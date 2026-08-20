@@ -31,7 +31,8 @@ export default function PublicLayout({ children }) {
       <header className="header" id="siteHeader">
         <div className="header-inner">
           <div className="header-logo">
-            <img src={LOGO_URL} alt="Bappenda Juara" className="header-logo-img" referrerPolicy="no-referrer" />
+            <img src="/image/tegarberiman.png" alt="Tegar Beriman" className="header-logo-img" />
+            <img src="/image/kab_bogor.png" alt="Kabupaten Bogor" className="header-logo-img" />
           </div>
           <nav className="header-nav">
             <Link to="/">Beranda</Link>
