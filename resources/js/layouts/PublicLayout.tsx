@@ -70,7 +70,23 @@ export default function PublicLayout({ children }) {
       </main>
 
       {/* Footer */}
-      <div className="footer">© {new Date().getFullYear()} Sistem Kunjungan Kerja</div>
+      <div className="footer" style={{ lineHeight: '1.8' }}>
+        <div>
+          <a href="https://bogorkab.go.id" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+            Pemerintah Kabupaten Bogor @ 2026
+          </a>
+        </div>
+        <div>
+          Powered by{' '}
+          <a href="https://diskominfo.bogorkab.go.id" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--navy, inherit)', textDecoration: 'underline', fontWeight: 500 }}>
+            Diskominfo
+          </a>{' '}
+          &{' '}
+          <a href="https://bappenda.bogorkab.go.id" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--navy, inherit)', textDecoration: 'underline', fontWeight: 500 }}>
+            Bappenda
+          </a>
+        </div>
+      </div>
 
       {/* Back to Top */}
       <button
