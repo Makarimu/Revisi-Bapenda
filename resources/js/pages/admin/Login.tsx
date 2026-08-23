@@ -4,7 +4,7 @@ import { login as apiLogin } from '../../api/admin/auth';
 import { AuthContext } from '../../contexts/AuthContext';
 
 const LOGO_URL = 'https://lh3.googleusercontent.com/d/1UJLWaokvtdtss1PGlPt4skw8lJwIi3Su';
-const BG_URL = 'https://lh3.googleusercontent.com/d/1qsLqxQVafVsTz1nBp6IPDb0-4-UzhLfW';
+const BG_URL = '/image/Icon_Kabupaten1.jpeg';
 
 export default function Login() {
   const navigate = useNavigate();
