@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-const LOGO_URL = 'https://lh3.googleusercontent.com/d/1UJLWaokvtdtss1PGlPt4skw8lJwIi3Su';
+const LOGO_URL = '/image/icon.png';
 
 export default function AdminLayout({ children }: { children?: React.ReactNode }) {
   const location = useLocation();
