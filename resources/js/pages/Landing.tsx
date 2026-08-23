@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../layouts/PublicLayout';
 import { getApprovedReviews } from '../api/review';
+import BogorMap from '../components/common/BogorMap';
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -321,6 +322,10 @@ export default function Landing() {
               <p style={{ fontSize: '13px', color: '#64748B', margin: '3px 0 0 0', lineHeight: '1.5' }}>Akses portal integrasi EKABO dan peta sebaran kantor dinas di Kabupaten Bogor.</p>
             </div>
           </div>
+
+          {/* Peta Interaktif Kabupaten Bogor */}
+          <BogorMap />
+
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '4px' }}>
             <a 
               href="https://ekabo.bogorkab.go.id/" 
