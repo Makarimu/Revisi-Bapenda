@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { login as apiLogin } from '../../api/admin/auth';
 import { AuthContext } from '../../contexts/AuthContext';
 
-const LOGO_URL = 'https://lh3.googleusercontent.com/d/1UJLWaokvtdtss1PGlPt4skw8lJwIi3Su';
-const BG_URL = '/image/Icon_Kabupaten1.jpeg';
+const LOGO_URL = '/image/kab_bogor.png';
+const BG_URL = '/image/login_bg.jpg';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ export default function Login() {
   return (
     <>
       <style>{`
-        .login-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; background:url('${BG_URL}') center/cover no-repeat; padding:24px; }
+        .login-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${BG_URL}') center/cover no-repeat; padding:24px; }
         .login-card { background:white; border-radius:20px; padding:40px 36px; width:100%; max-width:400px; box-shadow:0 24px 64px rgba(0,17,120,0.22); border:1px solid rgba(228, 231, 237, 0.8); }
         .login-logo { text-align:center; margin-bottom:28px; }
         .login-logo h2 { color:#001178; font-size:22px; font-weight:800; margin-top:12px; letter-spacing:-0.4px; }
