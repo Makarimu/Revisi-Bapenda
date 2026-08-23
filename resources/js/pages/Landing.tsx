@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../layouts/PublicLayout';
 import { getApprovedReviews } from '../api/review';
+import BogorMap from '../components/common/BogorMap';
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -321,6 +322,10 @@ export default function Landing() {
               <p style={{ fontSize: '12.5px', color: '#6B7280', margin: '2px 0 0 0' }}>Akses portal integrasi EKABO dan peta sebaran kantor dinas di Kabupaten Bogor.</p>
             </div>
           </div>
+
+          {/* Peta Interaktif Kabupaten Bogor */}
+          <BogorMap />
+
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '4px' }}>
             <a 
               href="https://ekabo.bogorkab.go.id/" 
@@ -335,19 +340,6 @@ export default function Landing() {
                 <line x1="10" y1="14" x2="21" y2="3" />
               </svg>
               Portal EKABO
-            </a>
-            <a 
-              href="https://www.google.com/maps/search/kantor+dinas+kabupaten+bogor" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="btn btn-ghost"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 18px', fontSize: '13px', textDecoration: 'none', border: '1px solid #D1D5DB' }}
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '16px', height: '16px' }}>
-                <circle cx="12" cy="10" r="3" />
-                <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z" />
-              </svg>
-              Peta Lokasi Kantor Dinas
             </a>
           </div>
         </div>

@@ -1,21 +1,26 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        $columns = DB::select("PRAGMA table_info(permohonan)");
-        $columnNames = array_column($columns, 'name');
-        if (!in_array('tgl_disetujui', $columnNames)) {
-            DB::statement('ALTER TABLE permohonan ADD COLUMN tgl_disetujui DATETIME NULL');
+        if (!Schema::hasColumn('permohonan', 'tgl_disetujui')) {
+            Schema::table('permohonan', function (Blueprint $table) {
+                $table->dateTime('tgl_disetujui')->nullable();
+            });
         }
     }
 
     public function down(): void
     {
-        // SQLite tidak mendukung DROP COLUMN — kolom dibiarkan (safe)
+        if (Schema::hasColumn('permohonan', 'tgl_disetujui')) {
+            Schema::table('permohonan', function (Blueprint $table) {
+                $table->dropColumn('tgl_disetujui');
+            });
+        }
     }
 };
