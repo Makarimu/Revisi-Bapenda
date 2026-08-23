@@ -79,30 +79,30 @@ const RatingReviewCard = memo(function RatingReviewCard({ kode, reviewData, onSu
   };
 
   return (
-    <div style={{ background: '#ffffff', border: '1.5px solid #2E7D32', borderRadius: '12px', padding: '20px', marginBottom: '24px' }}>
-      <h4 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '14px', color: '#222222', display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ color: '#F59E0B' }}>★</span> Rating & Review
+    <div style={{ background: '#ffffff', border: '1px solid rgba(228, 231, 237, 0.8)', borderRadius: '16px', padding: '24px', marginBottom: '28px', boxShadow: 'var(--shadow-sm)' }}>
+      <h4 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ color: '#F59E0B', fontSize: '18px' }}>★</span> Rating &amp; Review
       </h4>
 
       {isSubmitted ? (
-        <div style={{ background: '#F3FAF5', border: '1px solid #2E7D32', borderRadius: '8px', padding: '16px', textAlign: 'center' }}>
-          <div style={{ fontSize: '24px', color: '#F59E0B', marginBottom: '6px' }}>
+        <div style={{ background: '#C5DBFF', border: '1px solid rgba(117, 195, 255, 0.6)', borderRadius: '12px', padding: '20px', textAlign: 'center' }}>
+          <div style={{ fontSize: '24px', color: '#F59E0B', marginBottom: '8px' }}>
             {'★'.repeat(rating || reviewData?.rating || 5)}{'☆'.repeat(5 - (rating || reviewData?.rating || 5))}
           </div>
-          <p style={{ fontSize: '14px', fontWeight: '700', color: '#2E7D32', marginBottom: '4px' }}>
+          <p style={{ fontSize: '14.5px', fontWeight: '700', color: '#001178', marginBottom: '6px' }}>
             Terima kasih atas penilaian Anda.
           </p>
-          <p style={{ fontSize: '13px', color: '#4B5563', fontStyle: 'italic', margin: 0 }}>
+          <p style={{ fontSize: '13.5px', color: '#334155', fontStyle: 'italic', margin: 0, lineHeight: '1.6' }}>
             "{reviewText || reviewData?.review}"
           </p>
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '14px' }}>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#374151', marginBottom: '6px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>
               Rating *
             </label>
-            <div style={{ display: 'flex', gap: '6px' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
               {[1, 2, 3, 4, 5].map((star) => {
                 const activeStar = hoverRating ? star <= hoverRating : star <= rating;
                 return (
@@ -115,10 +115,11 @@ const RatingReviewCard = memo(function RatingReviewCard({ kode, reviewData, onSu
                     style={{
                       background: 'none',
                       border: 'none',
-                      fontSize: '28px',
+                      fontSize: '30px',
                       cursor: 'pointer',
                       color: activeStar ? '#F59E0B' : '#D1D5DB',
-                      transition: 'color 0.15s',
+                      transition: 'color 0.15s, transform 0.15s',
+                      transform: activeStar ? 'scale(1.08)' : 'scale(1)',
                       padding: '0 2px'
                     }}
                   >
@@ -129,33 +130,34 @@ const RatingReviewCard = memo(function RatingReviewCard({ kode, reviewData, onSu
             </div>
           </div>
 
-          <div style={{ marginBottom: '14px' }}>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#374151', marginBottom: '6px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>
               Review *
             </label>
             <textarea
               rows={4}
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
-              placeholder="Tuliskan pengalaman kunjungan kerja Anda."
+              placeholder="Tuliskan pengalaman kunjungan kerja Anda..."
               style={{
                 width: '100%',
-                padding: '10px 12px',
+                padding: '12px 14px',
                 border: '1px solid #D9DEE5',
-                borderRadius: '8px',
-                fontSize: '13px',
+                borderRadius: '10px',
+                fontSize: '13.5px',
                 fontFamily: 'inherit',
                 resize: 'vertical',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                lineHeight: '1.6'
               }}
             />
-            <div style={{ fontSize: '11px', color: '#6B7280', marginTop: '4px', textAlign: 'right' }}>
+            <div style={{ fontSize: '11.5px', color: '#64748B', marginTop: '6px', textAlign: 'right' }}>
               {reviewText.length}/1000 karakter (min. 10)
             </div>
           </div>
 
           {errorMsg && (
-            <div style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', color: '#991B1B', padding: '8px 12px', borderRadius: '6px', fontSize: '12px', marginBottom: '14px' }}>
+            <div style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', color: '#991B1B', padding: '10px 14px', borderRadius: '8px', fontSize: '12.5px', marginBottom: '16px' }}>
               {errorMsg}
             </div>
           )}
@@ -163,17 +165,22 @@ const RatingReviewCard = memo(function RatingReviewCard({ kode, reviewData, onSu
           <button
             type="submit"
             disabled={isSubmitting}
+            className="btn btn-primary"
             style={{
-              background: isSubmitting ? '#9CA3AF' : '#2E7D32',
+              background: isSubmitting ? '#9CA3AF' : '#0028B3',
               color: 'white',
               border: 'none',
               borderRadius: '8px',
-              padding: '10px 20px',
-              fontSize: '13px',
+              padding: '11px 22px',
+              minHeight: '44px',
+              fontSize: '13.5px',
               fontWeight: '700',
               cursor: isSubmitting ? 'not-allowed' : 'pointer',
               fontFamily: 'inherit',
-              transition: 'background 0.2s'
+              width: 'auto',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px'
             }}
           >
             {isSubmitting ? 'Mengirim...' : 'Kirim Penilaian'}
@@ -289,10 +296,10 @@ const RingkasanPdfCard = memo(function RingkasanPdfCard({ result }: { result: an
         </div>
       ) : (
         // PDF sudah ada — tampilkan tombol Download
-        <div style={{ background: '#F0FDF4', border: '1px solid #86EFAC', borderRadius: '8px', padding: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '14px' }}>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: '#DCFCE7', color: '#166534', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <div style={{ background: '#F0FDF4', border: '1px solid #86EFAC', borderRadius: '14px', padding: '20px', boxShadow: 'var(--shadow-sm)' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#DCFCE7', color: '#166534', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(22,101,52,0.1)' }}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E11D48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <polyline points="14 2 14 8 20 8" />
@@ -301,11 +308,11 @@ const RingkasanPdfCard = memo(function RingkasanPdfCard({ result }: { result: an
                 </svg>
               </div>
               <div>
-                <span style={{ display: 'inline-block', background: '#DCFCE7', color: '#15803D', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '700', marginBottom: '4px' }}>
+                <span style={{ display: 'inline-block', background: '#DCFCE7', color: '#15803D', padding: '3px 10px', borderRadius: '9999px', fontSize: '11px', fontWeight: '700', marginBottom: '4px' }}>
                   Status: Sudah tersedia
                 </span>
-                <div style={{ fontSize: '13.5px', fontWeight: '700', color: '#1E293B' }}>{pdfNamaFile}</div>
-                <div style={{ fontSize: '11.5px', color: '#64748B', marginTop: '2px' }}>
+                <div style={{ fontSize: '14px', fontWeight: '700', color: '#0F172A' }}>{pdfNamaFile}</div>
+                <div style={{ fontSize: '12px', color: '#64748B', marginTop: '3px' }}>
                   Tanggal Upload: {formatTanggal(pdfUploadedAt)} {pdfUkuranFile ? `• Ukuran: ${pdfUkuranFile}` : ''}
                 </div>
               </div>
@@ -315,20 +322,22 @@ const RingkasanPdfCard = memo(function RingkasanPdfCard({ result }: { result: an
           <button
             type="button"
             onClick={handleDownload}
+            className="btn btn-primary"
             style={{
-              background: '#2E7D32',
-              color: '#FFFFFF',
+              background: '#0028B3',
+              color: 'white',
               border: 'none',
               borderRadius: '8px',
-              padding: '10px 20px',
-              fontSize: '13px',
+              padding: '11px 22px',
+              minHeight: '44px',
+              fontSize: '13.5px',
               fontWeight: '700',
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
               fontFamily: 'inherit',
-              transition: 'background 0.2s',
+              width: 'auto'
             }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -358,30 +367,30 @@ function LangkahCard({ data, onRevisi, onUploadBukti }: any) {
   const isKondisiA = (status === 'Selesai' || status === 'Ringkasan_Terkirim') && !hasReview;
 
   const cardBg = isKondisiC ? '#F0FDF4' : isKondisiB ? '#FFFBEB' : isKondisiA ? '#FFFBEB' : '#ffffff';
-  const cardBorder = isKondisiC ? '1.5px solid #86EFAC' : '1.5px solid #FCD34D';
-  const titleColor = isKondisiC ? '#15803D' : '#222222';
+  const cardBorder = isKondisiC ? '1px solid #86EFAC' : (isKondisiB || isKondisiA) ? '1px solid #FCD34D' : '1px solid rgba(228, 231, 237, 0.8)';
+  const titleColor = isKondisiC ? '#15803D' : (isKondisiB || isKondisiA) ? '#92400E' : '#0F172A';
 
   return (
-    <div style={{ background: cardBg, border: cardBorder, borderRadius: '12px', padding: '20px', marginBottom: '24px' }}>
+    <div style={{ background: cardBg, border: cardBorder, borderRadius: '16px', padding: '24px', marginBottom: '28px', boxShadow: 'var(--shadow-sm)' }}>
       <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
         <div style={{ flex: '1 1 220px', minWidth: 0 }}>
-          <h4 style={{ fontSize: '15px', fontWeight: '700', marginBottom: '10px', color: titleColor }}>
+          <h4 style={{ fontSize: '15.5px', fontWeight: '700', marginBottom: '10px', color: titleColor }}>
             {isKondisiC ? 'Ringkasan Hasil Kunjungan Sudah Tersedia' : isKondisiB ? 'Menunggu Ringkasan Hasil Kunjungan' : 'Langkah Selanjutnya'}
           </h4>
-          {status === 'Pending' && <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: '1.7' }}>Permohonan Anda sedang dalam proses review oleh admin. Mohon menunggu konfirmasi melalui email.</p>}
-          {status === 'Revisi' && <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: '1.7' }}>Revisi permohonan Anda telah dikirim dan sedang menunggu review ulang dari admin.</p>}
+          {status === 'Pending' && <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: '1.7' }}>Permohonan Anda sedang dalam proses review oleh admin. Mohon menunggu konfirmasi melalui email.</p>}
+          {status === 'Revisi' && <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: '1.7' }}>Revisi permohonan Anda telah dikirim dan sedang menunggu review ulang dari admin.</p>}
           {status === 'Ditolak' && (
             <>
-              <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: '1.7' }}>Permohonan Anda ditolak. Silakan periksa keterangan admin untuk detail alasan penolakan.</p>
-              {!canRevisi && <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: '1.7', marginTop: '8px' }}>Permohonan ini tidak dapat direvisi. Silakan ajukan permohonan baru jika masih diperlukan.</p>}
+              <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: '1.7' }}>Permohonan Anda ditolak. Silakan periksa keterangan admin untuk detail alasan penolakan.</p>
+              {!canRevisi && <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: '1.7', marginTop: '8px' }}>Permohonan ini tidak dapat direvisi. Silakan ajukan permohonan baru jika masih diperlukan.</p>}
             </>
           )}
-          {status === 'Disetujui' && !needsMenginap && <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: '1.7' }}>Kunjungan telah disetujui. Silakan datang sesuai jadwal kunjungan yang telah ditentukan.</p>}
-          {status === 'Disetujui' && needsMenginap && !sudahUploadBukti && <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: '1.7' }}>Kunjungan telah disetujui. Karena Anda berencana menginap, silakan unggah bukti pemesanan penginapan.</p>}
-          {status === 'Disetujui' && needsMenginap && sudahUploadBukti && <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: '1.7' }}>Kunjungan telah disetujui. Bukti pemesanan penginapan telah diunggah. Silakan datang sesuai jadwal.</p>}
-          {isKondisiA && <p style={{ fontSize: '13px', color: '#78350F', lineHeight: '1.7' }}>Kunjungan kerja telah selesai dilaksanakan. Silakan berikan Rating & Review pada kolom di bawah ini terlebih dahulu.</p>}
-          {isKondisiB && <p style={{ fontSize: '13px', color: '#78350F', lineHeight: '1.7' }}>Terima kasih atas Rating & Review. Ringkasan hasil kunjungan sedang diproses oleh Admin.</p>}
-          {isKondisiC && <p style={{ fontSize: '13px', color: '#166534', lineHeight: '1.7' }}>Ringkasan hasil kunjungan kerja telah tersedia. Silakan mengunduh PDF pada bagian Ringkasan Hasil Kunjungan.</p>}
+          {status === 'Disetujui' && !needsMenginap && <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: '1.7' }}>Kunjungan telah disetujui. Silakan datang sesuai jadwal kunjungan yang telah ditentukan.</p>}
+          {status === 'Disetujui' && needsMenginap && !sudahUploadBukti && <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: '1.7' }}>Kunjungan telah disetujui. Karena Anda berencana menginap, silakan unggah bukti pemesanan penginapan.</p>}
+          {status === 'Disetujui' && needsMenginap && sudahUploadBukti && <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: '1.7' }}>Kunjungan telah disetujui. Bukti pemesanan penginapan telah diunggah. Silakan datang sesuai jadwal.</p>}
+          {isKondisiA && <p style={{ fontSize: '13.5px', color: '#78350F', lineHeight: '1.7' }}>Kunjungan kerja telah selesai dilaksanakan. Silakan berikan Rating &amp; Review pada kolom di bawah ini terlebih dahulu.</p>}
+          {isKondisiB && <p style={{ fontSize: '13.5px', color: '#78350F', lineHeight: '1.7' }}>Terima kasih atas Rating &amp; Review. Ringkasan hasil kunjungan sedang diproses oleh Admin.</p>}
+          {isKondisiC && <p style={{ fontSize: '13.5px', color: '#166534', lineHeight: '1.7' }}>Ringkasan hasil kunjungan kerja telah tersedia. Silakan mengunduh PDF pada bagian Ringkasan Hasil Kunjungan.</p>}
         </div>
 
         {canRevisi && (
@@ -389,7 +398,7 @@ function LangkahCard({ data, onRevisi, onUploadBukti }: any) {
             <button
               className="btn-primary"
               onClick={onRevisi}
-              style={{ width: '100%' }}
+              style={{ width: '100%', minHeight: '44px' }}
             >
               Revisi Permohonan
             </button>
@@ -397,13 +406,13 @@ function LangkahCard({ data, onRevisi, onUploadBukti }: any) {
         )}
         {status === 'Disetujui' && needsMenginap && (
           <div style={{ flex: '1 1 200px', minWidth: 0 }}>
-            <div style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>Status Upload</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', fontSize: '13px', fontWeight: '600', color: '#222222' }}>
-              <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: sudahUploadBukti ? '#2E7D32' : '#C7CCD3', flexShrink: 0, display: 'inline-block' }} />
+            <div style={{ fontSize: '11px', fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>Status Upload</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', fontSize: '13.5px', fontWeight: '600', color: '#0F172A' }}>
+              <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: sudahUploadBukti ? '#0028B3' : '#CBD5E1', flexShrink: 0, display: 'inline-block' }} />
               {sudahUploadBukti ? 'Sudah diunggah' : 'Belum diunggah'}
             </div>
             {sudahUploadBukti && (
-              <a href={linkBuktiMenginap} target="_blank" rel="noreferrer" style={{ fontSize: '12.5px', color: '#256628', fontWeight: '600', textDecoration: 'underline', display: 'block', marginBottom: '8px' }}>
+              <a href={linkBuktiMenginap} target="_blank" rel="noreferrer" style={{ fontSize: '13px', color: '#0028B3', fontWeight: '600', textDecoration: 'underline', display: 'block', marginBottom: '8px' }}>
                 Lihat File
               </a>
             )}
@@ -412,13 +421,14 @@ function LangkahCard({ data, onRevisi, onUploadBukti }: any) {
             <button
               className="btn-outline-navy"
               onClick={() => document.getElementById('fileBuktiMenginap')?.click()}
+              style={{ minHeight: '42px' }}
             >
               {sudahUploadBukti ? 'Ganti File' : 'Unggah Bukti Pemesanan'}
             </button>
             {buktiFile && (
               <>
-                <div style={{ marginTop: '8px', fontSize: '12px', color: '#2E7D32', fontWeight: '600' }}>{buktiFile.name}</div>
-                <button className="btn-primary" style={{ marginTop: '8px', width: '100%' }} onClick={() => onUploadBukti(buktiFile)}>
+                <div style={{ marginTop: '8px', fontSize: '12px', color: '#0028B3', fontWeight: '600' }}>{buktiFile.name}</div>
+                <button className="btn-primary" style={{ marginTop: '8px', width: '100%', minHeight: '42px' }} onClick={() => onUploadBukti(buktiFile)}>
                   Simpan Bukti Pemesanan
                 </button>
               </>
@@ -510,7 +520,7 @@ function RevisiDialog({ open, data, onClose, onSubmit }: any) {
             })}
           </div>
           {selectedDate && (
-            <div style={{ marginTop: '10px', padding: '10px 14px', background: '#F3FAF5', borderLeft: '3px solid #2E7D32', color: '#222222', borderRadius: '8px', fontSize: '12px' }}>
+            <div style={{ marginTop: '10px', padding: '10px 14px', background: '#C5DBFF', borderLeft: '3px solid #0028B3', color: '#001178', borderRadius: '8px', fontSize: '12px' }}>
               Tanggal terpilih: <strong>{selectedDate}</strong>
             </div>
           )}
@@ -542,7 +552,7 @@ function RevisiDialog({ open, data, onClose, onSubmit }: any) {
                   const f = e.target.files?.[0];
                   if (f) {
                     if (f.type !== 'application/pdf' && !f.name.toLowerCase().endsWith('.pdf')) {
-                      showToast('Surat permohonan harus berformat PDF.', 'error');
+                      alert('Surat permohonan harus berformat PDF.');
                       return;
                     }
                     setFile1(f);
@@ -554,7 +564,7 @@ function RevisiDialog({ open, data, onClose, onSubmit }: any) {
                   </svg>
                 </div>
                 <div className="upload-text">
-                  {file1 ? <strong style={{ color: '#2E7D32' }}>{file1.name}</strong> : <><strong>Klik untuk upload</strong> (opsional)</>}
+                  {file1 ? <strong style={{ color: '#0028B3' }}>{file1.name}</strong> : <><strong>Klik untuk upload</strong> (opsional)</>}
                 </div>
               </div>
             </div>
@@ -565,7 +575,7 @@ function RevisiDialog({ open, data, onClose, onSubmit }: any) {
                   const f = e.target.files?.[0];
                   if (f) {
                     if (f.type !== 'application/pdf' && !f.name.toLowerCase().endsWith('.pdf')) {
-                      showToast('Daftar pertanyaan harus berformat PDF.', 'error');
+                      alert('Daftar pertanyaan harus berformat PDF.');
                       return;
                     }
                     setFile2(f);
@@ -577,7 +587,7 @@ function RevisiDialog({ open, data, onClose, onSubmit }: any) {
                   </svg>
                 </div>
                 <div className="upload-text">
-                  {file2 ? <strong style={{ color: '#2E7D32' }}>{file2.name}</strong> : <><strong>Klik untuk upload</strong> (opsional)</>}
+                  {file2 ? <strong style={{ color: '#0028B3' }}>{file2.name}</strong> : <><strong>Klik untuk upload</strong> (opsional)</>}
                 </div>
               </div>
             </div>
@@ -707,60 +717,62 @@ export default function Status() {
     <PublicLayout>
       {/* Status-specific inline CSS additions */}
       <style>{`
-        .card-header { padding:16px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #E5E7EB; background:#fff; }
-        .card-header h3 { font-size:16px; font-weight:700; color:#145c2a; margin:0; }
-        .btn-outline-navy { background:#fff; border:1.5px solid #2E7D32; color:#2E7D32; padding:9px 16px; border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit; transition:all .2s; width:100%; }
-        .btn-outline-navy:hover { background:#F3FAF5; }
-        .revisi-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:flex-start; justify-content:center; z-index:1000; padding:16px; overflow-y:auto; }
+        .card-header { padding:20px 24px; display:flex; align-items:center; gap:12px; border-bottom:1px solid #E4E7ED; background:#fff; border-radius:16px 16px 0 0; }
+        .card-header h3 { font-size:16px; font-weight:700; color:#001178; margin:0; letter-spacing:-0.2px; }
+        .btn-outline-navy { background:#fff; border:1.5px solid #0028B3; color:#0028B3; padding:10px 18px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; transition:all .2s; width:100%; display:inline-flex; align-items:center; justify-content:center; }
+        .btn-outline-navy:hover { background:#C5DBFF; color:#001178; }
+        .revisi-overlay { position:fixed; inset:0; background:rgba(0,17,120,0.45); backdrop-filter:blur(4px); display:none; align-items:flex-start; justify-content:center; z-index:1000; padding:20px; overflow-y:auto; }
         .revisi-overlay.active { display:flex; }
-        .revisi-dialog { background:white; border-radius:14px; max-width:680px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,0.25); margin:auto; }
-        .revisi-dialog-header { padding:16px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #E5E7EB; background:#2E7D32; color:white; border-radius:14px 14px 0 0; }
-        .revisi-dialog-header h3 { font-size:15px; font-weight:700; }
-        .revisi-close { background:rgba(255,255,255,0.15); border:none; color:white; width:30px; height:30px; border-radius:7px; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-        .revisi-body { padding:20px; max-height:80vh; overflow-y:auto; }
-        .revisi-footer { display:flex; gap:10px; padding:16px 20px; border-top:1px solid #E5E7EB; }
-        .btn-revisi-batal { flex:none; background:#ffffff; color:#222222; border:1px solid #E5E7EB; border-radius:8px; padding:10px 18px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s; }
-        .btn-revisi-batal:hover { background:#F3F4F6; }
-        .btn-revisi-kirim { flex:1; background:#2E7D32; color:white; border:none; border-radius:8px; padding:10px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; }
-        .btn-revisi-kirim:hover { background:#256628; }
+        .revisi-dialog { background:white; border-radius:20px; max-width:680px; width:100%; box-shadow:var(--shadow-modal); margin:auto; border:1px solid #E4E7ED; overflow:hidden; }
+        .revisi-dialog-header { padding:18px 24px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #E4E7ED; background:#0028B3; color:white; }
+        .revisi-dialog-header h3 { font-size:16px; font-weight:700; }
+        .revisi-close { background:rgba(255,255,255,0.15); border:none; color:white; width:32px; height:32px; border-radius:8px; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.2s; }
+        .revisi-close:hover { background:rgba(255,255,255,0.25); }
+        .revisi-body { padding:24px; max-height:80vh; overflow-y:auto; }
+        .revisi-footer { display:flex; gap:12px; padding:18px 24px; border-top:1px solid #E4E7ED; }
+        .btn-revisi-batal { flex:none; background:#ffffff; color:#111827; border:1px solid #E4E7ED; border-radius:8px; padding:11px 20px; font-size:13.5px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+        .btn-revisi-batal:hover { background:#F6F7FA; }
+        .btn-revisi-kirim { flex:1; background:#0028B3; color:white; border:none; border-radius:8px; padding:11px; font-size:13.5px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+        .btn-revisi-kirim:hover { background:#001178; }
         .btn-revisi-kirim:disabled { background:#aaa; cursor:not-allowed; }
-        .stepper { display:flex; align-items:flex-start; margin-bottom:28px; }
+        .stepper { display:flex; align-items:flex-start; margin-bottom:32px; }
         .stepper-item { display:flex; flex-direction:column; align-items:center; text-align:center; flex:1; min-width:0; }
-        .stepper-line { flex:0 0 40px; height:2px; background:#E5E7EB; margin-top:17px; }
-        .stepper-line.done { background:#2E7D32; }
-        .stepper-title { font-size:12.5px; font-weight:700; margin-top:10px; color:#222222; }
-        .stepper-date { font-size:11px; color:#6B7280; margin-top:3px; }
+        .stepper-line { flex:0 0 40px; height:2px; background:#E4E7ED; margin-top:17px; }
+        .stepper-line.done { background:#1883FF; }
+        .stepper-title { font-size:13px; font-weight:700; margin-top:10px; color:#0F172A; }
+        .stepper-date { font-size:11.5px; color:#64748B; margin-top:3px; }
         @media (max-width:560px) {
-          .stepper-title { font-size:10.5px; } .stepper-date { font-size:9px; }
+          .stepper-title { font-size:11px; } .stepper-date { font-size:9.5px; }
           .stepper-line { flex-basis:18px; margin-top:14px; }
         }
       `}</style>
 
-      <div style={{ background: '#F7F8FA', minHeight: 'calc(100vh - 80px)' }}>
-        <div style={{ maxWidth: '780px', margin: '0 auto', padding: '32px 16px' }}>
+      <div style={{ background: '#F6F7FA', minHeight: 'calc(100vh - 80px)' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px 64px' }}>
 
           {/* Search Card */}
           <div className="card">
             <div className="card-header">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '18px', height: '18px', flexShrink: 0, color: '#145c2a' }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '18px', height: '18px', flexShrink: 0, color: '#0028B3' }}>
                 <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
               </svg>
               <h3>Cek Status Permohonan</h3>
             </div>
-            <div className="card-body">
-              <p style={{ fontSize: '13px', color: '#6B7280', marginBottom: '14px' }}>Masukkan kode permohonan yang Anda terima melalui email.</p>
-              <div style={{ display: 'flex', gap: '10px', marginBottom: result ? '20px' : 0 }}>
+            <div className="card-body" style={{ padding: '24px' }}>
+              <p style={{ fontSize: '13.5px', color: '#64748B', marginBottom: '16px', lineHeight: '1.6' }}>Masukkan kode permohonan yang Anda terima melalui email.</p>
+              <div style={{ display: 'flex', gap: '10px', marginBottom: result ? '24px' : 0 }}>
                 <input
                   type="text"
                   value={kodeInput}
                   onChange={e => setKodeInput(e.target.value.toUpperCase())}
                   onKeyDown={e => e.key === 'Enter' && handleCek()}
                   placeholder="Contoh: KUNKER-20260808-84A12"
-                  style={{ flex: 1, padding: '9px 12px', border: '1px solid #D9DEE5', borderRadius: '8px', fontSize: '13px', fontFamily: 'inherit', textTransform: 'uppercase', letterSpacing: '1px', color: '#222222' }}
+                  style={{ flex: 1, padding: '11px 14px', minHeight: '44px', border: '1px solid #D9DEE5', borderRadius: '8px', fontSize: '13.5px', fontFamily: 'inherit', textTransform: 'uppercase', letterSpacing: '1px', color: '#0F172A' }}
                 />
                 <button
                   onClick={() => handleCek()}
-                  style={{ padding: '10px 18px', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', background: '#2E7D32', color: 'white', fontFamily: 'inherit', transition: 'all 0.2s' }}
+                  className="btn btn-primary"
+                  style={{ padding: '11px 24px', minHeight: '44px', border: 'none', borderRadius: '8px', fontSize: '13.5px', fontWeight: '700', cursor: 'pointer', background: '#0028B3', color: 'white', fontFamily: 'inherit', width: 'auto' }}
                 >
                   {loading ? '...' : 'Cek'}
                 </button>
@@ -785,7 +797,7 @@ export default function Status() {
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
                     <div>
                       <p style={{ fontSize: '10px', color: '#6B7280', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Kode Permohonan</p>
-                      <p style={{ fontSize: '17px', fontWeight: '800', color: '#000000', letterSpacing: '1px' }}>{result.kode}</p>
+                      <p style={{ fontSize: '17px', fontWeight: '800', color: '#001178', letterSpacing: '1px' }}>{result.kode}</p>
                     </div>
                     <span className={`status-badge ${statusClass(result.status)}`}>{statusLabel(result.status)}</span>
                   </div>
@@ -809,11 +821,11 @@ export default function Status() {
                   )}
 
                   {/* Stepper (Alur 6 Langkah Dinamis) */}
-                  <p style={{ fontSize: '15px', fontWeight: '700', color: '#222222', marginBottom: '18px' }}>Progres Permohonan</p>
+                  <p style={{ fontSize: '15px', fontWeight: '700', color: '#111827', marginBottom: '18px' }}>Progres Permohonan</p>
                   <div className="stepper">
                     {/* Step 1: Diajukan */}
                     <div className="stepper-item">
-                      <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: '#2E7D32', color: '#fff' }}>
+                      <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: '#0028B3', color: 'white' }}>
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 5 5L19 7" /></svg>
                       </div>
                       <div className="stepper-title">Diajukan</div>
@@ -825,7 +837,7 @@ export default function Status() {
                     {(() => {
                       const isPending = result.status === 'Pending';
                       const isRevisi = result.status === 'Revisi';
-                      const bg = isPending ? '#F0C040' : isRevisi ? '#A569BD' : '#2E7D32';
+                      const bg = isPending ? '#B45309' : isRevisi ? '#6D28D9' : '#0028B3';
                       const title = isPending ? 'Menunggu Review' : isRevisi ? 'Revisi Dikirim' : 'Diproses';
                       const date = result.tglDiproses ? formatDateTime(result.tglDiproses) : result.tglRevisi ? formatDateTime(result.tglRevisi) : 'Dalam antrian review';
                       return (
@@ -844,7 +856,7 @@ export default function Status() {
                     {(() => {
                       const isApproved = ['Disetujui', 'Selesai', 'Ringkasan_Terkirim'].includes(result.status);
                       const isRejected = result.status === 'Ditolak';
-                      const bg = isApproved ? '#2E7D32' : isRejected ? '#e74c3c' : '#E5E7EB';
+                      const bg = isApproved ? '#0028B3' : isRejected ? '#B91C1C' : '#E4E7ED';
                       const title = isApproved ? 'Disetujui' : isRejected ? 'Ditolak' : 'Keputusan Final';
                       const date = result.tglDisetujui ? formatDateTime(result.tglDisetujui) : result.tglDiproses ? formatDateTime(result.tglDiproses) : 'Belum diproses';
                       return (
@@ -865,7 +877,7 @@ export default function Status() {
                     {(() => {
                       const isFinished = ['Selesai', 'Ringkasan_Terkirim'].includes(result.status);
                       const isWaitingVisit = result.status === 'Disetujui';
-                      const bg = isFinished ? '#2E7D32' : isWaitingVisit ? '#F0C040' : '#E5E7EB';
+                      const bg = isFinished ? '#0028B3' : isWaitingVisit ? '#B45309' : '#E4E7ED';
                       const title = isFinished ? 'Selesai' : isWaitingVisit ? 'Menunggu Kunjungan' : 'Pelaksanaan';
                       const date = result.tglSelesai ? formatDateTime(result.tglSelesai) : isWaitingVisit ? 'Sesuai jadwal' : 'Belum dilaksanakan';
                       return (
@@ -886,7 +898,7 @@ export default function Status() {
                     {(() => {
                       const hasReview = result.hasReview;
                       const isSelesaiStage = ['Selesai', 'Ringkasan_Terkirim'].includes(result.status);
-                      const bg = hasReview ? '#2E7D32' : isSelesaiStage ? '#F0C040' : '#E5E7EB';
+                      const bg = hasReview ? '#0028B3' : isSelesaiStage ? '#B45309' : '#E4E7ED';
                       const title = hasReview ? 'Rating & Review' : isSelesaiStage ? 'Menunggu Review' : 'Rating & Review';
                       const date = result.tglReview ? formatDateTime(result.tglReview) : hasReview ? 'Selesai' : isSelesaiStage ? 'Belum diisi' : 'Belum tersedia';
                       return (
@@ -908,7 +920,7 @@ export default function Status() {
                       // pdf_ready adalah satu-satunya gate — true hanya jika PDF sudah diupload
                       const isReady = !!(result.pdf_ready);
                       const isWaitingSummary = result.hasReview && ['Selesai', 'Ringkasan_Terkirim'].includes(result.status) && !isReady;
-                      const bg = isReady ? '#2E7D32' : isWaitingSummary ? '#F0C040' : '#E5E7EB';
+                      const bg = isReady ? '#0028B3' : isWaitingSummary ? '#B45309' : '#E4E7ED';
                       const title = isReady ? 'Ringkasan Tersedia' : isWaitingSummary ? 'Menunggu Ringkasan' : 'Ringkasan PDF';
                       const date = result.ringkasanSentAt ? formatDateTime(result.ringkasanSentAt) : isReady ? 'Dokumen tersedia' : isWaitingSummary ? 'Dalam proses admin' : 'Belum tersedia';
                       return (
@@ -945,8 +957,8 @@ export default function Status() {
                       ['', null],
                       ['TUJUAN/MAKSUD', result.tujuan || '-'],
                       ['', null],
-                      ['SURAT PERMOHONAN', result.linkSurat1 ? <a href={result.linkSurat1} target="_blank" rel="noreferrer" style={{color: '#2E7D32', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '4px'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Lihat Surat</a> : '-'],
-                      ['SURAT DAFTAR PERTANYAAN', result.linkSurat2 ? <a href={result.linkSurat2} target="_blank" rel="noreferrer" style={{color: '#2E7D32', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '4px'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Lihat Surat</a> : '-'],
+                      ['SURAT PERMOHONAN', result.linkSurat1 ? <a href={result.linkSurat1} target="_blank" rel="noreferrer" style={{color: '#0028B3', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '4px'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Lihat Surat</a> : '-'],
+                      ['SURAT DAFTAR PERTANYAAN', result.linkSurat2 ? <a href={result.linkSurat2} target="_blank" rel="noreferrer" style={{color: '#0028B3', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '4px'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Lihat Surat</a> : '-'],
                       ['TGL PENGAJUAN', result.tglPengajuanAwal ? formatDateTime(result.tglPengajuanAwal) : '-'],
                       ['TGL DIPROSES', result.tglDiproses ? formatDateTime(result.tglDiproses) : '-']
                     ].map(([label, value], i) => (
@@ -969,7 +981,7 @@ export default function Status() {
 
                   {/* Keterangan Admin */}
                   {result.keterangan && result.status !== 'Revisi' && (
-                    <div style={{ borderRadius: '8px', padding: '12px 14px', marginTop: '14px', fontSize: '13px', lineHeight: '1.6', background: '#F7F8FA', borderLeft: `3px solid ${result.status === 'Ditolak' ? '#e74c3c' : result.status === 'Disetujui' ? '#2E7D32' : '#A569BD'}` }}>
+                    <div style={{ borderRadius: '8px', padding: '12px 14px', marginTop: '14px', fontSize: '13px', lineHeight: '1.6', background: '#F7F8FA', borderLeft: `3px solid ${result.status === 'Ditolak' ? '#B91C1C' : result.status === 'Disetujui' ? '#0028B3' : '#6D28D9'}` }}>
                       <strong>Keterangan Admin:</strong><br />{result.keterangan}
                     </div>
                   )}
@@ -998,7 +1010,7 @@ export default function Status() {
 
       {/* Toast */}
       {toast.show && (
-        <div style={{ position: 'fixed', bottom: '20px', right: '20px', padding: '11px 18px', borderRadius: '8px', color: 'white', fontSize: '13px', fontWeight: '500', zIndex: 9999, maxWidth: '320px', boxShadow: '0 4px 16px rgba(0,0,0,0.15)', background: toast.type === 'error' ? '#e74c3c' : '#2E7D32' }}>
+        <div style={{ position: 'fixed', bottom: '20px', right: '20px', padding: '11px 18px', borderRadius: '8px', color: 'white', fontSize: '13px', fontWeight: '500', zIndex: 9999, maxWidth: '320px', boxShadow: '0 4px 16px rgba(0,17,120,0.18)', background: toast.type === 'error' ? '#B91C1C' : '#001178' }}>
           {toast.msg}
         </div>
       )}

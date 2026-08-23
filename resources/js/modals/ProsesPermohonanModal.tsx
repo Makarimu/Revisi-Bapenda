@@ -12,11 +12,11 @@ function formatTanggal(s) {
 
 function StatusBadge({ status }) {
   const cfg = {
-    Pending: { bg: '#FEF9E7', color: '#B7791F', border: '#F0C040' },
-    Disetujui: { bg: '#EAFAF1', color: '#256628', border: '#2E7D32' },
-    Selesai: { bg: '#EAF6EC', color: '#2E7D32', border: '#2E7D32' },
-    Ditolak: { bg: '#FDEDEC', color: '#922B21', border: '#e74c3c' },
-    Revisi: { bg: '#F5EEF8', color: '#7D3C98', border: '#A569BD' },
+    Pending: { bg: '#FEF3C7', color: '#B45309', border: '#F59E0B' },
+    Disetujui: { bg: '#DCFCE7', color: '#15803D', border: '#86EFAC' },
+    Selesai: { bg: '#C5DBFF', color: '#001178', border: '#0028B3' },
+    Ditolak: { bg: '#FEE2E2', color: '#B91C1C', border: '#FCA5A5' },
+    Revisi: { bg: '#F3E8FF', color: '#6D28D9', border: '#D8B4FE' },
   };
   const s = cfg[status] || cfg.Pending;
   return (
@@ -79,7 +79,7 @@ function ModalSetujui({ data, onClose, onSuccess }) {
 
   return (
     <div style={{ padding: '20px' }}>
-      <div style={{ borderRadius: '10px', background: '#F3FAF5', border: '1.5px solid #2E7D32', padding: '12px 14px', marginBottom: '16px', fontSize: '13px', color: '#256628', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+      <div style={{ borderRadius: '10px', background: '#C5DBFF', border: '1.5px solid #0028B3', padding: '12px 14px', marginBottom: '16px', fontSize: '13px', color: '#001178', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: '1px' }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
         <span>Permohonan akan <strong>disetujui</strong> dan email notifikasi dikirim ke <strong>{data.email}</strong></span>
       </div>
@@ -106,7 +106,7 @@ function ModalSetujui({ data, onClose, onSuccess }) {
       <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
         <button onClick={onClose} style={{ flex: 'none', background: '#fff', border: '1px solid #E5E7EB', borderRadius: '8px', padding: '10px 18px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>Batal</button>
         <button onClick={handleSubmit} disabled={loading || !narasumber || !jamPenerimaan}
-          style={{ flex: 1, background: loading || !narasumber || !jamPenerimaan ? '#aaa' : '#2E7D32', color: 'white', border: 'none', borderRadius: '8px', padding: '10px', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
+          style={{ flex: 1, background: loading || !narasumber || !jamPenerimaan ? '#aaa' : '#0028B3', color: 'white', border: 'none', borderRadius: '8px', padding: '10px', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', boxShadow: '0 2px 8px rgba(0,40,179,0.2)' }}>
           {loading ? 'Memproses...' : '✓ Setujui & Kirim Email'}
         </button>
       </div>
@@ -153,8 +153,13 @@ function ModalTolak({ data, onClose, onSuccess }) {
           <div style={{ display: 'flex', gap: '14px' }}>
             {['Ya', 'Tidak'].map(v => (
               <label key={v} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>
-                <input type="radio" name="bisaRevisi" value={v} checked={bisaRevisi === v} onChange={() => setBisaRevisi(v)}
-                  style={{ width: '16px', height: '16px', accentColor: '#2E7D32' }} />
+                <input
+                  type="radio"
+                  name="bisaRevisi"
+                  value="Ya"
+                  checked={bisaRevisi === 'Ya'}
+                  onChange={() => setBisaRevisi('Ya')}
+                  style={{ width: '16px', height: '16px', accentColor: '#0028B3' }} />
                 {v === 'Ya' ? 'Ya, Boleh Revisi' : 'Tidak (Tolak Permanen)'}
               </label>
             ))}
@@ -196,7 +201,7 @@ function ModalHapus({ data, onClose, onSuccess }) {
         </div>
         <p style={{ fontSize: '15px', fontWeight: '700', color: '#222', marginBottom: '8px' }}>Hapus Permohonan?</p>
         <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: '1.6' }}>
-          Permohonan <strong style={{ color: '#2E7D32' }}>{data.kode}</strong> dari <strong>{data.instansi}</strong> akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.
+          Permohonan <strong style={{ color: '#0028B3' }}>{data.kode}</strong> dari <strong>{data.instansi}</strong> akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.
         </p>
         {err && <div style={{ color: '#e74c3c', fontSize: '13px', background: '#FEF2F2', padding: '10px 12px', borderRadius: '8px', marginTop: '12px' }}>{err}</div>}
       </div>
@@ -229,20 +234,20 @@ function ModalSelesai({ data, onClose, onSuccess }: any) {
   return (
     <div style={{ padding: '20px' }}>
       <div style={{ textAlign: 'center', padding: '10px 0 20px' }}>
-        <div style={{ width: '60px', height: '60px', background: '#F3FAF5', border: '1px solid #2E7D32', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#2E7D32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+        <div style={{ width: '60px', height: '60px', background: '#C5DBFF', border: '1px solid #0028B3', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
         </div>
         <p style={{ fontSize: '15px', fontWeight: '700', color: '#222', marginBottom: '8px' }}>Selesaikan Kunjungan Kerja?</p>
         <p style={{ fontSize: '13px', color: '#6B7280', lineHeight: '1.6' }}>
-          Kunjungan dengan kode <strong style={{ color: '#2E7D32' }}>{data.kode}</strong> dari <strong>{data.instansi}</strong> akan dinyatakan <strong style={{ color: '#2E7D32' }}>Selesai</strong>. Sistem akan otomatis mengirim email notifikasi ke <strong>{data.email}</strong> agar pemohon dapat mengisi Rating & Review.
+          Kunjungan dengan kode <strong style={{ color: '#0028B3' }}>{data.kode}</strong> dari <strong>{data.instansi}</strong> akan dinyatakan <strong style={{ color: '#0028B3' }}>Selesai</strong>. Sistem akan otomatis mengirim email notifikasi ke <strong>{data.email}</strong> agar pemohon dapat mengisi Rating & Review.
         </p>
         {err && <div style={{ color: '#e74c3c', fontSize: '13px', background: '#FEF2F2', padding: '10px 12px', borderRadius: '8px', marginTop: '12px' }}>{err}</div>}
       </div>
       <div style={{ display: 'flex', gap: '10px' }}>
         <button onClick={onClose} style={{ flex: 1, background: '#fff', border: '1px solid #E5E7EB', borderRadius: '8px', padding: '10px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>Batal</button>
         <button onClick={handleSubmit} disabled={loading}
-          style={{ flex: 1, background: loading ? '#aaa' : '#2E7D32', color: 'white', border: 'none', borderRadius: '8px', padding: '10px', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit' }}>
-          {loading ? 'Memproses...' : 'Ya, Selesaikan Kunjungan'}
+          style={{ flex: 1, background: loading ? '#aaa' : '#0028B3', color: 'white', border: 'none', borderRadius: '8px', padding: '10px', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 2px 8px rgba(0,40,179,0.2)' }}>
+          {loading ? 'Memproses...' : '✓ Ya, Selesaikan Kunjungan'}
         </button>
       </div>
     </div>
@@ -309,7 +314,7 @@ function ModalEdit({ data, onClose, onSuccess }) {
       <div style={{ display: 'flex', gap: '10px' }}>
         <button onClick={onClose} style={{ flex: 'none', background: '#fff', border: '1px solid #E5E7EB', borderRadius: '8px', padding: '10px 18px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>Batal</button>
         <button onClick={handleSubmit} disabled={loading}
-          style={{ flex: 1, background: loading ? '#aaa' : '#2E7D32', color: 'white', border: 'none', borderRadius: '8px', padding: '10px', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit' }}>
+          style={{ flex: 1, background: loading ? '#aaa' : '#0028B3', color: 'white', border: 'none', borderRadius: '8px', padding: '10px', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 2px 8px rgba(0,40,179,0.2)' }}>
           {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
         </button>
       </div>
@@ -461,7 +466,7 @@ function DetailSectionRingkasanPdf({
               <button
                 type="button"
                 onClick={handleUploadConfirmed}
-                style={{ padding: '8px 18px', borderRadius: '6px', background: '#2E7D32', border: 'none', fontSize: '13px', fontWeight: '700', cursor: 'pointer', color: '#ffffff' }}
+                style={{ padding: '8px 18px', borderRadius: '6px', background: '#0028B3', border: 'none', fontSize: '13px', fontWeight: '700', cursor: 'pointer', color: 'white', boxShadow: '0 2px 8px rgba(0,40,179,0.2)' }}
               >
                 Kirim Sekarang
               </button>
@@ -507,7 +512,7 @@ function DetailSectionRingkasanPdf({
               href={pdfViewUrl}
               target="_blank"
               rel="noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', borderRadius: '6px', background: '#2E7D32', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700', textDecoration: 'none' }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', borderRadius: '6px', background: '#0028B3', color: 'white', fontSize: '11.5px', fontWeight: '700', textDecoration: 'none', boxShadow: '0 2px 6px rgba(0,40,179,0.2)' }}
             >
               Lihat PDF
             </a>
@@ -589,7 +594,7 @@ function DetailSectionRingkasanPdf({
                 type="button"
                 onClick={() => setShowConfirmSend(true)}
                 disabled={uploading}
-                style={{ padding: '7px 14px', borderRadius: '6px', background: uploading ? '#94A3B8' : '#2E7D32', border: 'none', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700', cursor: uploading ? 'not-allowed' : 'pointer' }}
+                style={{ padding: '7px 14px', borderRadius: '6px', background: uploading ? '#94A3B8' : '#0028B3', border: 'none', color: 'white', fontSize: '11.5px', fontWeight: '700', cursor: uploading ? 'not-allowed' : 'pointer', boxShadow: '0 2px 8px rgba(0,40,179,0.2)' }}
               >
                 {uploading ? 'Mengirim...' : 'Kirim Ringkasan'}
               </button>
@@ -646,9 +651,9 @@ export default function ProsesPermohonanModal({ data: initialData, onClose, onSu
       {/* Dialog Konfirmasi Tutup saat file belum dikirim */}
       {showConfirmCloseModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
-          <div style={{ background: '#ffffff', borderRadius: '12px', padding: '28px', maxWidth: '380px', width: '100%', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}>
-            <div style={{ fontSize: '15px', fontWeight: '700', color: '#92400E', marginBottom: '10px' }}>File belum dikirim</div>
-            <p style={{ fontSize: '13px', color: '#475569', lineHeight: '1.7', marginBottom: '20px' }}>
+          <div style={{ background: '#ffffff', borderRadius: '16px', padding: '28px', maxWidth: '380px', width: '100%', boxShadow: 'var(--shadow-modal)' }}>
+            <div style={{ fontSize: '16px', fontWeight: '800', color: '#92400E', marginBottom: '10px' }}>File belum dikirim</div>
+            <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: '1.7', marginBottom: '20px' }}>
               Apakah Anda yakin ingin menutup?<br />
               <strong>Perubahan akan hilang.</strong>
             </p>
@@ -659,14 +664,14 @@ export default function ProsesPermohonanModal({ data: initialData, onClose, onSu
                   setShowConfirmCloseModal(false);
                   onClose();
                 }}
-                style={{ padding: '8px 18px', borderRadius: '6px', background: '#FEF2F2', border: '1px solid #FCA5A5', fontSize: '13px', fontWeight: '600', cursor: 'pointer', color: '#991B1B' }}
+                style={{ padding: '9px 18px', minHeight: '40px', borderRadius: '8px', background: '#FEF2F2', border: '1px solid #FCA5A5', fontSize: '13px', fontWeight: '600', cursor: 'pointer', color: '#991B1B' }}
               >
                 Tetap Tutup
               </button>
               <button
                 type="button"
                 onClick={() => setShowConfirmCloseModal(false)}
-                style={{ padding: '8px 18px', borderRadius: '6px', background: '#2E7D32', border: 'none', fontSize: '13px', fontWeight: '700', cursor: 'pointer', color: '#ffffff' }}
+                style={{ padding: '9px 18px', minHeight: '40px', borderRadius: '8px', background: '#0028B3', border: 'none', fontSize: '13px', fontWeight: '700', cursor: 'pointer', color: 'white' }}
               >
                 Kembali
               </button>
@@ -676,57 +681,57 @@ export default function ProsesPermohonanModal({ data: initialData, onClose, onSu
       )}
 
       {/* Overlay */}
-      <div onClick={handleCloseAttempt} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)' }} />
+      <div onClick={handleCloseAttempt} style={{ position: 'absolute', inset: 0, background: 'rgba(0,17,120,0.3)', backdropFilter: 'blur(3px)' }} />
       {/* Kartu modal di tengah */}
-      <div style={{ position: 'relative', width: view === 'detail' ? '680px' : '520px', maxWidth: '95vw', maxHeight: 'calc(100vh - 32px)', background: 'white', boxShadow: '0 20px 60px rgba(0,0,0,0.25)', borderRadius: '14px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+      <div style={{ position: 'relative', width: view === 'detail' ? '680px' : '520px', maxWidth: '95vw', maxHeight: 'calc(100vh - 32px)', background: 'white', boxShadow: 'var(--shadow-modal)', borderRadius: '20px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         {/* Header */}
-        <div style={{ padding: '15px 17px', borderBottom: '1px solid #E8EDF0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: view === 'detail' ? 'white' : '#2E7D32', color: view === 'detail' ? '#202833' : 'white', flexShrink: 0, borderRadius: '14px 14px 0 0' }}>
+        <div style={{ padding: '18px 22px', borderBottom: '1px solid #E8EDF0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: view === 'detail' ? 'white' : '#0028B3', color: view === 'detail' ? '#202833' : 'white', flexShrink: 0, borderRadius: '20px 20px 0 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {view !== 'detail' && (
-              <button onClick={() => setView('detail')} style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: 'white', width: '28px', height: '28px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <button onClick={() => setView('detail')} style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: 'white', width: '30px', height: '30px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
               </button>
             )}
-            {view === 'detail' && <div style={{ width: '31px', height: '31px', borderRadius: '50%', background: '#EAF6EC', color: '#2E7D32', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><path d="M9 15h6M9 11h2" /></svg>
+            {view === 'detail' && <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#C5DBFF', color: '#0028B3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(0,40,179,0.2)' }}>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><path d="M9 15h6M9 11h2" /></svg>
             </div>}
             <div>
-              <div style={{ fontWeight: '700', fontSize: '14px' }}>{modalTitles[view]}</div>
-              <div style={{ fontSize: '10px', color: view === 'detail' ? '#2E7D32' : 'inherit', opacity: view === 'detail' ? 1 : 0.8, fontWeight: view === 'detail' ? '700' : '400' }}>{data.kode}</div>
+              <div style={{ fontWeight: '800', fontSize: '15px' }}>{modalTitles[view]}</div>
+              <div style={{ fontSize: '11px', color: view === 'detail' ? '#0028B3' : 'inherit', opacity: view === 'detail' ? 1 : 0.8, fontWeight: view === 'detail' ? '700' : '400', fontFamily: 'monospace' }}>{data.kode}</div>
             </div>
           </div>
-          <button onClick={handleCloseAttempt} aria-label="Tutup" style={{ background: view === 'detail' ? '#F4F6F8' : 'rgba(255,255,255,0.15)', border: 'none', color: view === 'detail' ? '#4B5563' : 'white', width: '28px', height: '28px', borderRadius: view === 'detail' ? '50%' : '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '17px' }}>×</button>
+          <button onClick={handleCloseAttempt} aria-label="Tutup" style={{ background: view === 'detail' ? '#F4F6F8' : 'rgba(255,255,255,0.15)', border: 'none', color: view === 'detail' ? '#4B5563' : 'white', width: '30px', height: '30px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>×</button>
         </div>
 
         {/* View: Detail */}
         {view === 'detail' && (
-          <div style={{ flex: 1, overflowY: 'auto', background: '#F7F9FA', padding: '12px' }}>
+          <div style={{ flex: 1, overflowY: 'auto', background: '#F8FAFC', padding: '16px 20px' }}>
             {/* Status + aksi cepat */}
-            <div style={{ padding: '8px 10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '9px' }}>
+            <div style={{ padding: '8px 4px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
               <div>
-                <div style={{ fontSize: '8px', fontWeight: '700', color: '#7B8490', textTransform: 'uppercase', letterSpacing: '0.35px', marginBottom: '4px' }}>Status Permohonan</div>
+                <div style={{ fontSize: '9px', fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>Status Permohonan</div>
                 <StatusBadge status={data.status} />
               </div>
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 {(data.status === 'Pending' || data.status === 'Revisi') && (
                   <>
-                    <button onClick={() => setView('setujui')} style={{ background: '#2E7D32', color: 'white', border: 'none', borderRadius: '7px', padding: '7px 14px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit' }}>
+                    <button onClick={() => setView('setujui')} style={{ background: '#0028B3', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 16px', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 2px 6px rgba(0,40,179,0.2)' }}>
                       ✓ Setujui
                     </button>
-                    <button onClick={() => setView('tolak')} style={{ background: '#e74c3c', color: 'white', border: 'none', borderRadius: '7px', padding: '7px 14px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit' }}>
+                    <button onClick={() => setView('tolak')} style={{ background: '#B91C1C', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 16px', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit' }}>
                       ✕ Tolak
                     </button>
                   </>
                 )}
                 {data.status === 'Disetujui' && (
-                  <button onClick={() => setView('selesai')} style={{ background: '#2E7D32', color: 'white', border: 'none', borderRadius: '7px', padding: '7px 14px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit' }}>
+                  <button onClick={() => setView('selesai')} style={{ background: '#0028B3', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 16px', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 2px 6px rgba(0,40,179,0.2)' }}>
                     ✓ Selesaikan Kunjungan
                   </button>
                 )}
-                <button onClick={() => setView('edit')} style={{ background: 'white', color: '#222', border: '1px solid #E5E7EB', borderRadius: '7px', padding: '7px 14px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>
+                <button onClick={() => setView('edit')} style={{ background: 'white', color: '#0F172A', border: '1px solid #CBD5E1', borderRadius: '8px', padding: '8px 16px', fontSize: '12.5px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>
                   ✎ Edit
                 </button>
-                <button onClick={() => setView('hapus')} style={{ background: 'white', color: '#e74c3c', border: '1px solid #e74c3c', borderRadius: '7px', padding: '7px 14px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>
+                <button onClick={() => setView('hapus')} style={{ background: 'white', color: '#B91C1C', border: '1px solid #FECACA', borderRadius: '8px', padding: '8px 16px', fontSize: '12.5px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>
                   🗑 Hapus
                 </button>
               </div>
@@ -772,11 +777,11 @@ export default function ProsesPermohonanModal({ data: initialData, onClose, onSu
                 ].map(({ label, url, optional }) => (
                   <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', background: '#F8FAFC', borderRadius: '7px', border: '1px solid #E8EDF0' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2E7D32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
                       <span style={{ fontSize: '11px', fontWeight: '600', color: '#222' }}>{label}</span>
                     </div>
                     {url ? (
-                      <a href={url} target="_blank" rel="noreferrer" style={{ fontSize: '10px', color: '#2E7D32', fontWeight: '700', textDecoration: 'none', border: '1px solid #9BCFA2', borderRadius: '4px', padding: '3px 7px' }}>Lihat File</a>
+                      <a href={url} target="_blank" rel="noreferrer" style={{ fontSize: '10px', color: '#0028B3', fontWeight: '700', textDecoration: 'none', border: '1px solid #0028B3', borderRadius: '4px', padding: '3px 7px', background: '#F0F7FF' }}>Lihat File</a>
                     ) : (
                       <span style={{ fontSize: '12px', color: optional ? '#AAB2BC' : '#e74c3c', fontStyle: 'italic' }}>{optional ? 'Belum diunggah' : 'Tidak ada'}</span>
                     )}
@@ -801,7 +806,7 @@ export default function ProsesPermohonanModal({ data: initialData, onClose, onSu
             {data.keterangan_admin && (
               <div style={{ padding: '18px 20px', borderBottom: '1px solid #E5E7EB' }}>
                 <div style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>Keterangan Admin</div>
-                <div style={{ background: '#F7F8FA', borderLeft: `3px solid ${data.status === 'Ditolak' ? '#e74c3c' : data.status === 'Disetujui' ? '#2E7D32' : '#A569BD'}`, borderRadius: '8px', padding: '12px 14px', fontSize: '13px', lineHeight: '1.7', color: '#444' }}>
+                <div style={{ background: '#F7F8FA', borderLeft: `3px solid ${data.status === 'Ditolak' ? '#B91C1C' : data.status === 'Disetujui' ? '#0028B3' : '#6D28D9'}`, borderRadius: '8px', padding: '12px 14px', fontSize: '13px', lineHeight: '1.7', color: '#444' }}>
                   {data.keterangan_admin}
                 </div>
               </div>

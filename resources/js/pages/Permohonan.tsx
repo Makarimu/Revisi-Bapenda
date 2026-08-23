@@ -4,14 +4,6 @@ import PublicLayout from '../layouts/PublicLayout';
 import api from '../services/api';
 import { loadRecaptchaScript, resetRecaptchaPromise } from '../services/recaptcha';
 
-declare global {
-  interface Window {
-    grecaptcha?: {
-      render: (container: HTMLElement, options: Record<string, any>) => number;
-      reset: (widgetId?: number) => void;
-    };
-  }
-}
 
 // ---- Static Constants (keluar dari komponen agar tidak dibuat ulang setiap render) ----
 const MONTHS_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
@@ -19,17 +11,17 @@ const DAYS_ID = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 const STAR_NUMBERS = [1, 2, 3, 4, 5];
 const DROPDOWN_OPTIONS = [{ value: 'Ya', label: 'Ya' }, { value: 'Tidak', label: 'Tidak' }];
 const STEP_LABELS = ['Pilih Tanggal', 'Data Pemohon', 'Konfirmasi', 'Detail Kunjungan'];
-const LEGEND_DOT_STYLE_TERSEDIA = { background: '#EAFAF1', border: '1.5px solid #2E7D32' };
-const LEGEND_DOT_STYLE_USER_BOOKED = { background: '#FFF3E0', border: '1.5px solid #FB8C00' };
-const LEGEND_DOT_STYLE_TERPAKAI = { background: '#FDEDEC', border: '1.5px solid #e74c3c' };
-const LEGEND_DOT_STYLE_TIDAK = { background: '#F1F2F4', border: '1.5px solid #9AA0A8' };
+const LEGEND_DOT_STYLE_TERSEDIA = { background: '#C5DBFF', border: '1.5px solid #1883FF' };
+const LEGEND_DOT_STYLE_USER_BOOKED = { background: '#FEF3C7', border: '1.5px solid #F59E0B' };
+const LEGEND_DOT_STYLE_TERPAKAI = { background: '#FEE2E2', border: '1.5px solid #B91C1C' };
+const LEGEND_DOT_STYLE_TIDAK = { background: '#F1F3F6', border: '1.5px solid #9CA3AF' };
 const INITIAL_FORM = {
   instansi: '', namaPic: '', jabatanPic: '',
   noTelp: '', email: '', tujuan: '', namaKetuaRombongan: '',
   jabatanKetuaRombongan: '', jumlahPeserta: '', rencanaMenginap: '', namaHotel: '', nomorSurat: '',
 };
 // Style pesan validasi inline
-const ERR_MSG_STYLE: React.CSSProperties = { color: '#e74c3c', fontSize: '12px', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' };
+const ERR_MSG_STYLE: React.CSSProperties = { color: '#B91C1C', fontSize: '12px', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' };
 // Urutan field yang akan digulung saat ada error pertama
 const FIELD_ORDER = ['nomorSurat', 'namaPic', 'instansi', 'jabatanPic', 'noTelp', 'email', 'tujuan', 'namaKetuaRombongan', 'jabatanKetuaRombongan', 'jumlahPeserta', 'rencanaMenginap', 'namaHotel', 'file1', 'file2'];
 
@@ -306,7 +298,7 @@ const UploadArea = memo(function UploadArea({ file, onChange, error, id }: any) 
       </div>
       <div className="upload-text"><strong>Klik untuk upload</strong><br />PDF (Maks. 10 MB)</div>
       {file && (
-        <div style={{ marginTop: '6px', fontSize: '12px', color: '#2E7D32', fontWeight: '600' }}>{file.name}</div>
+        <div style={{ marginTop: '6px', fontSize: '12px', color: '#0028B3', fontWeight: '600' }}>{file.name}</div>
       )}
     </div>
   );
@@ -781,6 +773,18 @@ export default function Permohonan() {
     }
   }, [selectedDate, form, file1, file2]);
 
+  // Bypass reCAPTCHA di localhost/development — useEffect ini harus di BAWAH submitPermohonan
+  useEffect(() => {
+    if (!showRecaptcha) return;
+    const isDev = import.meta.env.DEV ||
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1';
+    if (isDev) {
+      setShowRecaptcha(false);
+      submitPermohonan('dev-bypass');
+    }
+  }, [showRecaptcha, submitPermohonan]);
+
   const handleGoToStatus = useCallback(() => {
     navigate('/status?kode=' + submittedKode);
   }, [navigate, submittedKode]);
@@ -804,18 +808,20 @@ export default function Permohonan() {
       <div style={{ background: 'var(--gray-bg)', minHeight: 'calc(100vh - 80px)' }}>
         {/* Step 4: Sukses */}
         {step === 4 ? (
-          <div style={{ maxWidth: '560px', margin: '0 auto', padding: '32px 16px' }}>
+          <div style={{ maxWidth: '580px', margin: '0 auto', padding: '48px 20px 64px' }}>
             <div className="card">
-              <div className="card-body">
-                <div style={{ textAlign: 'center', padding: '24px 0 16px' }}>
-                  <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
-                    <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="#2E7D32" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                      <path d="M22 4 12 14.01l-3-3" />
-                    </svg>
+              <div className="card-body" style={{ padding: '36px 32px' }}>
+                <div style={{ textAlign: 'center', padding: '16px 0 20px' }}>
+                  <div style={{ marginBottom: '18px', display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: '#C5DBFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(0,40,179,0.15)' }}>
+                      <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <path d="M22 4 12 14.01l-3-3" />
+                      </svg>
+                    </div>
                   </div>
-                  <h3 style={{ color: '#2E7D32', marginBottom: '8px', fontSize: '18px', fontWeight: '700' }}>Permohonan Berhasil Diajukan!</h3>
-                  <p style={{ fontSize: '13px', color: 'var(--text-sub)', lineHeight: '1.6', marginBottom: '20px' }}>
+                  <h3 style={{ color: '#001178', marginBottom: '10px', fontSize: '20px', fontWeight: '800', letterSpacing: '-0.3px' }}>Permohonan Berhasil Diajukan!</h3>
+                  <p style={{ fontSize: '13.5px', color: 'var(--text-sub)', lineHeight: '1.7', marginBottom: '24px' }}>
                     Simpan kode permohonan Anda untuk memantau status. Konfirmasi telah dikirim ke email Anda.
                   </p>
                   <div className="kode-wrapper">
@@ -828,7 +834,7 @@ export default function Permohonan() {
                     </button>
                   </div>
                 </div>
-                <div className="modal-actions">
+                <div className="modal-actions" style={{ gap: '12px' }}>
                   <button className="btn-primary" onClick={handleGoToStatus}>
                     Pantau Status Permohonan
                   </button>
@@ -865,14 +871,16 @@ export default function Permohonan() {
 
                   {/* Step 1 */}
                   {step === 1 && (
-                    <div style={{ textAlign: 'center', padding: '36px 16px', color: 'var(--text-sub)' }}>
-                      <div style={{ marginBottom: '14px', display: 'flex', justifyContent: 'center' }}>
-                        <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="#3D9142" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
-                        </svg>
+                    <div style={{ textAlign: 'center', padding: '48px 20px', color: 'var(--text-sub)' }}>
+                      <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: '#C5DBFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(0,40,179,0.1)' }}>
+                          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#0028B3" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+                          </svg>
+                        </div>
                       </div>
-                      <h3 style={{ color: '#2E7D32', marginBottom: '8px', fontSize: '16px' }}>Pilih Tanggal Kunjungan</h3>
-                      <p style={{ fontSize: '13px', lineHeight: '1.6' }}>Klik tanggal yang <strong style={{ color: '#2E7D32' }}>tersedia</strong> pada kalender di sebelah untuk memulai pengajuan.</p>
+                      <h3 style={{ color: '#001178', marginBottom: '8px', fontSize: '17px', fontWeight: '700' }}>Pilih Tanggal Kunjungan</h3>
+                      <p style={{ fontSize: '13.5px', lineHeight: '1.7' }}>Klik tanggal yang <strong style={{ color: '#0028B3' }}>tersedia</strong> pada kalender di sebelah untuk memulai pengajuan.</p>
                     </div>
                   )}
 
@@ -880,7 +888,7 @@ export default function Permohonan() {
                   {step === 2 && (
                     <div>
                       <div className="selected-date-display">
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2E7D32" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
                         </svg>
                         <span>Tanggal terpilih: <strong>{formatDisplayDate(selectedDate)}</strong></span>
@@ -924,7 +932,7 @@ export default function Permohonan() {
                       <div className="form-grid full">
                         <div className="form-group" id="field-tujuan">
                           <label>Tujuan/Maksud Kunjungan *</label>
-                          <textarea className={errors.tujuan ? 'error' : ''} value={form.tujuan} onChange={e => { setForm((f: any) => ({ ...f, tujuan: e.target.value })); if (e.target.value) clearError('tujuan'); }} placeholder="Jelaskan tujuan kunjungan secara singkat dan jelas" />
+                          <textarea className={errors.tujuan ? 'error' : ''} value={form.tujuan} onChange={e => { setForm((f: any) => ({ ...f, input: e.target.value, tujuan: e.target.value })); if (e.target.value) clearError('tujuan'); }} placeholder="Jelaskan tujuan kunjungan secara singkat dan jelas" />
                           {errors.tujuan && <p style={ERR_MSG_STYLE}>⚠ {errors.tujuan}</p>}
                         </div>
                       </div>
@@ -940,7 +948,7 @@ export default function Permohonan() {
                           {errors.jabatanKetuaRombongan && <p style={ERR_MSG_STYLE}>⚠ {errors.jabatanKetuaRombongan}</p>}
                         </div>
                       </div>
-                      <div className="form-grid" style={{ marginTop: '14px' }}>
+                      <div className="form-grid" style={{ marginTop: '16px' }}>
                         <div className="form-group" id="field-jumlahPeserta">
                           <label>Jumlah Peserta *</label>
                           <input type="number" min="1" className={errors.jumlahPeserta ? 'error' : ''} value={form.jumlahPeserta} onChange={e => { setForm((f: any) => ({ ...f, jumlahPeserta: e.target.value })); if (e.target.value) clearError('jumlahPeserta'); }} placeholder="Jumlah peserta" />
@@ -948,7 +956,7 @@ export default function Permohonan() {
                         </div>
                       </div>
 
-                      <div className="form-title" style={{ marginTop: '24px' }}>Rencana Menginap</div>
+                      <div className="form-title" style={{ marginTop: '28px' }}>Rencana Menginap</div>
                       <div className="form-grid full">
                         <div className="form-group" id="field-rencanaMenginap">
                           <label>Apakah ada rencana menginap? *</label>
@@ -957,7 +965,7 @@ export default function Permohonan() {
                         </div>
                       </div>
                       {form.rencanaMenginap === 'Ya' && (
-                        <div className="form-grid full" style={{ marginTop: '14px' }}>
+                        <div className="form-grid full" style={{ marginTop: '16px' }}>
                           <div className="form-group" id="field-namaHotel">
                             <label>Nama Hotel/Penginapan *</label>
                             <input type="text" className={errors.namaHotel ? 'error' : ''} value={form.namaHotel} onChange={e => { setForm((f: any) => ({ ...f, namaHotel: e.target.value })); if (e.target.value) clearError('namaHotel'); }} placeholder="Nama hotel atau penginapan" />
@@ -966,7 +974,7 @@ export default function Permohonan() {
                         </div>
                       )}
 
-                      <div className="form-title" style={{ marginTop: '24px' }}>Surat Pendukung</div>
+                      <div className="form-title" style={{ marginTop: '28px' }}>Surat Pendukung</div>
                       <div className="upload-pair">
                         <div id="field-file1">
                           <span className="upload-item-label">Surat Permohonan Kunjungan Kerja <span style={{ color: '#e74c3c' }}>*</span></span>
@@ -980,8 +988,8 @@ export default function Permohonan() {
                         </div>
                       </div>
 
-                      <div style={{ marginTop: '24px', display: 'flex', gap: '10px' }}>
-                        <button className="btn-outline" onClick={handleGoToStep1} style={{ width: 'auto', paddingLeft: '20px', paddingRight: '20px' }}>
+                      <div style={{ marginTop: '28px', display: 'flex', gap: '12px' }}>
+                        <button className="btn-outline" onClick={handleGoToStep1} style={{ width: 'auto', paddingLeft: '22px', paddingRight: '22px' }}>
                           ← Kembali
                         </button>
                         <button className="btn-primary" onClick={goToKonfirmasi} style={{ flex: 1 }}>
@@ -1024,14 +1032,14 @@ export default function Permohonan() {
                         <div className="confirm-block-title">Dokumen</div>
                         <table className="confirm-table">
                           <tbody>
-                            <tr><td>Surat Permohonan</td><td style={{ color: '#2E7D32', fontWeight: '600' }}>{file1?.name}</td></tr>
-                            <tr><td>Daftar Pertanyaan</td><td style={{ color: '#2E7D32', fontWeight: '600' }}>{file2?.name}</td></tr>
+                            <tr><td>Surat Permohonan</td><td style={{ color: '#0028B3', fontWeight: '600' }}>{file1?.name}</td></tr>
+                            <tr><td>Daftar Pertanyaan</td><td style={{ color: '#0028B3', fontWeight: '600' }}>{file2?.name}</td></tr>
                           </tbody>
                         </table>
                       </div>
 
-                      <div style={{ marginTop: '24px', display: 'flex', gap: '10px' }}>
-                        <button className="btn-outline" onClick={handleGoToStep2} style={{ width: 'auto', paddingLeft: '20px', paddingRight: '20px' }}>
+                      <div style={{ marginTop: '28px', display: 'flex', gap: '12px' }}>
+                        <button className="btn-outline" onClick={handleGoToStep2} style={{ width: 'auto', paddingLeft: '22px', paddingRight: '22px' }}>
                           ← Kembali
                         </button>
                         <button
@@ -1052,7 +1060,7 @@ export default function Permohonan() {
           </div>
         )}
       {toast.show && (
-        <div style={{ position: 'fixed', bottom: '20px', right: '20px', padding: '11px 18px', borderRadius: '8px', color: 'white', fontSize: '13px', fontWeight: '500', zIndex: 9999, maxWidth: '320px', boxShadow: '0 4px 16px rgba(0,0,0,0.15)', background: toast.type === 'error' ? '#e74c3c' : '#2E7D32' }}>
+        <div style={{ position: 'fixed', bottom: '28px', right: '28px', padding: '14px 22px', borderRadius: '12px', color: 'white', fontSize: '13.5px', fontWeight: '600', zIndex: 9999, maxWidth: '340px', boxShadow: '0 8px 24px rgba(0,17,120,0.22)', background: toast.type === 'error' ? '#B91C1C' : '#001178' }}>
           {toast.msg}
         </div>
       )}

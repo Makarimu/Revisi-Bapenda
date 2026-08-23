@@ -16,9 +16,9 @@ function formatDisplayDate(s: any) {
 
 function StatusReviewBadge({ status }: { status: string }) {
   const cfg: Record<string, { bg: string; color: string; border: string; label: string }> = {
-    pending: { bg: '#FEF9E7', color: '#B7791F', border: '#F0C040', label: 'Pending' },
-    approved: { bg: '#EAFAF1', color: '#256628', border: '#2E7D32', label: 'Approved' },
-    rejected: { bg: '#FDEDEC', color: '#922B21', border: '#e74c3c', label: 'Rejected' },
+    pending: { bg: '#FEF3C7', color: '#B45309', border: '#F59E0B', label: 'Pending' },
+    approved: { bg: '#DCFCE7', color: '#15803D', border: '#86EFAC', label: 'Approved' },
+    rejected: { bg: '#FEE2E2', color: '#B91C1C', border: '#FCA5A5', label: 'Rejected' },
   };
   const s = cfg[status] || cfg.pending;
   return (
@@ -133,8 +133,8 @@ export default function KelolaReview() {
             fontWeight: '500',
             zIndex: 9999,
             maxWidth: '320px',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
-            background: toast.type === 'error' ? '#e74c3c' : '#2E7D32',
+            boxShadow: '0 4px 16px rgba(0,17,120,0.18)',
+            background: toast.type === 'error' ? '#B91C1C' : '#001178',
           }}
         >
           {toast.msg}
@@ -142,32 +142,33 @@ export default function KelolaReview() {
       )}
 
       {/* Header */}
-      <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+      <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
         <div>
-          <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#000' }}>Kelola Rating & Review</h2>
-          <p style={{ fontSize: '13px', color: '#6B7280', marginTop: '3px' }}>Moderasi ulasan dan penilaian dari instansi yang berkunjung</p>
+          <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#001178', letterSpacing: '-0.3px' }}>Kelola Rating &amp; Review</h2>
+          <p style={{ fontSize: '13.5px', color: '#64748B', marginTop: '3px' }}>Moderasi ulasan dan penilaian dari instansi yang berkunjung</p>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '18px', flexWrap: 'wrap' }}>
         {STATUS_TABS.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             style={{
-              padding: '7px 16px',
+              padding: '8px 18px',
               borderRadius: '20px',
-              fontSize: '12px',
-              fontWeight: '600',
+              fontSize: '12.5px',
+              fontWeight: '700',
               cursor: 'pointer',
               border: '1.5px solid',
               transition: 'all 0.2s',
               fontFamily: 'inherit',
-              background: tab === t ? '#2E7D32' : 'white',
-              color: tab === t ? 'white' : '#6B7280',
-              borderColor: tab === t ? '#2E7D32' : '#E5E7EB',
+              background: tab === t ? '#0028B3' : 'white',
+              color: tab === t ? 'white' : '#64748B',
+              borderColor: tab === t ? '#0028B3' : '#E5E7EB',
               textTransform: 'capitalize',
+              boxShadow: tab === t ? '0 2px 8px rgba(0,40,179,0.2)' : 'none',
             }}
           >
             {t}
@@ -176,9 +177,9 @@ export default function KelolaReview() {
       </div>
 
       {/* Search Bar */}
-      <div style={{ background: 'white', borderRadius: '14px', boxShadow: '0 2px 8px rgba(0,0,0,.06)', border: '1px solid #E5E7EB', padding: '14px 18px', marginBottom: '14px' }}>
-        <div style={{ maxWidth: '320px' }}>
-          <label style={{ fontSize: '10px', fontWeight: '700', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>
+      <div style={{ background: 'white', borderRadius: '16px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(228, 231, 237, 0.8)', padding: '18px 20px', marginBottom: '20px' }}>
+        <div style={{ maxWidth: '360px' }}>
+          <label style={{ fontSize: '11px', fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>
             Pencarian
           </label>
           <input
@@ -186,16 +187,16 @@ export default function KelolaReview() {
             placeholder="Cari kode, instansi, nama PIC..."
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            style={{ width: '100%', padding: '8px 12px', border: '1px solid #D9DEE5', borderRadius: '8px', fontSize: '13px', fontFamily: 'inherit', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '10px 14px', minHeight: '42px', border: '1px solid #D9DEE5', borderRadius: '8px', fontSize: '13.5px', fontFamily: 'inherit', boxSizing: 'border-box' }}
           />
         </div>
       </div>
 
       {/* Table */}
-      <div style={{ background: 'white', borderRadius: '14px', boxShadow: '0 2px 8px rgba(0,0,0,.06)', border: '1px solid #E5E7EB', overflow: 'hidden' }}>
-        <div style={{ padding: '13px 18px', borderBottom: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: '700', color: '#000' }}>Daftar Rating & Review</h3>
-          <span style={{ fontSize: '12px', color: '#6B7280' }}>{loading ? 'Memuat...' : `${data.length} data`}</span>
+      <div style={{ background: 'white', borderRadius: '16px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(228, 231, 237, 0.8)', overflow: 'hidden' }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid #E4E7ED', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#0F172A' }}>Daftar Rating &amp; Review</h3>
+          <span style={{ fontSize: '12.5px', color: '#64748B', fontWeight: '500' }}>{loading ? 'Memuat...' : `${data.length} data`}</span>
         </div>
 
         <div style={{ overflowX: 'auto' }}>
@@ -203,7 +204,7 @@ export default function KelolaReview() {
             <thead>
               <tr>
                 {['Tanggal', 'Kode Permohonan', 'Nama Instansi', 'PIC', 'Rating', 'Review', 'Status Review', 'Aksi'].map((h) => (
-                  <th key={h} style={{ background: '#F7F8FA', padding: '9px 13px', fontSize: '10px', fontWeight: '700', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'left', whiteSpace: 'nowrap' }}>
+                  <th key={h} style={{ background: '#F8FAFC', padding: '12px 16px', fontSize: '11px', fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.6px', textAlign: 'left', whiteSpace: 'nowrap', borderBottom: '1px solid #E2E8F0' }}>
                     {h}
                   </th>
                 ))}
@@ -212,58 +213,59 @@ export default function KelolaReview() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={8} style={{ textAlign: 'center', padding: '44px 20px' }}>
-                    <div style={{ display: 'inline-block', width: '28px', height: '28px', border: '3px solid #E5E7EB', borderTopColor: '#2E7D32', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-                    <div style={{ marginTop: '10px', color: '#6B7280', fontSize: '13px' }}>Memuat data review...</div>
+                  <td colSpan={8} style={{ textAlign: 'center', padding: '48px 20px' }}>
+                    <div style={{ display: 'inline-block', width: '32px', height: '32px', border: '3px solid #C5DBFF', borderTopColor: '#0028B3', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+                    <div style={{ marginTop: '12px', color: '#64748B', fontSize: '13.5px' }}>Memuat data review...</div>
                   </td>
                 </tr>
               ) : data.length === 0 ? (
                 <tr>
-                  <td colSpan={8} style={{ textAlign: 'center', padding: '44px 20px', color: '#6B7280', fontSize: '13px' }}>
+                  <td colSpan={8} style={{ textAlign: 'center', padding: '48px 20px', color: '#64748B', fontSize: '13.5px' }}>
                     <div style={{ fontSize: '32px', marginBottom: '8px' }}>⭐</div>
                     Belum ada review.
                   </td>
                 </tr>
               ) : (
                 data.map((d: any) => (
-                  <tr key={d.id} style={{ borderTop: '1px solid #E5E7EB', transition: 'background 0.15s' }}>
-                    <td style={{ padding: '11px 13px', fontSize: '12.5px', color: '#444', whiteSpace: 'nowrap' }}>
+                  <tr key={d.id} style={{ borderTop: '1px solid #F1F5F9', transition: 'background 0.15s' }}>
+                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#334155', whiteSpace: 'nowrap' }}>
                       {formatDisplayDate(d.created_at)}
                     </td>
-                    <td style={{ padding: '11px 13px', fontSize: '12.5px', fontWeight: '700', color: '#2E7D32', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '12px 16px', fontSize: '13px', fontWeight: '700', color: '#0028B3', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>
                       {d.kode_permohonan || '-'}
                     </td>
-                    <td style={{ padding: '11px 13px', fontSize: '13px', fontWeight: '600', color: '#222' }}>
+                    <td style={{ padding: '12px 16px', fontSize: '13.5px', fontWeight: '600', color: '#0F172A' }}>
                       {d.instansi || '-'}
                     </td>
-                    <td style={{ padding: '11px 13px', fontSize: '12.5px', color: '#444' }}>
+                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748B' }}>
                       {d.nama_pic || '-'}
                     </td>
-                    <td style={{ padding: '11px 13px', whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '12px 16px', whiteSpace: 'nowrap' }}>
                       <StarRating rating={d.rating} />
                     </td>
-                    <td style={{ padding: '11px 13px', fontSize: '12.5px', color: '#374151', maxWidth: '300px', lineHeight: '1.5' }}>
+                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#334155', maxWidth: '300px', lineHeight: '1.6' }}>
                       {d.review}
                     </td>
-                    <td style={{ padding: '11px 13px' }}>
+                    <td style={{ padding: '12px 16px' }}>
                       <StatusReviewBadge status={d.status} />
                     </td>
-                    <td style={{ padding: '11px 13px', whiteSpace: 'nowrap' }}>
-                      <div style={{ display: 'flex', gap: '6px' }}>
+                    <td style={{ padding: '12px 16px', whiteSpace: 'nowrap' }}>
+                      <div style={{ display: 'flex', gap: '8px' }}>
                         {d.status !== 'approved' && (
                           <button
                             onClick={() => handleProses(d.id, 'approve')}
                             disabled={actionLoadingId === d.id}
                             style={{
-                              padding: '5px 12px',
+                              padding: '6px 14px',
                               border: 'none',
-                              borderRadius: '6px',
-                              fontSize: '11.5px',
+                              borderRadius: '8px',
+                              fontSize: '12px',
                               fontWeight: '700',
                               cursor: actionLoadingId === d.id ? 'not-allowed' : 'pointer',
-                              background: '#2E7D32',
+                              background: '#0028B3',
                               color: 'white',
                               fontFamily: 'inherit',
+                              boxShadow: '0 2px 6px rgba(0,40,179,0.2)',
                             }}
                           >
                             Approve
@@ -274,13 +276,13 @@ export default function KelolaReview() {
                             onClick={() => handleProses(d.id, 'reject')}
                             disabled={actionLoadingId === d.id}
                             style={{
-                              padding: '5px 12px',
+                              padding: '6px 14px',
                               border: 'none',
-                              borderRadius: '6px',
-                              fontSize: '11.5px',
+                              borderRadius: '8px',
+                              fontSize: '12px',
                               fontWeight: '700',
                               cursor: actionLoadingId === d.id ? 'not-allowed' : 'pointer',
-                              background: '#e74c3c',
+                              background: '#B91C1C',
                               color: 'white',
                               fontFamily: 'inherit',
                             }}
@@ -299,23 +301,23 @@ export default function KelolaReview() {
 
         {/* Pagination Bar */}
         {meta && meta.last_page > 1 && (
-          <div style={{ padding: '12px 18px', borderTop: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', fontSize: '12.5px', color: '#6B7280' }}>
+          <div style={{ padding: '14px 20px', borderTop: '1px solid #E4E7ED', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', fontSize: '13px', color: '#64748B' }}>
             <div>
               Menampilkan <strong>{meta.from || 0}</strong> - <strong>{meta.to || 0}</strong> dari <strong>{meta.total || 0}</strong> review
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <button
                 disabled={page <= 1 || loading}
                 onClick={() => handlePageChange(page - 1)}
                 style={{
-                  padding: '6px 12px',
-                  border: '1px solid #E5E7EB',
-                  borderRadius: '6px',
-                  background: page <= 1 || loading ? '#F3F4F6' : 'white',
-                  color: page <= 1 || loading ? '#9CA3AF' : '#374151',
+                  padding: '7px 14px',
+                  border: '1px solid #CBD5E1',
+                  borderRadius: '8px',
+                  background: page <= 1 || loading ? '#F1F5F9' : 'white',
+                  color: page <= 1 || loading ? '#94A3B8' : '#334155',
                   cursor: page <= 1 || loading ? 'not-allowed' : 'pointer',
                   fontWeight: '600',
-                  fontSize: '12px',
+                  fontSize: '12.5px',
                   fontFamily: 'inherit',
                 }}
               >
@@ -325,14 +327,14 @@ export default function KelolaReview() {
                 disabled={page >= meta.last_page || loading}
                 onClick={() => handlePageChange(page + 1)}
                 style={{
-                  padding: '6px 12px',
-                  border: '1px solid #E5E7EB',
-                  borderRadius: '6px',
-                  background: page >= meta.last_page || loading ? '#F3F4F6' : 'white',
-                  color: page >= meta.last_page || loading ? '#9CA3AF' : '#374151',
+                  padding: '7px 14px',
+                  border: '1px solid #CBD5E1',
+                  borderRadius: '8px',
+                  background: page >= meta.last_page || loading ? '#F1F5F9' : 'white',
+                  color: page >= meta.last_page || loading ? '#94A3B8' : '#334155',
                   cursor: page >= meta.last_page || loading ? 'not-allowed' : 'pointer',
                   fontWeight: '600',
-                  fontSize: '12px',
+                  fontSize: '12.5px',
                   fontFamily: 'inherit',
                 }}
               >

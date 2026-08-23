@@ -57,35 +57,38 @@ const StatCard = memo(function StatCard({
     <div
       style={{
         background: '#FFFFFF',
-        borderRadius: '14px',
-        padding: '20px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-        border: '1px solid #E5E7EB',
+        borderRadius: '16px',
+        padding: '24px',
+        boxShadow: 'var(--shadow-sm)',
+        border: '1px solid rgba(228, 231, 237, 0.8)',
         display: 'flex',
         alignItems: 'center',
-        gap: '16px',
+        gap: '18px',
+        transition: 'transform 0.2s, box-shadow 0.2s',
       }}
     >
       <div
         style={{
-          width: '48px',
-          height: '48px',
-          borderRadius: '12px',
-          background: '#EAFAF1',
-          color: '#2E7D32',
+          width: '52px',
+          height: '52px',
+          borderRadius: '14px',
+          background: '#C5DBFF',
+          color: '#0028B3',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           flexShrink: 0,
+          border: '1px solid rgba(117,195,255,0.4)',
+          boxShadow: '0 2px 8px rgba(0,40,179,0.1)',
         }}
       >
         {icon}
       </div>
       <div>
-        <div style={{ fontSize: '12px', color: '#6B7280', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+        <div style={{ fontSize: '12px', color: '#64748B', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
           {title}
         </div>
-        <div style={{ fontSize: '24px', fontWeight: '800', color: '#111827', marginTop: '4px' }}>
+        <div style={{ fontSize: '26px', fontWeight: '800', color: '#0F172A', marginTop: '4px', letterSpacing: '-0.5px' }}>
           {value}
         </div>
       </div>
@@ -105,60 +108,60 @@ const ReviewDetailModal = memo(function ReviewDetailModal({
 
   return (
     <div className="modal-overlay active" role="dialog" aria-modal="true">
-      <div className="modal" style={{ maxWidth: '500px' }}>
-        <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ margin: 0, fontSize: '16px', color: '#111827' }}>Detail Ulasan Kunjungan</h3>
+      <div className="modal" style={{ maxWidth: '520px', borderRadius: '20px', boxShadow: 'var(--shadow-modal)' }}>
+        <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px' }}>
+          <h3 style={{ margin: 0, fontSize: '16px', color: '#001178', fontWeight: '700' }}>Detail Ulasan Kunjungan</h3>
           <button className="sidebar-close" onClick={onClose} aria-label="Tutup">
             ✕
           </button>
         </div>
-        <div className="modal-body" style={{ paddingTop: '16px' }}>
-          <div style={{ marginBottom: '14px' }}>
-            <span style={{ fontSize: '12px', color: '#6B7280', display: 'block', marginBottom: '2px' }}>Instansi</span>
-            <strong style={{ fontSize: '15px', color: '#1E293B' }}>{item.instansi}</strong>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
-            <div>
-              <span style={{ fontSize: '12px', color: '#6B7280', display: 'block', marginBottom: '2px' }}>Tanggal Kunjungan</span>
-              <span style={{ fontSize: '13px', color: '#334155', fontWeight: '500' }}>{formatTanggalIndo(item.tanggal_kunjungan)}</span>
-            </div>
-            <div>
-              <span style={{ fontSize: '12px', color: '#6B7280', display: 'block', marginBottom: '2px' }}>Jumlah Peserta</span>
-              <span style={{ fontSize: '13px', color: '#334155', fontWeight: '500' }}>{item.jumlah_peserta} orang</span>
-            </div>
-          </div>
-
+        <div className="modal-body" style={{ padding: '24px' }}>
           <div style={{ marginBottom: '16px' }}>
-            <span style={{ fontSize: '12px', color: '#6B7280', display: 'block', marginBottom: '4px' }}>Penilaian</span>
+            <span style={{ fontSize: '12px', color: '#64748B', display: 'block', marginBottom: '3px', fontWeight: '600' }}>Instansi</span>
+            <strong style={{ fontSize: '16px', color: '#0F172A' }}>{item.instansi}</strong>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '18px' }}>
+            <div>
+              <span style={{ fontSize: '12px', color: '#64748B', display: 'block', marginBottom: '3px', fontWeight: '600' }}>Tanggal Kunjungan</span>
+              <span style={{ fontSize: '13.5px', color: '#334155', fontWeight: '600' }}>{formatTanggalIndo(item.tanggal_kunjungan)}</span>
+            </div>
+            <div>
+              <span style={{ fontSize: '12px', color: '#64748B', display: 'block', marginBottom: '3px', fontWeight: '600' }}>Jumlah Peserta</span>
+              <span style={{ fontSize: '13.5px', color: '#334155', fontWeight: '600' }}>{item.jumlah_peserta} orang</span>
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '18px' }}>
+            <span style={{ fontSize: '12px', color: '#64748B', display: 'block', marginBottom: '6px', fontWeight: '600' }}>Penilaian</span>
             <StarRating rating={item.rating} />
           </div>
 
-          <div style={{ marginBottom: '16px' }}>
-            <span style={{ fontSize: '12px', color: '#6B7280', display: 'block', marginBottom: '4px' }}>Ulasan & Kesan</span>
+          <div style={{ marginBottom: '18px' }}>
+            <span style={{ fontSize: '12px', color: '#64748B', display: 'block', marginBottom: '6px', fontWeight: '600' }}>Ulasan & Kesan</span>
             <div
               style={{
                 background: '#F8FAFC',
                 border: '1px solid #E2E8F0',
-                borderRadius: '10px',
-                padding: '14px',
+                borderRadius: '12px',
+                padding: '16px',
                 fontSize: '13.5px',
                 color: '#334155',
-                lineHeight: '1.6',
+                lineHeight: '1.7',
                 whiteSpace: 'pre-line',
               }}
             >
-              {item.review}
+              "{item.review}"
             </div>
           </div>
 
           {item.created_at_review && (
-            <div style={{ fontSize: '11.5px', color: '#94A3B8', textAlign: 'right' }}>
+            <div style={{ fontSize: '12px', color: '#94A3B8', textAlign: 'right' }}>
               Dikirim pada: {formatTanggalIndo(item.created_at_review)}
             </div>
           )}
 
-          <div className="modal-actions" style={{ marginTop: '20px' }}>
+          <div className="modal-actions" style={{ marginTop: '24px' }}>
             <button className="btn-primary" onClick={onClose}>
               Tutup
             </button>
@@ -189,27 +192,27 @@ const RiwayatCard = memo(function RiwayatCard({
       style={{
         display: 'flex',
         flexDirection: 'column',
-        justify: 'space-between',
-        borderRadius: '14px',
-        border: '1px solid #E2E8F0',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+        justifyContent: 'space-between',
+        borderRadius: '16px',
+        border: '1px solid rgba(228, 231, 237, 0.8)',
+        boxShadow: 'var(--shadow-sm)',
         background: '#FFFFFF',
         transition: 'transform 0.2s, box-shadow 0.2s',
-        padding: '20px',
+        padding: '24px',
       }}
     >
       <div>
         {/* Header Card */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px', gap: '8px' }}>
-          <h4 style={{ margin: 0, fontSize: '15px', fontWeight: '700', color: '#1E293B', lineHeight: '1.4' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px', gap: '8px' }}>
+          <h4 style={{ margin: 0, fontSize: '15.5px', fontWeight: '700', color: '#0F172A', lineHeight: '1.4' }}>
             {item.instansi}
           </h4>
           <span
             style={{
-              padding: '3px 8px',
+              padding: '3px 9px',
               borderRadius: '6px',
-              background: '#EAFAF1',
-              color: '#2E7D32',
+              background: '#C5DBFF',
+              color: '#001178',
               fontSize: '11px',
               fontWeight: '700',
               whiteSpace: 'nowrap',
@@ -221,7 +224,7 @@ const RiwayatCard = memo(function RiwayatCard({
         </div>
 
         {/* Info Meta */}
-        <div style={{ display: 'flex', gap: '14px', fontSize: '12.5px', color: '#64748B', marginBottom: '14px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '16px', fontSize: '12.5px', color: '#64748B', marginBottom: '14px', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
@@ -238,13 +241,13 @@ const RiwayatCard = memo(function RiwayatCard({
 
         {/* Tujuan */}
         {item.tujuan && (
-          <div style={{ fontSize: '12px', color: '#64748B', marginBottom: '14px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          <div style={{ fontSize: '12.5px', color: '#64748B', marginBottom: '14px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.6' }}>
             <strong style={{ color: '#475569' }}>Maksud:</strong> {item.tujuan}
           </div>
         )}
 
         {/* Rating */}
-        <div style={{ marginBottom: '12px' }}>
+        <div style={{ marginBottom: '14px' }}>
           <StarRating rating={item.rating} />
         </div>
 
@@ -263,7 +266,7 @@ const RiwayatCard = memo(function RiwayatCard({
             background: '#F8FAFC',
             padding: '10px 12px',
             borderRadius: '8px',
-            borderLeft: '3px solid #2E7D32',
+            borderLeft: '3px solid #0028B3',
           }}
         >
           "{item.review}"
@@ -278,7 +281,7 @@ const RiwayatCard = memo(function RiwayatCard({
             style={{
               background: 'none',
               border: 'none',
-              color: '#2E7D32',
+              color: '#0028B3',
               fontSize: '12px',
               fontWeight: '700',
               cursor: 'pointer',
@@ -387,16 +390,16 @@ export default function RiwayatKunjungan() {
 
   return (
     <PublicLayout>
-      <div style={{ background: '#F8FAFC', minHeight: 'calc(100vh - 80px)', padding: '32px 16px 64px' }}>
+      <div style={{ background: '#F6F7FA', minHeight: 'calc(100vh - 80px)', padding: '48px 20px 80px' }}>
         <div style={{ maxWidth: '1140px', margin: '0 auto' }}>
           
           {/* Header Title */}
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <h1 style={{ fontSize: '26px', fontWeight: '800', color: '#1E293B', marginBottom: '8px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <h1 style={{ fontSize: '28px', fontWeight: '800', color: '#001178', marginBottom: '10px', letterSpacing: '-0.4px' }}>
               Riwayat Kunjungan Kerja
             </h1>
-            <p style={{ fontSize: '14px', color: '#64748B', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>
-              Daftar seluruh kunjungan kerja yang telah selesai beserta ulasan & tingkat kepuasan dari instansi pemohon.
+            <p style={{ fontSize: '14.5px', color: '#64748B', maxWidth: '640px', margin: '0 auto', lineHeight: '1.7' }}>
+              Daftar seluruh kunjungan kerja yang telah selesai beserta ulasan &amp; tingkat kepuasan dari instansi pemohon.
             </p>
           </div>
 
@@ -404,9 +407,9 @@ export default function RiwayatKunjungan() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '16px',
-              marginBottom: '32px',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '20px',
+              marginBottom: '36px',
             }}
           >
             <StatCard
@@ -420,7 +423,7 @@ export default function RiwayatKunjungan() {
               }
             />
             <StatCard
-              title="Total Ulasan Menerima"
+              title="Total Ulasan Diterima"
               value={statistik.total_review}
               icon={
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -443,14 +446,14 @@ export default function RiwayatKunjungan() {
           <div
             style={{
               background: '#FFFFFF',
-              borderRadius: '14px',
-              padding: '16px 20px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-              border: '1px solid #E2E8F0',
-              marginBottom: '28px',
+              borderRadius: '16px',
+              padding: '18px 24px',
+              boxShadow: 'var(--shadow-sm)',
+              border: '1px solid rgba(228, 231, 237, 0.8)',
+              marginBottom: '32px',
               display: 'flex',
               flexWrap: 'wrap',
-              gap: '14px',
+              gap: '16px',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
@@ -464,7 +467,8 @@ export default function RiwayatKunjungan() {
                 placeholder="Cari nama instansi..."
                 style={{
                   width: '100%',
-                  padding: '10px 14px 10px 38px',
+                  padding: '11px 14px 11px 40px',
+                  minHeight: '44px',
                   borderRadius: '8px',
                   border: '1px solid #CBD5E1',
                   fontSize: '13.5px',
@@ -481,22 +485,23 @@ export default function RiwayatKunjungan() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }}
+                style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }}
               >
                 <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </div>
 
             {/* Dropdown Filters */}
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               {/* Filter Rating */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '12px', color: '#64748B', fontWeight: '600' }}>Rating:</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '12.5px', color: '#64748B', fontWeight: '600' }}>Rating:</span>
                 <select
                   value={rating}
                   onChange={handleRatingChange}
                   style={{
-                    padding: '9px 12px',
+                    padding: '10px 14px',
+                    minHeight: '44px',
                     borderRadius: '8px',
                     border: '1px solid #CBD5E1',
                     fontSize: '13px',
@@ -516,13 +521,14 @@ export default function RiwayatKunjungan() {
               </div>
 
               {/* Sort Dropdown */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '12px', color: '#64748B', fontWeight: '600' }}>Urutkan:</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '12.5px', color: '#64748B', fontWeight: '600' }}>Urutkan:</span>
                 <select
                   value={sort}
                   onChange={handleSortChange}
                   style={{
-                    padding: '9px 12px',
+                    padding: '10px 14px',
+                    minHeight: '44px',
                     borderRadius: '8px',
                     border: '1px solid #CBD5E1',
                     fontSize: '13px',
@@ -542,27 +548,27 @@ export default function RiwayatKunjungan() {
 
           {/* Grid Content */}
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748B' }}>
-              <div className="spinner" style={{ margin: '0 auto 12px', width: '32px', height: '32px' }} />
+            <div style={{ textAlign: 'center', padding: '80px 0', color: '#64748B' }}>
+              <div className="spinner" style={{ margin: '0 auto 14px', width: '36px', height: '36px' }} />
               <p style={{ fontSize: '14px' }}>Memuat riwayat kunjungan...</p>
             </div>
           ) : items.length === 0 ? (
             <div
               style={{
                 background: '#FFFFFF',
-                borderRadius: '14px',
-                padding: '48px 20px',
+                borderRadius: '16px',
+                padding: '56px 24px',
                 textAlign: 'center',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                boxShadow: 'var(--shadow-sm)',
                 border: '1px solid #E2E8F0',
                 color: '#64748B',
               }}
             >
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 12px' }}>
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 16px' }}>
                 <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
               </svg>
-              <h4 style={{ fontSize: '16px', color: '#334155', marginBottom: '4px' }}>Belum Ada Data Riwayat Kunjungan</h4>
-              <p style={{ fontSize: '13px', margin: 0 }}>Tidak ada ulasan kunjungan yang sesuai dengan kriteria filter Anda.</p>
+              <h4 style={{ fontSize: '17px', color: '#0F172A', fontWeight: '700', marginBottom: '6px' }}>Belum Ada Data Riwayat Kunjungan</h4>
+              <p style={{ fontSize: '13.5px', margin: 0 }}>Tidak ada ulasan kunjungan yang sesuai dengan kriteria filter Anda.</p>
             </div>
           ) : (
             <>
@@ -571,8 +577,8 @@ export default function RiwayatKunjungan() {
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                  gap: '20px',
-                  marginBottom: '36px',
+                  gap: '24px',
+                  marginBottom: '40px',
                 }}
               >
                 {items.map((item) => (
@@ -588,7 +594,7 @@ export default function RiwayatKunjungan() {
                     className="btn-outline"
                     disabled={meta.current_page === 1}
                     onClick={() => handlePageChange(meta.current_page - 1)}
-                    style={{ padding: '6px 14px', fontSize: '13px' }}
+                    style={{ padding: '8px 16px', fontSize: '13px', minHeight: '38px' }}
                   >
                     ← Sebelum
                   </button>
@@ -599,14 +605,16 @@ export default function RiwayatKunjungan() {
                       type="button"
                       onClick={() => handlePageChange(p)}
                       style={{
-                        padding: '6px 12px',
+                        padding: '8px 14px',
                         fontSize: '13px',
-                        borderRadius: '6px',
+                        minHeight: '38px',
+                        borderRadius: '8px',
                         border: '1px solid #CBD5E1',
-                        background: p === meta.current_page ? '#2E7D32' : '#FFFFFF',
+                        background: p === meta.current_page ? '#0028B3' : '#FFFFFF',
                         color: p === meta.current_page ? '#FFFFFF' : '#334155',
-                        fontWeight: p === meta.current_page ? '700' : '500',
+                        fontWeight: p === meta.current_page ? '700' : '600',
                         cursor: 'pointer',
+                        transition: 'all 0.15s ease',
                       }}
                     >
                       {p}
@@ -618,7 +626,7 @@ export default function RiwayatKunjungan() {
                     className="btn-outline"
                     disabled={meta.current_page === meta.last_page}
                     onClick={() => handlePageChange(meta.current_page + 1)}
-                    style={{ padding: '6px 14px', fontSize: '13px' }}
+                    style={{ padding: '8px 16px', fontSize: '13px', minHeight: '38px' }}
                   >
                     Sesudah →
                   </button>

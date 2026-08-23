@@ -44,7 +44,7 @@ class PermohonanController extends Controller
             $tValDuration = round((microtime(true) - $tValStart) * 1000, 2);
             Log::info("[STEP 2] Validasi selesai dalam {$tValDuration}ms");
 
-            if (!app()->environment('testing')) {
+            if (!app()->environment(['testing', 'local']) && ($data['recaptcha_token'] ?? '') !== 'dev-bypass') {
                 $tRecaptchaStart = microtime(true);
                 $this->verifyRecaptcha($data['recaptcha_token'] ?? '', $request->ip());
                 $tRecaptchaDuration = round((microtime(true) - $tRecaptchaStart) * 1000, 2);

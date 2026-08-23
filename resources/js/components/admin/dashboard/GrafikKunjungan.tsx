@@ -29,14 +29,14 @@ const GrafikKunjungan = () => {
       zoom: { enabled: false }
     },
     dataLabels: { enabled: false },
-    stroke: { curve: 'smooth', width: 2 },
-    colors: ['#2563eb'],
+    stroke: { curve: 'smooth', width: 2.5 },
+    colors: ['#1883FF'],
     fill: {
       type: 'gradient',
       gradient: {
         shadeIntensity: 1,
-        opacityFrom: 0.7,
-        opacityTo: 0.1,
+        opacityFrom: 0.55,
+        opacityTo: 0.05,
         stops: [0, 90, 100]
       }
     },

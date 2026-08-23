@@ -52,53 +52,53 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
       <style>{`
         /* Reset & Base Admin Variables */
         :root {
-            --navy-admin: #2E7D32;
-            --navy-dark-admin: #256628;
-            --green-soft: #F3FAF5;
-            --gray-bg: #F7F8FA;
-            --border: #E5E7EB;
+            --navy-admin: #0028B3;
+            --navy-dark-admin: #001178;
+            --green-soft: #C5DBFF;
+            --gray-bg: #F6F7FA;
+            --border: #E4E7ED;
         }
         
-        .admin-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 600; opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0.35s ease; }
+        .admin-overlay { position: fixed; inset: 0; background: rgba(0,17,120,0.45); backdrop-filter: blur(4px); z-index: 600; opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0.35s ease; }
         .admin-overlay.active { opacity: 1; visibility: visible; }
         
-        .admin-sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 270px; max-width: 82vw; background: white; box-shadow: 8px 0 30px rgba(0,0,0,0.15); z-index: 601; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; }
+        .admin-sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 270px; max-width: 82vw; background: white; box-shadow: 4px 0 24px rgba(0,17,120,0.06); border-right: 1px solid var(--border); z-index: 601; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; }
         .admin-sidebar.active { transform: translateX(0); }
         
-        .admin-sidebar-header { display: flex; align-items: center; gap: 10px; padding: 18px; border-bottom: 1px solid var(--border); position: relative; }
-        .admin-sidebar-logo { height: 36px; width: auto; flex-shrink: 0; }
-        .admin-sidebar-title { font-size: 13.5px; font-weight: 700; color: #000; line-height: 1.3; }
-        .admin-sidebar-sub { font-size: 11px; color: #6B7280; margin-top: 2px; }
+        .admin-sidebar-header { display: flex; align-items: center; gap: 12px; padding: 20px; border-bottom: 1px solid var(--border); position: relative; }
+        .admin-sidebar-logo { height: 38px; width: auto; flex-shrink: 0; }
+        .admin-sidebar-title { font-size: 14px; font-weight: 700; color: #001178; line-height: 1.3; }
+        .admin-sidebar-sub { font-size: 11.5px; color: #64748B; margin-top: 2px; }
         
-        .admin-sidebar-nav { padding: 14px 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; overflow-y: auto; }
-        .admin-nav-btn { display: flex; align-items: center; gap: 11px; padding: 11px 14px; border-radius: 9px; border: none; background: transparent; color: #6B7280; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: left; text-decoration: none; transition: all 0.2s; }
-        .admin-nav-btn svg { width: 17px; height: 17px; flex-shrink: 0; }
-        .admin-nav-btn:hover { background: var(--gray-bg); color: var(--navy-admin); }
-        .admin-nav-btn.active { background: var(--green-soft); color: var(--navy-admin); }
+        .admin-sidebar-nav { padding: 16px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; }
+        .admin-nav-btn { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; border: none; background: transparent; color: #64748B; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: left; text-decoration: none; transition: all 0.2s cubic-bezier(0.4,0,0.2,1); }
+        .admin-nav-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+        .admin-nav-btn:hover { background: #C5DBFF; color: #001178; }
+        .admin-nav-btn.active { background: #C5DBFF; color: #001178; font-weight: 700; box-shadow: 0 2px 6px rgba(117,195,255,0.15); }
         
-        .admin-sidebar-footer { padding: 14px 16px 18px; border-top: 1px solid var(--border); }
-        .admin-side-info { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-        .admin-side-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green-soft); color: var(--navy-admin); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .admin-side-name { font-size: 13px; font-weight: 700; color: #222; line-height: 1.3; }
-        .admin-side-role { font-size: 11px; color: #6B7280; margin-top: 1px; }
+        .admin-sidebar-footer { padding: 16px 18px 20px; border-top: 1px solid var(--border); }
+        .admin-side-info { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .admin-side-avatar { width: 36px; height: 36px; border-radius: 50%; background: #C5DBFF; color: #001178; font-size: 13.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(117,195,255,0.15); }
+        .admin-side-name { font-size: 13.5px; font-weight: 700; color: #0F172A; line-height: 1.3; }
+        .admin-side-role { font-size: 11.5px; color: #64748B; margin-top: 1px; }
         
-        .admin-logout-btn { width: 100%; background: var(--gray-bg); color: #222; border: none; border-radius: 8px; padding: 10px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-        .admin-logout-btn:hover { background: #FDEDEC; color: #922B21; }
+        .admin-logout-btn { width: 100%; background: var(--gray-bg); color: #0F172A; border: 1px solid var(--border); border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; min-height: 42px; }
+        .admin-logout-btn:hover { background: #FEE2E2; color: #B91C1C; border-color: #FCA5A5; }
 
-        .admin-topbar { background: #fff; color: var(--navy-dark-admin); box-shadow: 0 2px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 200; }
+        .admin-topbar { background: #fff; color: var(--navy-dark-admin); box-shadow: 0 1px 4px rgba(0,17,120,0.06); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 200; }
         .admin-topbar-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; flex-wrap: wrap; gap: 10px; }
         
-        .admin-main { padding: 16px; flex: 1; width: 100%; box-sizing: border-box; }
+        .admin-main { padding: 16px; flex: 1; width: 100%; box-sizing: border-box; background: var(--gray-bg); }
 
         @media (min-width: 601px) {
-            .admin-main { padding: 20px 24px; }
+            .admin-main { padding: 24px 28px; }
         }
 
         @media (min-width: 901px) {
             .admin-topbar { display: none !important; }
             .admin-overlay { display: none !important; }
             .admin-sidebar { transform: translateX(0) !important; }
-            .admin-main { margin-left: 270px !important; width: calc(100% - 270px) !important; padding: 24px 32px; transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1); }
+            .admin-main { margin-left: 270px !important; width: calc(100% - 270px) !important; padding: 32px 40px; transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1); }
         }
       `}</style>
 
@@ -118,7 +118,7 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
             <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
               <img src={LOGO_URL} alt="Bappenda" style={{height:'32px',width:'auto'}} referrerPolicy="no-referrer"/>
               <div>
-                <div style={{fontSize:'13.5px',fontWeight:'700',color:'#000',lineHeight:'1.2'}}>{getPageTitle()}</div>
+                <div style={{fontSize:'13.5px',fontWeight:'700',color:'#001178',lineHeight:'1.2'}}>{getPageTitle()}</div>
                 <div style={{fontSize:'11px',color:'#6B7280'}}>Sistem Kunjungan Kerja</div>
               </div>
             </div>

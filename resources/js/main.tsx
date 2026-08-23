@@ -32,8 +32,8 @@ const ScrollToTop = () => {
 };
 
 const FullPageSpinner = () => (
-  <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F8FAFC' }}>
-    <div style={{ width: '36px', height: '36px', border: '3px solid #E2E8F0', borderTopColor: '#2E7D32', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+  <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F6F7FA' }}>
+    <div style={{ width: '36px', height: '36px', border: '3px solid #C5DBFF', borderTopColor: '#0028B3', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
     <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
   </div>
 );

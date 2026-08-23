@@ -42,23 +42,24 @@ export default function Login() {
   return (
     <>
       <style>{`
-        .login-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; background:url('${BG_URL}') center/cover no-repeat; padding:20px; }
-        .login-card { background:white; border-radius:14px; padding:36px; width:100%; max-width:380px; box-shadow:0 20px 60px rgba(0,0,0,0.25); border:1px solid #E5E7EB; }
-        .login-logo { text-align:center; margin-bottom:24px; }
-        .login-logo h2 { color:#2E7D32; font-size:20px; font-weight:700; margin-top:10px; }
-        .login-logo p { color:#6B7280; font-size:13px; margin-top:3px; }
-        .login-field { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
-        .login-field label { font-size:11px; font-weight:700; color:#6B7280; text-transform:uppercase; letter-spacing:0.5px; }
-        .login-field input { border:1px solid #D9DEE5; border-radius:8px; padding:9px 12px; font-size:13px; font-family:inherit; background:#fff; width:100%; color:#222; box-sizing:border-box; transition:border-color 0.2s, box-shadow 0.2s; }
-        .login-field input:focus { outline:none; border-color:#2E7D32; box-shadow:0 0 0 3px rgba(46,125,50,0.12); }
+        .login-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; background:url('${BG_URL}') center/cover no-repeat; padding:24px; }
+        .login-card { background:white; border-radius:20px; padding:40px 36px; width:100%; max-width:400px; box-shadow:0 24px 64px rgba(0,17,120,0.22); border:1px solid rgba(228, 231, 237, 0.8); }
+        .login-logo { text-align:center; margin-bottom:28px; }
+        .login-logo h2 { color:#001178; font-size:22px; font-weight:800; margin-top:12px; letter-spacing:-0.4px; }
+        .login-logo p { color:#64748B; font-size:13.5px; margin-top:4px; }
+        .login-field { display:flex; flex-direction:column; gap:6px; margin-bottom:18px; }
+        .login-field label { font-size:12px; font-weight:700; color:#334155; text-transform:uppercase; letter-spacing:0.5px; }
+        .login-field input { border:1px solid #D9DEE5; border-radius:8px; padding:11px 14px; min-height:44px; font-size:13.5px; font-family:inherit; background:#fff; width:100%; color:#0F172A; box-sizing:border-box; transition:border-color 0.2s, box-shadow 0.2s; }
+        .login-field input:focus { outline:none; border-color:#0028B3; box-shadow:0 0 0 3.5px rgba(0,40,179,0.15); }
         .pw-wrapper { position:relative; }
-        .pw-wrapper input { padding-right:42px !important; }
-        .btn-pw { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#6B7280; padding:4px; display:flex; align-items:center; }
-        .btn-pw:hover { color:#2E7D32; }
-        .btn-login { width:100%; background:#2E7D32; color:white; border:none; border-radius:8px; padding:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; margin-top:4px; }
-        .btn-login:hover:not(:disabled) { background:#256628; }
-        .btn-login:disabled { background:#aaa; cursor:not-allowed; }
-        .login-err { color:#e74c3c; font-size:13px; text-align:center; margin-top:10px; }
+        .pw-wrapper input { padding-right:44px !important; }
+        .btn-pw { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#64748B; padding:4px; display:flex; align-items:center; transition:color 0.15s; }
+        .btn-pw:hover { color:#0028B3; }
+        .btn-login { width:100%; background:#0028B3; color:white; border:none; border-radius:8px; padding:12px; min-height:46px; font-size:14.5px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s cubic-bezier(0.4,0,0.2,1); margin-top:6px; box-shadow:0 4px 16px rgba(0,40,179,0.25); display:inline-flex; align-items:center; justify-content:center; }
+        .btn-login:hover:not(:disabled) { background:#001178; transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,17,120,0.3); }
+        .btn-login:active:not(:disabled) { transform:translateY(0); }
+        .btn-login:disabled { background:#94A3B8; cursor:not-allowed; transform:none; }
+        .login-err { color:#B91C1C; font-size:13px; text-align:center; margin-top:14px; padding:8px 12px; background:#FEF2F2; border-radius:8px; border:1px solid #FCA5A5; }
       `}</style>
       <div className="login-screen">
         <div className="login-card">

@@ -203,7 +203,7 @@ export default function Landing() {
         </div>
 
         {/* ===== KETENTUAN ===== */}
-        <div className="section-head" id="ketentuan-section" ref={ketentuanRef} style={{ marginTop: '48px' }}>
+        <div className="section-head" id="ketentuan-section" ref={ketentuanRef} style={{ marginTop: '64px' }}>
           <div className="section-tag">Dasar Hukum</div>
           <h2>Ketentuan Kunjungan Kerja</h2>
           <p>Mohon membaca dan memahami ketentuan berikut sebelum mengajukan permohonan kunjungan kerja.</p>
@@ -267,26 +267,26 @@ export default function Landing() {
         </div>
 
         {reviews.length > 0 && (
-          <div style={{ marginTop: '56px' }}>
+          <div style={{ marginTop: '64px' }}>
             <div className="section-head">
               <div className="section-tag">Testimonial</div>
               <h2>Apa Kata Instansi yang Pernah Berkunjung</h2>
               <p>Ulasan dan pengalaman dari instansi yang telah melaksanakan kunjungan kerja di Bappenda Kabupaten Bogor.</p>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px', marginTop: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px', marginTop: '28px' }}>
               {reviews.slice(0, 6).map((rev: any) => (
-                <div key={rev.id} style={{ background: '#ffffff', border: '1px solid #E5E7EB', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div key={rev.id} style={{ background: '#ffffff', border: '1px solid rgba(228, 231, 237, 0.7)', borderRadius: '16px', padding: '24px', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transition: 'all 0.2s ease' }}>
                   <div>
-                    <div style={{ color: '#F59E0B', fontSize: '18px', marginBottom: '10px' }}>
+                    <div style={{ color: '#F59E0B', fontSize: '18px', marginBottom: '12px' }}>
                       {'★'.repeat(rev.rating)}{'☆'.repeat(5 - rev.rating)}
                     </div>
-                    <p style={{ fontSize: '13.5px', color: '#374151', lineHeight: '1.6', fontStyle: 'italic', marginBottom: '16px' }}>
+                    <p style={{ fontSize: '13.5px', color: '#334155', lineHeight: '1.7', fontStyle: 'italic', marginBottom: '18px' }}>
                       "{rev.review}"
                     </p>
                   </div>
-                  <div style={{ borderTop: '1px solid #F3F4F6', paddingTop: '12px' }}>
-                    <div style={{ fontSize: '13px', fontWeight: '700', color: '#111827' }}>{rev.instansi || '-'}</div>
-                    <div style={{ fontSize: '11.5px', color: '#6B7280', marginTop: '2px' }}>PIC: {rev.nama_pic || '-'}</div>
+                  <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '14px' }}>
+                    <div style={{ fontSize: '13.5px', fontWeight: '700', color: '#0F172A' }}>{rev.instansi || '-'}</div>
+                    <div style={{ fontSize: '12px', color: '#64748B', marginTop: '3px' }}>PIC: {rev.nama_pic || '-'}</div>
                   </div>
                 </div>
               ))}
@@ -309,16 +309,16 @@ export default function Landing() {
         </div>
 
         {/* ===== LAYANAN & PETA CARD ===== */}
-        <div style={{ marginTop: '24px', background: '#ffffff', borderRadius: '14px', padding: '24px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.06)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: '38px', height: '38px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FEF3C7', color: '#D97706', flexShrink: 0 }}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ width: '20px', height: '20px' }}>
+        <div style={{ marginTop: '32px', background: '#ffffff', borderRadius: '18px', padding: '28px', border: '1px solid rgba(197, 219, 255, 0.5)', boxShadow: 'var(--shadow-md)', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#C5DBFF', color: '#0028B3', flexShrink: 0, border: '1px solid rgba(117,195,255,0.5)', boxShadow: '0 2px 8px rgba(0,40,179,0.1)' }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ width: '22px', height: '22px' }}>
                 <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
               </svg>
             </div>
             <div>
-              <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#111827', margin: 0 }}>Layanan &amp; Peta Kabupaten Bogor</h3>
-              <p style={{ fontSize: '12.5px', color: '#6B7280', margin: '2px 0 0 0' }}>Akses portal integrasi EKABO dan peta sebaran kantor dinas di Kabupaten Bogor.</p>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#001178', margin: 0, letterSpacing: '-0.2px' }}>Layanan &amp; Peta Kabupaten Bogor</h3>
+              <p style={{ fontSize: '13px', color: '#64748B', margin: '3px 0 0 0', lineHeight: '1.5' }}>Akses portal integrasi EKABO dan peta sebaran kantor dinas di Kabupaten Bogor.</p>
             </div>
           </div>
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '4px' }}>
@@ -326,8 +326,8 @@ export default function Landing() {
               href="https://ekabo.bogorkab.go.id/" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="btn btn-gold"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 18px', fontSize: '13px', textDecoration: 'none' }}
+              className="btn btn-primary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', minHeight: '42px', fontSize: '13.5px', textDecoration: 'none', background: '#0028B3', color: '#FFFFFF', borderRadius: '8px', width: 'auto', fontWeight: '700', boxShadow: '0 2px 8px rgba(0,40,179,0.2)' }}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '16px', height: '16px' }}>
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
@@ -340,8 +340,8 @@ export default function Landing() {
               href="https://www.google.com/maps/search/kantor+dinas+kabupaten+bogor" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="btn btn-ghost"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 18px', fontSize: '13px', textDecoration: 'none', border: '1px solid #D1D5DB' }}
+              className="btn btn-outline"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', minHeight: '42px', fontSize: '13.5px', textDecoration: 'none', background: '#FFFFFF', border: '1.5px solid #0028B3', color: '#0028B3', borderRadius: '8px', fontWeight: '700' }}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '16px', height: '16px' }}>
                 <circle cx="12" cy="10" r="3" />

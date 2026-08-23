@@ -4,4 +4,17 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+@theme {
+  --color-blue-900: #001178;
+  --color-blue-800: #0028B3;
+  --color-blue-500: #1883FF;
+  --color-blue-200: #75C3FF;
+  --color-blue-100: #C5DBFF;
+  --color-navy-950: #001178;
+  --color-navy-900: #0028B3;
+  --color-navy-800: #001A94;
+  --color-navy-600: #1883FF;
+  --color-navy-100: #C5DBFF;
+}
+
 @import '../js/index.css';

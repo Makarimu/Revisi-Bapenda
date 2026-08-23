@@ -12,23 +12,23 @@ const MONTHS_ID = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep'
 
 // Static style objects (keluar dari komponen agar tidak dibuat ulang setiap render)
 const STATUS_BADGE_CFG: Record<string, any> = {
-  Pending: { bg: '#FEF9E7', color: '#B7791F', border: '#F0C040' },
-  Disetujui: { bg: '#EAFAF1', color: '#256628', border: '#2E7D32' },
-  Ditolak: { bg: '#FDEDEC', color: '#922B21', border: '#e74c3c' },
-  Revisi: { bg: '#F5EEF8', color: '#7D3C98', border: '#A569BD' },
+  Pending: { bg: '#FEF3C7', color: '#B45309', border: '#F59E0B' },
+  Disetujui: { bg: '#DCFCE7', color: '#15803D', border: '#86EFAC' },
+  Ditolak: { bg: '#FEE2E2', color: '#B91C1C', border: '#FCA5A5' },
+  Revisi: { bg: '#F3E8FF', color: '#6D28D9', border: '#D8B4FE' },
 };
 const STAT_CARD_STYLES: Record<string, any> = {
-  total: { bg: '#F3FAF5', color: '#2E7D32', valColor: '#2E7D32' },
-  pending: { bg: '#FEF9E7', color: '#B7791F', valColor: '#B7791F' },
-  revisi: { bg: '#F5EEF8', color: '#7D3C98', valColor: '#7D3C98' },
-  disetujui: { bg: '#EAFAF1', color: '#256628', valColor: '#256628' },
-  ditolak: { bg: '#FDEDEC', color: '#922B21', valColor: '#922B21' },
+  total: { bg: '#C5DBFF', color: '#0028B3', valColor: '#001178' },
+  pending: { bg: '#FEF3C7', color: '#B45309', valColor: '#B45309' },
+  revisi: { bg: '#F3E8FF', color: '#6D28D9', valColor: '#6D28D9' },
+  disetujui: { bg: '#DCFCE7', color: '#15803D', valColor: '#15803D' },
+  ditolak: { bg: '#FEE2E2', color: '#B91C1C', valColor: '#B91C1C' },
 };
 const DONUT_SEGMENT_DEFS = [
-  { key: 'Pending', label: 'Pending', color: '#F0C040' },
-  { key: 'Disetujui', label: 'Disetujui', color: '#2E7D32' },
-  { key: 'Ditolak', label: 'Ditolak', color: '#e74c3c' },
-  { key: 'Revisi', label: 'Revisi', color: '#A569BD' },
+  { key: 'Pending', label: 'Pending', color: '#F59E0B' },
+  { key: 'Disetujui', label: 'Disetujui', color: '#0028B3' },
+  { key: 'Ditolak', label: 'Ditolak', color: '#B91C1C' },
+  { key: 'Revisi', label: 'Revisi', color: '#6D28D9' },
 ];
 
 function formatTanggal(s: any) {
@@ -51,16 +51,16 @@ const StatusBadge = memo(function StatusBadge({ status }: any) {
 const StatCard = memo(function StatCard({ title, value, icon, type, loading }: any) {
   const s = STAT_CARD_STYLES[type] || STAT_CARD_STYLES.total;
   return (
-    <div style={{ background: 'white', borderRadius: '14px', padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,.06)', border: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', gap: '14px' }}>
-      <div style={{ width: '46px', height: '46px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: s.bg, color: s.color }}>
+    <div style={{ background: 'white', borderRadius: '16px', padding: '20px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(228, 231, 237, 0.8)', display: 'flex', alignItems: 'center', gap: '16px', transition: 'transform 0.2s, box-shadow 0.2s' }}>
+      <div style={{ width: '48px', height: '48px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: s.bg, color: s.color, border: '1px solid rgba(117,195,255,0.4)', boxShadow: '0 2px 8px rgba(0,17,120,0.06)' }}>
         {icon}
       </div>
       <div>
-        <div style={{ fontSize: '11px', color: '#6B7280', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{title}</div>
+        <div style={{ fontSize: '11.5px', color: '#64748B', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{title}</div>
         {loading ? (
           <div style={{ height: '28px', background: '#F0F0F0', borderRadius: '6px', width: '50px', marginTop: '6px', animation: 'pulse 1.5s infinite' }} />
         ) : (
-          <div style={{ fontSize: '26px', fontWeight: '800', marginTop: '5px', color: s.valColor }}>{value}</div>
+          <div style={{ fontSize: '28px', fontWeight: '800', marginTop: '4px', color: s.valColor, letterSpacing: '-0.5px' }}>{value}</div>
         )}
       </div>
     </div>
@@ -72,22 +72,22 @@ const BarChart = memo(function BarChart({ data }: any) {
   const max = useMemo(() => Math.max(...(data?.map((d: any) => d.total) ?? [0]), 1), [data]);
 
   if (!data || data.length === 0) return (
-    <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#AAB2BC', fontSize: '13px' }}>
+    <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94A3B8', fontSize: '13.5px' }}>
       Belum ada data grafik
     </div>
   );
   return (
     <div style={{ overflowX: 'auto' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', padding: '16px 4px 8px', minWidth: '400px' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '10px', padding: '20px 4px 10px', minWidth: '400px' }}>
         {data.map((d: any, i: number) => {
-          const h = Math.max(4, Math.round((d.total / max) * 160));
+          const h = Math.max(6, Math.round((d.total / max) * 160));
           return (
-            <div key={d.bulan ?? i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', flex: 1, minWidth: '30px' }}>
-              <span style={{ fontSize: '11px', fontWeight: '700', color: '#2E7D32' }}>{d.total || ''}</span>
-              <div style={{ width: '100%', height: '160px', display: 'flex', alignItems: 'flex-end' }}>
-                <div style={{ width: '100%', height: `${h}px`, background: 'linear-gradient(180deg,#3D9142,#2E7D32)', borderRadius: '4px 4px 0 0', transition: 'height 0.4s' }} />
+            <div key={d.bulan ?? i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', flex: 1, minWidth: '32px' }}>
+              <span style={{ fontSize: '11.5px', fontWeight: '700', color: '#0028B3' }}>{d.total || ''}</span>
+              <div style={{ width: '100%', height: '140px', display: 'flex', alignItems: 'flex-end' }}>
+                <div style={{ width: '100%', height: `${h}px`, background: 'linear-gradient(180deg,#0028B3,#1883FF)', borderRadius: '6px 6px 0 0', transition: 'height 0.4s ease' }} />
               </div>
-              <span style={{ fontSize: '10px', color: '#6B7280', fontWeight: '600' }}>{d.bulan || MONTHS_ID[i] || ''}</span>
+              <span style={{ fontSize: '11px', color: '#64748B', fontWeight: '600' }}>{d.bulan || MONTHS_ID[i] || ''}</span>
             </div>
           );
         })}
@@ -124,28 +124,28 @@ const DonutChart = memo(function DonutChart({ stats }: any) {
   }, [stats, total]);
 
   if (!total) return (
-    <div style={{ height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#AAB2BC', fontSize: '13px' }}>
+    <div style={{ height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94A3B8', fontSize: '13.5px' }}>
       Belum ada data
     </div>
   );
 
   const cx = 90, cy = 90;
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
       <svg width="180" height="180" viewBox="0 0 180 180" style={{ flexShrink: 0 }}>
         {paths.map((seg: any) => (
-          <path key={seg.key} d={seg.d} fill={seg.color} stroke="white" strokeWidth="2" />
+          <path key={seg.key} d={seg.d} fill={seg.color} stroke="white" strokeWidth="2.5" />
         ))}
         <circle cx={cx} cy={cy} r="48" fill="white" />
-        <text x={cx} y={cy - 6} textAnchor="middle" fill="#222" fontSize="22" fontWeight="800">{total}</text>
-        <text x={cx} y={cy + 12} textAnchor="middle" fill="#6B7280" fontSize="10">Total</text>
+        <text x={cx} y={cy - 4} textAnchor="middle" fill="#0F172A" fontSize="22" fontWeight="800">{total}</text>
+        <text x={cx} y={cy + 14} textAnchor="middle" fill="#64748B" fontSize="11" fontWeight="600">Total</text>
       </svg>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {segments.map((seg: any) => (
           <div key={seg.key} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: '10px', height: '10px', borderRadius: '3px', background: seg.color, flexShrink: 0 }} />
-            <span style={{ fontSize: '12px', color: '#6B7280', fontWeight: '500' }}>{seg.label}</span>
-            <span style={{ fontSize: '12px', fontWeight: '800', color: '#222', marginLeft: '4px' }}>{seg.count}</span>
+            <div style={{ width: '12px', height: '12px', borderRadius: '4px', background: seg.color, flexShrink: 0 }} />
+            <span style={{ fontSize: '12.5px', color: '#64748B', fontWeight: '500' }}>{seg.label}</span>
+            <span style={{ fontSize: '13px', fontWeight: '800', color: '#0F172A', marginLeft: '4px' }}>{seg.count}</span>
           </div>
         ))}
       </div>
@@ -209,8 +209,8 @@ export default function Dashboard() {
         .dash-grafik-grid {
           display: grid;
           grid-template-columns: 1fr 380px;
-          gap: 16px;
-          margin-bottom: 20px;
+          gap: 20px;
+          margin-bottom: 24px;
           align-items: start;
         }
         @media (max-width: 900px) {
@@ -218,9 +218,9 @@ export default function Dashboard() {
         }
         .dash-stat-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-          gap: 12px;
-          margin-bottom: 20px;
+          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+          gap: 16px;
+          margin-bottom: 24px;
         }
         @media (max-width: 480px) {
           .dash-stat-grid { grid-template-columns: 1fr 1fr; }
@@ -229,12 +229,12 @@ export default function Dashboard() {
 
 
       {/* Header */}
-      <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+      <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
         <div>
-          <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#000' }}>Dashboard</h2>
-          <p style={{ fontSize: '13px', color: '#6B7280', marginTop: '3px' }}>Ringkasan sistem kunjungan kerja</p>
+          <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#001178', letterSpacing: '-0.3px' }}>Dashboard</h2>
+          <p style={{ fontSize: '13.5px', color: '#64748B', marginTop: '3px' }}>Ringkasan sistem kunjungan kerja</p>
         </div>
-        <button onClick={loadAll} style={{ display: 'flex', alignItems: 'center', gap: '7px', padding: '9px 16px', border: '1px solid #E5E7EB', borderRadius: '8px', background: 'white', color: '#6B7280', cursor: 'pointer', fontSize: '12.5px', fontWeight: '600', fontFamily: 'inherit', transition: 'all 0.2s' }}>
+        <button onClick={() => { loadAll(); }} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', border: '1px solid #E4E7ED', borderRadius: '8px', background: 'white', color: '#334155', cursor: 'pointer', fontSize: '13px', fontWeight: '600', fontFamily: 'inherit', transition: 'all 0.2s', boxShadow: 'var(--shadow-xs)' }}>
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
           Refresh
         </button>
@@ -272,43 +272,43 @@ export default function Dashboard() {
       </div>
 
       {/* Kunjungan Hari Ini */}
-      <div style={{ background: 'white', borderRadius: '14px', boxShadow: '0 2px 8px rgba(0,0,0,.06)', border: '1px solid #E5E7EB', marginBottom: '20px', overflow: 'hidden' }}>
-        <div style={{ padding: '14px 18px', borderBottom: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ width: '32px', height: '32px', background: '#FEF9E7', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#B7791F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+      <div style={{ background: 'white', borderRadius: '16px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(228, 231, 237, 0.8)', marginBottom: '24px', overflow: 'hidden' }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid #E4E7ED', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '36px', height: '36px', background: '#FEF9E7', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FDE68A' }}>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#B45309" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
             </div>
             <div>
-              <div style={{ fontSize: '14px', fontWeight: '700', color: '#000' }}>Kunjungan Hari Ini</div>
-              <div style={{ fontSize: '11px', color: '#6B7280' }}>{new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
+              <div style={{ fontSize: '15px', fontWeight: '700', color: '#0F172A' }}>Kunjungan Hari Ini</div>
+              <div style={{ fontSize: '12px', color: '#64748B', marginTop: '1px' }}>{new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
             </div>
           </div>
-          <span style={{ background: '#FEF9E7', color: '#B7791F', border: '1px solid #F0C040', borderRadius: '20px', padding: '3px 12px', fontSize: '12px', fontWeight: '700' }}>
+          <span style={{ background: '#FEF9E7', color: '#B45309', border: '1px solid #FDE68A', borderRadius: '20px', padding: '4px 14px', fontSize: '12px', fontWeight: '700' }}>
             {hariIni.length} kunjungan
           </span>
         </div>
         {loading ? (
-          <div style={{ padding: '24px 18px', color: '#AAB2BC', fontSize: '13px', textAlign: 'center' }}>Memuat data...</div>
+          <div style={{ padding: '32px 20px', color: '#94A3B8', fontSize: '13.5px', textAlign: 'center' }}>Memuat data...</div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
                   {['Kode', 'Instansi', 'Nama PIC', 'Peserta', 'Jam', 'Status'].map(h => (
-                    <th key={h} style={{ background: '#F7F8FA', padding: '9px 13px', fontSize: '10px', fontWeight: '700', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'left', whiteSpace: 'nowrap' }}>{h}</th>
+                    <th key={h} style={{ background: '#F8FAFC', padding: '11px 16px', fontSize: '11px', fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.6px', textAlign: 'left', whiteSpace: 'nowrap', borderBottom: '1px solid #E2E8F0' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {hariIni.length === 0 && <tr><td colSpan={6} style={{textAlign:'center',padding:'32px 16px',color:'#6B7280',fontSize:'13px'}}>Tidak ada kunjungan yang dijadwalkan hari ini.</td></tr>}
+                {hariIni.length === 0 && <tr><td colSpan={6} style={{textAlign:'center',padding:'36px 16px',color:'#64748B',fontSize:'13.5px'}}>Tidak ada kunjungan yang dijadwalkan hari ini.</td></tr>}
                 {hariIni.map((d: any, i: number) => (
-                  <tr key={i} style={{ borderTop: '1px solid #E5E7EB' }}>
-                    <td style={{ padding: '10px 13px', fontSize: '12px', fontWeight: '700', color: '#2E7D32', fontFamily: 'monospace' }}>{d.kode_permohonan}</td>
-                    <td style={{ padding: '10px 13px', fontSize: '13px' }}>{d.instansi}</td>
-                    <td style={{ padding: '10px 13px', fontSize: '13px', color: '#6B7280' }}>{d.nama_pic}</td>
-                    <td style={{ padding: '10px 13px', fontSize: '13px', textAlign: 'center' }}>{d.jumlah_peserta}</td>
-                    <td style={{ padding: '10px 13px', fontSize: '13px', color: '#6B7280' }}>{d.jam_penerimaan || '-'}</td>
-                    <td style={{ padding: '10px 13px' }}><StatusBadge status={d.status} /></td>
+                  <tr key={i} style={{ borderTop: '1px solid #F1F5F9' }}>
+                    <td style={{ padding: '12px 16px', fontSize: '13px', fontWeight: '700', color: '#0028B3', fontFamily: 'monospace' }}>{d.kode_permohonan}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '13.5px', color: '#0F172A' }}>{d.instansi}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748B' }}>{d.nama_pic}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '13px', textAlign: 'center', fontWeight: '600' }}>{d.jumlah_peserta}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748B' }}>{d.jam_penerimaan || '-'}</td>
+                    <td style={{ padding: '12px 16px' }}><StatusBadge status={d.status} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -320,16 +320,16 @@ export default function Dashboard() {
       {/* Grafik + Aktivitas Terbaru */}
       <div className="dash-grafik-grid">
         {/* Bar Chart */}
-        <div style={{ background: 'white', borderRadius: '14px', boxShadow: '0 2px 8px rgba(0,0,0,.06)', border: '1px solid #E5E7EB', overflow: 'hidden' }}>
-          <div style={{ padding: '14px 18px', borderBottom: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ width: '32px', height: '32px', background: '#F3FAF5', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2E7D32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /><line x1="2" y1="20" x2="22" y2="20" /></svg>
+        <div style={{ background: 'white', borderRadius: '16px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(228, 231, 237, 0.8)', overflow: 'hidden' }}>
+          <div style={{ padding: '16px 20px', borderBottom: '1px solid #E4E7ED', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '36px', height: '36px', background: '#C5DBFF', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /><line x1="2" y1="20" x2="22" y2="20" /></svg>
             </div>
-            <div style={{ fontSize: '14px', fontWeight: '700', color: '#000' }}>Permohonan per Bulan</div>
+            <div style={{ fontSize: '15px', fontWeight: '700', color: '#0F172A' }}>Permohonan per Bulan</div>
           </div>
-          <div style={{ padding: '16px 18px' }}>
+          <div style={{ padding: '20px 20px' }}>
             {loading ? (
-              <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#AAB2BC', fontSize: '13px' }}>Memuat grafik...</div>
+              <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94A3B8', fontSize: '13.5px' }}>Memuat grafik...</div>
             ) : (
               <BarChart data={grafik} />
             )}
@@ -337,16 +337,16 @@ export default function Dashboard() {
         </div>
 
         {/* Donut Chart */}
-        <div style={{ background: 'white', borderRadius: '14px', boxShadow: '0 2px 8px rgba(0,0,0,.06)', border: '1px solid #E5E7EB', overflow: 'hidden' }}>
-          <div style={{ padding: '14px 18px', borderBottom: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ width: '32px', height: '32px', background: '#F5EEF8', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#7D3C98" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 2a10 10 0 0 1 10 10" /></svg>
+        <div style={{ background: 'white', borderRadius: '16px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(228, 231, 237, 0.8)', overflow: 'hidden' }}>
+          <div style={{ padding: '16px 20px', borderBottom: '1px solid #E4E7ED', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '36px', height: '36px', background: '#F3E8FF', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 2a10 10 0 0 1 10 10" /></svg>
             </div>
-            <div style={{ fontSize: '14px', fontWeight: '700', color: '#000' }}>Distribusi Status</div>
+            <div style={{ fontSize: '15px', fontWeight: '700', color: '#0F172A' }}>Distribusi Status</div>
           </div>
-          <div style={{ padding: '20px 18px' }}>
+          <div style={{ padding: '24px 20px' }}>
             {loading ? (
-              <div style={{ height: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#AAB2BC', fontSize: '13px' }}>Memuat...</div>
+              <div style={{ height: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94A3B8', fontSize: '13.5px' }}>Memuat...</div>
             ) : (
               <DonutChart stats={stats} />
             )}
@@ -355,30 +355,30 @@ export default function Dashboard() {
       </div>
 
       {/* Aktivitas Terbaru */}
-      <div style={{ background: 'white', borderRadius: '14px', boxShadow: '0 2px 8px rgba(0,0,0,.06)', border: '1px solid #E5E7EB', overflow: 'hidden' }}>
-        <div style={{ padding: '14px 18px', borderBottom: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ width: '32px', height: '32px', background: '#F3FAF5', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2E7D32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+      <div style={{ background: 'white', borderRadius: '16px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(228, 231, 237, 0.8)', overflow: 'hidden' }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid #E4E7ED', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '36px', height: '36px', background: '#C5DBFF', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
             </div>
-            <div style={{ fontSize: '14px', fontWeight: '700', color: '#000' }}>Aktivitas Terbaru</div>
+            <div style={{ fontSize: '15px', fontWeight: '700', color: '#0F172A' }}>Aktivitas Terbaru</div>
           </div>
           <button onClick={() => navigate('/admin/permohonan')}
-            style={{ fontSize: '12px', color: '#2E7D32', fontWeight: '700', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'inherit' }}>
+            style={{ fontSize: '13px', color: '#0028B3', fontWeight: '700', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'inherit' }}>
             Lihat Semua →
           </button>
         </div>
         {loading ? (
-          <div style={{ padding: '24px', color: '#AAB2BC', fontSize: '13px', textAlign: 'center' }}>Memuat aktivitas...</div>
+          <div style={{ padding: '28px', color: '#94A3B8', fontSize: '13.5px', textAlign: 'center' }}>Memuat aktivitas...</div>
         ) : (
           <div>
-            {aktivitas.length === 0 && <div style={{ padding: '28px', textAlign: 'center', color: '#6B7280', fontSize: '13px' }}>Belum ada aktivitas terbaru.</div>}
+            {aktivitas.length === 0 && <div style={{ padding: '32px', textAlign: 'center', color: '#64748B', fontSize: '13.5px' }}>Belum ada aktivitas terbaru.</div>}
             {aktivitas.map((a: any, i: number) => (
-              <div key={i} style={{ padding: '13px 18px', borderTop: i > 0 ? '1px solid #E5E7EB' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+              <div key={i} style={{ padding: '14px 20px', borderTop: i > 0 ? '1px solid #F1F5F9' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
                 <div>
-                  <div style={{ fontFamily: 'monospace', fontSize: '12.5px', fontWeight: '700', color: '#2E7D32' }}>{a.kode_permohonan}</div>
-                  <div style={{ fontSize: '12.5px', color: '#444', marginTop: '2px' }}>{a.instansi}</div>
-                  <div style={{ fontSize: '11px', color: '#AAB2BC', marginTop: '2px' }}>{formatTanggal(a.created_at || a.tgl_pengajuan_awal)}</div>
+                  <div style={{ fontFamily: 'monospace', fontSize: '13px', fontWeight: '700', color: '#0028B3' }}>{a.kode_permohonan}</div>
+                  <div style={{ fontSize: '13px', color: '#334155', marginTop: '2px' }}>{a.instansi}</div>
+                  <div style={{ fontSize: '11.5px', color: '#94A3B8', marginTop: '2px' }}>{formatTanggal(a.created_at || a.tgl_pengajuan_awal)}</div>
                 </div>
                 <StatusBadge status={a.status} />
               </div>
@@ -388,13 +388,14 @@ export default function Dashboard() {
       </div>
 
      {/* CTA ke Halaman Permohonan */}
-      <div style={{ background: 'linear-gradient(135deg,#2E7D32,#3D9142)', borderRadius: '14px', padding: '20px 24px', marginTop: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+      <div style={{ background: 'linear-gradient(135deg,#001178 0%,#1883FF 50%,#75C3FF 100%)', borderRadius: '18px', padding: '24px 30px', marginTop: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', boxShadow: '0 8px 24px rgba(0,17,120,0.16)' }}>
         <div style={{ color: 'white' }}>
-          <div style={{ fontSize: '15px', fontWeight: '700' }}>Lihat semua permohonan</div>
-          <div style={{ fontSize: '12px', opacity: 0.85, marginTop: '3px' }}>Proses, filter, dan kelola seluruh permohonan kunjungan kerja</div>
+          <div style={{ fontSize: '16px', fontWeight: '700', letterSpacing: '-0.2px' }}>Lihat semua permohonan</div>
+          <div style={{ fontSize: '13px', opacity: 0.9, marginTop: '4px' }}>Proses, filter, dan kelola seluruh permohonan kunjungan kerja</div>
         </div>
         <button onClick={() => navigate('/admin/permohonan')}
-          style={{ background: 'white', color: '#2E7D32', border: 'none', borderRadius: '8px', padding: '10px 20px', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}>
+          className="btn"
+          style={{ background: 'white', color: '#001178', border: 'none', borderRadius: '8px', padding: '11px 22px', fontSize: '13.5px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.12)', transition: 'transform 0.2s' }}>
           Buka Daftar Permohonan →
         </button>
       </div>

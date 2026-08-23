@@ -13,12 +13,12 @@ const EMPTY_FORM = { nama_pic: '', nomor_telepon: '', keterangan: '' };
 function FormInput({ label, name, type = 'text', placeholder, required, value, error, onChange }: any) {
   return (
     <div>
-      <label style={{fontSize:'10px',fontWeight:'700',color:'#6B7280',textTransform:'uppercase',letterSpacing:'0.5px',display:'block',marginBottom:'5px'}}>
-        {label}{required&&<span style={{color:'#e74c3c'}}> *</span>}
+      <label style={{fontSize:'11px',fontWeight:'700',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.5px',display:'block',marginBottom:'6px'}}>
+        {label}{required&&<span style={{color:'#B91C1C'}}> *</span>}
       </label>
       <input type={type} value={value} placeholder={placeholder} onChange={onChange}
-        style={{width:'100%',padding:'9px 11px',border:`1px solid ${error?'#e74c3c':'#D9DEE5'}`,borderRadius:'8px',fontSize:'13px',fontFamily:'inherit',boxSizing:'border-box'}}/>
-      {error&&<div style={{fontSize:'11px',color:'#e74c3c',marginTop:'3px'}}>{error}</div>}
+        style={{width:'100%',padding:'10px 12px',minHeight:'42px',border:`1px solid ${error?'#B91C1C':'#D9DEE5'}`,borderRadius:'8px',fontSize:'13.5px',fontFamily:'inherit',boxSizing:'border-box'}}/>
+      {error&&<div style={{fontSize:'11.5px',color:'#B91C1C',marginTop:'4px'}}>{error}</div>}
     </div>
   );
 }
@@ -117,7 +117,7 @@ export default function KontakTeleponPage() {
         .kontak-form-grid {
           display: grid;
           grid-template-columns: 1fr 1fr 1fr;
-          gap: 12px;
+          gap: 16px;
           align-items: start;
         }
         @media (max-width: 768px) {
@@ -128,51 +128,51 @@ export default function KontakTeleponPage() {
         }
       `}</style>
       {toast && (
-        <div style={{position:'fixed',bottom:'20px',right:'20px',padding:'11px 18px',borderRadius:'8px',color:'white',fontSize:'13px',fontWeight:'500',zIndex:9999,boxShadow:'0 4px 16px rgba(0,0,0,0.15)',background:toast.type==='error'?'#e74c3c':'#2E7D32'}}>
+        <div style={{position:'fixed',bottom:'24px',right:'24px',padding:'12px 20px',borderRadius:'10px',color:'white',fontSize:'13.5px',fontWeight:'600',zIndex:9999,boxShadow:'var(--shadow-lg)',background:toast.type==='error'?'#B91C1C':'#001178'}}>
           {toast.msg}
         </div>
       )}
 
       {/* Header */}
-      <div style={{marginBottom:'20px',display:'flex',alignItems:'flex-start',justifyContent:'space-between',flexWrap:'wrap',gap:'10px'}}>
+      <div style={{marginBottom:'24px',display:'flex',alignItems:'flex-start',justifyContent:'space-between',flexWrap:'wrap',gap:'12px'}}>
         <div>
-          <h2 style={{fontSize:'20px',fontWeight:'700',color:'#000'}}>Kontak Telepon</h2>
-          <p style={{fontSize:'13px',color:'#6B7280',marginTop:'3px'}}>Kelola kontak yang ditampilkan pada email persetujuan kunjungan</p>
+          <h2 style={{fontSize:'22px',fontWeight:'800',color:'#001178',letterSpacing:'-0.3px'}}>Kontak Telepon</h2>
+          <p style={{fontSize:'13.5px',color:'#64748B',marginTop:'3px'}}>Kelola kontak yang ditampilkan pada email persetujuan kunjungan</p>
         </div>
         <button onClick={handleOpenAdd}
-          style={{display:'flex',alignItems:'center',gap:'7px',padding:'9px 16px',border:'none',borderRadius:'8px',background:'#2E7D32',color:'white',cursor:'pointer',fontSize:'13px',fontWeight:'700',fontFamily:'inherit'}}>
+          style={{display:'flex',alignItems:'center',gap:'8px',padding:'10px 18px',minHeight:'42px',border:'none',borderRadius:'8px',background:'#0028B3',color:'white',cursor:'pointer',fontSize:'13px',fontWeight:'700',fontFamily:'inherit',boxShadow:'0 2px 8px rgba(0,40,179,0.2)'}}>
           + Tambah Kontak
         </button>
       </div>
 
       {/* Info Box */}
-      <div style={{background:'#F3FAF5',border:'1px solid #C6DCC8',borderRadius:'10px',padding:'12px 16px',marginBottom:'16px',display:'flex',gap:'10px',alignItems:'flex-start'}}>
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2E7D32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,marginTop:'2px'}}>
+      <div style={{background:'#F0F6FF',border:'1px solid #C5DBFF',borderRadius:'14px',padding:'14px 18px',marginBottom:'20px',display:'flex',gap:'12px',alignItems:'flex-start'}}>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,marginTop:'2px'}}>
           <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
         </svg>
-        <p style={{fontSize:'13px',color:'#256628',lineHeight:'1.6',margin:0}}>
+        <p style={{fontSize:'13.5px',color:'#001178',lineHeight:'1.6',margin:0}}>
           Kontak yang berstatus <strong>Aktif</strong> akan otomatis dicantumkan dalam email notifikasi persetujuan kunjungan, sehingga pemohon dapat menghubungi kontak tersebut.
         </p>
       </div>
 
       {/* Form Tambah/Edit */}
       {showForm && (
-        <div style={{background:'white',borderRadius:'14px',boxShadow:'0 2px 8px rgba(0,0,0,.06)',border:'1.5px solid #2E7D32',overflow:'hidden',marginBottom:'16px'}}>
-          <div style={{padding:'14px 18px',borderBottom:'1px solid #E5E7EB',background:'#2E7D32',color:'white',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-            <div style={{fontSize:'14px',fontWeight:'700'}}>{editId ? 'Edit Kontak' : 'Tambah Kontak Baru'}</div>
-            <button onClick={()=>setShowForm(false)} style={{background:'rgba(255,255,255,0.15)',border:'none',color:'white',width:'28px',height:'28px',borderRadius:'6px',cursor:'pointer',fontSize:'16px',display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
+        <div style={{background:'white',borderRadius:'16px',boxShadow:'var(--shadow-md)',border:'1.5px solid #0028B3',overflow:'hidden',marginBottom:'20px'}}>
+          <div style={{padding:'16px 20px',background:'#0028B3',color:'white',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+            <div style={{fontSize:'15px',fontWeight:'700'}}>{editId ? 'Edit Kontak' : 'Tambah Kontak Baru'}</div>
+            <button onClick={()=>setShowForm(false)} style={{background:'rgba(255,255,255,0.15)',border:'none',color:'white',width:'30px',height:'30px',borderRadius:'8px',cursor:'pointer',fontSize:'16px',display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
           </div>
-          <form onSubmit={handleSubmit} className="kontak-form-grid" style={{padding:'16px'}}>
+          <form onSubmit={handleSubmit} className="kontak-form-grid" style={{padding:'20px'}}>
             <FormInput label="Nama/Bagian" name="nama_pic" value={form.nama_pic} error={errors.nama_pic} onChange={handleFormChange('nama_pic')} placeholder="Misal: Bp. Budi / Resepsionis" required/>
             <FormInput label="Nomor Telepon" name="nomor_telepon" value={form.nomor_telepon} error={errors.nomor_telepon} onChange={handleFormChange('nomor_telepon')} placeholder="08xxxxxxxxxx" required/>
             <FormInput label="Keterangan (Opsional)" name="keterangan" value={form.keterangan} error={errors.keterangan} onChange={handleFormChange('keterangan')} placeholder="Catatan tambahan"/>
-            <div style={{gridColumn:'1/-1',display:'flex',gap:'8px',justifyContent:'flex-end'}}>
+            <div style={{gridColumn:'1/-1',display:'flex',gap:'10px',justifyContent:'flex-end',marginTop:'4px'}}>
               <button type="button" onClick={()=>setShowForm(false)}
-                style={{background:'white',border:'1px solid #E5E7EB',borderRadius:'8px',padding:'9px 18px',fontSize:'13px',fontWeight:'600',cursor:'pointer',fontFamily:'inherit'}}>
+                style={{background:'white',border:'1px solid #CBD5E1',borderRadius:'8px',padding:'10px 18px',minHeight:'42px',fontSize:'13px',fontWeight:'600',cursor:'pointer',fontFamily:'inherit'}}>
                 Batal
               </button>
               <button type="submit" disabled={submitting}
-                style={{background:submitting?'#aaa':'#2E7D32',color:'white',border:'none',borderRadius:'8px',padding:'9px 24px',fontSize:'13px',fontWeight:'700',cursor:'pointer',fontFamily:'inherit'}}>
+                style={{background:submitting?'#94A3B8':'#0028B3',color:'white',border:'none',borderRadius:'8px',padding:'10px 24px',minHeight:'42px',fontSize:'13px',fontWeight:'700',cursor:'pointer',fontFamily:'inherit',boxShadow:'0 2px 8px rgba(0,40,179,0.2)'}}>
                 {submitting?'Menyimpan...':(editId?'Simpan Perubahan':'Tambah Kontak')}
               </button>
             </div>
@@ -181,61 +181,61 @@ export default function KontakTeleponPage() {
       )}
 
       {/* Tabel Kontak */}
-      <div style={{background:'white',borderRadius:'14px',boxShadow:'0 2px 8px rgba(0,0,0,.06)',border:'1px solid #E5E7EB',overflow:'hidden'}}>
-        <div style={{padding:'13px 18px',borderBottom:'1px solid #E5E7EB',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-          <h3 style={{fontSize:'14px',fontWeight:'700',color:'#000'}}>Daftar Kontak</h3>
-          <span style={{fontSize:'12px',color:'#6B7280'}}>{data.length} kontak</span>
+      <div style={{background:'white',borderRadius:'16px',boxShadow:'var(--shadow-sm)',border:'1px solid rgba(228, 231, 237, 0.8)',overflow:'hidden'}}>
+        <div style={{padding:'16px 20px',borderBottom:'1px solid #E4E7ED',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <h3 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A'}}>Daftar Kontak</h3>
+          <span style={{fontSize:'12.5px',color:'#64748B',fontWeight:'500'}}>{data.length} kontak</span>
         </div>
 
         {loading ? (
-          <div style={{padding:'32px',textAlign:'center',color:'#6B7280',fontSize:'13px'}}>Memuat data...</div>
+          <div style={{padding:'36px',textAlign:'center',color:'#64748B',fontSize:'13.5px'}}>Memuat data...</div>
         ) : (
           <div style={{overflowX:'auto'}}>
             <table style={{width:'100%',borderCollapse:'collapse'}}>
               <thead>
                 <tr>
                   {['Nama PIC','No. Telepon','Keterangan','Status','Aksi'].map(h=>(
-                    <th key={h} style={{background:'#F7F8FA',padding:'9px 13px',fontSize:'10px',fontWeight:'700',color:'#6B7280',textTransform:'uppercase',letterSpacing:'0.5px',textAlign:'left',whiteSpace:'nowrap'}}>{h}</th>
+                    <th key={h} style={{background:'#F8FAFC',padding:'12px 16px',fontSize:'11px',fontWeight:'700',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.6px',textAlign:'left',whiteSpace:'nowrap',borderBottom:'1px solid #E2E8F0'}}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {data.length === 0 && <tr><td colSpan={5} style={{textAlign:'center',padding:'32px',color:'#6B7280'}}>Belum ada data kontak</td></tr>}
+                {data.length === 0 && <tr><td colSpan={5} style={{textAlign:'center',padding:'36px',color:'#64748B',fontSize:'13.5px'}}>Belum ada data kontak</td></tr>}
                 {data.map((item: any) => (
-                  <tr key={item.id} style={{borderTop:'1px solid #E5E7EB',opacity:item.status==='Nonaktif'?0.65:1,transition:'background 0.15s'}}
-                    onMouseEnter={e=>e.currentTarget.style.background='#F9FAFB'}
+                  <tr key={item.id} style={{borderTop:'1px solid #F1F5F9',opacity:item.status==='Nonaktif'?0.65:1,transition:'background 0.15s'}}
+                    onMouseEnter={e=>e.currentTarget.style.background='#F8FAFC'}
                     onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
-                    <td style={{padding:'12px 13px'}}>
-                      <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
-                        <div style={{width:'34px',height:'34px',borderRadius:'50%',background:item.status==='Aktif'?'#F3FAF5':'#F3F4F6',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke={item.status==='Aktif'?'#2E7D32':'#AAB2BC'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <td style={{padding:'14px 16px'}}>
+                      <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
+                        <div style={{width:'36px',height:'36px',borderRadius:'50%',background:item.status==='Aktif'?'#C5DBFF':'#F1F5F9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke={item.status==='Aktif'?'#0028B3':'#94A3B8'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.38 2 2 0 0 1 3.59 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-1.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                           </svg>
                         </div>
-                        <span style={{fontSize:'13px',fontWeight:'700',color:'#222'}}>{item.nama_pic}</span>
+                        <span style={{fontSize:'13.5px',fontWeight:'700',color:'#0F172A'}}>{item.nama_pic}</span>
                       </div>
                     </td>
-                    <td style={{padding:'12px 13px',fontSize:'13px',fontFamily:'monospace',color:'#444'}}>{item.nomor_telepon}</td>
-                    <td style={{padding:'12px 13px',fontSize:'13px',color:'#6B7280'}}>{item.keterangan||'-'}</td>
-                    <td style={{padding:'12px 13px'}}>
+                    <td style={{padding:'14px 16px',fontSize:'13.5px',fontFamily:'monospace',color:'#334155'}}>{item.nomor_telepon}</td>
+                    <td style={{padding:'14px 16px',fontSize:'13px',color:'#64748B'}}>{item.keterangan||'-'}</td>
+                    <td style={{padding:'14px 16px'}}>
                       <button onClick={()=>handleToggle(item.id)}
-                        style={{display:'inline-flex',alignItems:'center',gap:'5px',padding:'4px 12px',borderRadius:'20px',fontSize:'11px',fontWeight:'700',cursor:'pointer',border:'1.5px solid',transition:'all 0.2s',fontFamily:'inherit',
-                          background: item.status==='Aktif'?'#EAFAF1':'#F7F8FA',
-                          color: item.status==='Aktif'?'#256628':'#6B7280',
-                          borderColor: item.status==='Aktif'?'#2E7D32':'#E5E7EB',
+                        style={{display:'inline-flex',alignItems:'center',gap:'6px',padding:'4px 12px',borderRadius:'20px',fontSize:'11.5px',fontWeight:'700',cursor:'pointer',border:'1.5px solid',transition:'all 0.2s',fontFamily:'inherit',
+                          background: item.status==='Aktif'?'#DCFCE7':'#F8FAFC',
+                          color: item.status==='Aktif'?'#15803D':'#64748B',
+                          borderColor: item.status==='Aktif'?'#86EFAC':'#CBD5E1',
                         }}>
-                        <span style={{width:'7px',height:'7px',borderRadius:'50%',background:item.status==='Aktif'?'#2E7D32':'#AAB2BC',flexShrink:0,display:'inline-block'}}/>
+                        <span style={{width:'7px',height:'7px',borderRadius:'50%',background:item.status==='Aktif'?'#15803D':'#94A3B8',flexShrink:0,display:'inline-block'}}/>
                         {item.status}
                       </button>
                     </td>
-                    <td style={{padding:'12px 13px'}}>
-                      <div style={{display:'flex',gap:'6px'}}>
+                    <td style={{padding:'14px 16px'}}>
+                      <div style={{display:'flex',gap:'8px'}}>
                         <button onClick={()=>handleOpenEdit(item)}
-                          style={{padding:'5px 12px',border:'1px solid #E5E7EB',borderRadius:'7px',fontSize:'12px',fontWeight:'600',cursor:'pointer',background:'#F7F8FA',color:'#444',fontFamily:'inherit'}}>
+                          style={{padding:'6px 14px',border:'1px solid #CBD5E1',borderRadius:'8px',fontSize:'12px',fontWeight:'600',cursor:'pointer',background:'#F8FAFC',color:'#334155',fontFamily:'inherit'}}>
                           Edit
                         </button>
                         <button onClick={()=>handleHapus(item.id, item.nama_pic)}
-                          style={{padding:'5px 12px',border:'1px solid #FBCFCB',borderRadius:'7px',fontSize:'12px',fontWeight:'600',cursor:'pointer',background:'#FDEDEC',color:'#922B21',fontFamily:'inherit'}}>
+                          style={{padding:'6px 14px',border:'1px solid #FECACA',borderRadius:'8px',fontSize:'12px',fontWeight:'600',cursor:'pointer',background:'#FEF2F2',color:'#B91C1C',fontFamily:'inherit'}}>
                           Hapus
                         </button>
                       </div>
