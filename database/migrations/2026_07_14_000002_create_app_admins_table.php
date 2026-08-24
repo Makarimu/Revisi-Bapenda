@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kontak_telepon', function (Blueprint $table) {
+        Schema::create('app_admins', function (Blueprint $table) {
             $table->id();
-            $table->string('nomor_telepon', 20);
-            $table->string('nama_pic', 150);
-            $table->text('keterangan')->nullable();
-            $table->enum('status', ['Aktif', 'Nonaktif'])->default('Aktif');
+            $table->string('username', 50)->unique();
+            $table->string('password', 255);
+            $table->string('nama', 150);
             $table->timestamps();
-
-            $table->index('status');
         });
     }
 
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kontak_telepon');
+        Schema::dropIfExists('app_admins');
     }
 };

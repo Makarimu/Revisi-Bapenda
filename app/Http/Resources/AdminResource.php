@@ -12,7 +12,14 @@ class AdminResource extends JsonResource
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'nama' => $this->nama, // kolom DB: nama
+            'nama' => $this->nama,
+            'dinas_id' => $this->dinas_id,
+            'dinas' => $this->dinas ? [
+                'id' => $this->dinas->id,
+                'nama' => $this->dinas->nama,
+                'singkatan' => $this->dinas->singkatan,
+                'nomor_telepon' => $this->dinas->nomor_telepon,
+            ] : null,
         ];
     }
 }

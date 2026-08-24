@@ -206,6 +206,8 @@ function mapApiToResult(d: any, kontak: any) {
     noTelp: d.no_telp,
     email: d.email,
     tujuan: d.tujuan,
+    dinasTujuan: d.dinas_tujuan,
+    dinasId: d.dinas_id,
     namaKetuaRombongan: d.nama_ketua_rombongan,
     jabatanKetuaRombongan: d.jabatan_ketua_rombongan,
     jumlahPeserta: d.jumlah_peserta,
@@ -450,6 +452,19 @@ function RevisiDialog({ open, data, onClose, onSubmit }: any) {
   const [viewDate, setViewDate] = useState(new Date());
   const [file1, setFile1] = useState<File | null>(null);
   const [file2, setFile2] = useState<File | null>(null);
+  const [dinasList, setDinasList] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (open) {
+      api.get('/dinas')
+        .then(res => {
+          if (res.data.success) {
+            setDinasList(res.data.data);
+          }
+        })
+        .catch(err => console.error('Gagal mengambil daftar dinas:', err));
+    }
+  }, [open]);
 
   useEffect(() => {
     if (data) {
@@ -461,6 +476,8 @@ function RevisiDialog({ open, data, onClose, onSubmit }: any) {
         noTelp: data.noTelp || '',
         email: data.email || '',
         tujuan: data.tujuan || '',
+        dinasTujuan: data.dinasTujuan || '',
+        dinasId: data.dinasId !== null && data.dinasId !== undefined ? data.dinasId.toString() : '',
         namaKetuaRombongan: data.namaKetuaRombongan || '',
         jabatanKetuaRombongan: data.jabatanKetuaRombongan || '',
         jumlahPeserta: data.jumlahPeserta || '',
@@ -469,7 +486,7 @@ function RevisiDialog({ open, data, onClose, onSubmit }: any) {
       });
       setSelectedDate(data.tanggalKunjungan || '');
     }
-  }, [data]);
+  }, [data, open]);
 
   if (!open) return null;
 
@@ -535,7 +552,33 @@ function RevisiDialog({ open, data, onClose, onSubmit }: any) {
             <div className="form-group"><label>Email *</label><input type="email" value={form.email || ''} onChange={e => setForm((f: any) => ({ ...f, email: e.target.value }))} /></div>
           </div>
           <div className="form-grid full" style={{ marginTop: '14px' }}>
-            <div className="form-group"><label>Tujuan/Maksud Kunjungan *</label><textarea value={form.tujuan || ''} onChange={e => setForm((f: any) => ({ ...f, tujuan: e.target.value }))} /></div>
+            <div className="form-group">
+              <label>Dinas/Instansi yang Dituju *</label>
+              <select 
+                value={form.dinasId || ''} 
+                onChange={e => {
+                  const selectedId = e.target.value;
+                  const selectedDinas = dinasList.find(d => d.id.toString() === selectedId);
+                  setForm((f: any) => ({ 
+                    ...f, 
+                    dinasId: selectedId,
+                    dinasTujuan: selectedDinas ? selectedDinas.nama : ''
+                  }));
+                }}
+                style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '13.5px', fontFamily: 'inherit', outline: 'none', background: 'white' }}
+              >
+                <option value="">-- Pilih Dinas Tujuan --</option>
+                {dinasList.map((d: any) => (
+                  <option key={d.id} value={d.id}>{d.nama} ({d.singkatan})</option>
+                ))}
+              </select>
+              {form.dinasId && (
+                <div style={{ marginTop: '6px', fontSize: '12px', color: '#0028B3', fontWeight: '600' }}>
+                  No. Telp Dinas: {dinasList.find(d => d.id.toString() === form.dinasId)?.nomor_telepon || '-'}
+                </div>
+              )}
+            </div>
+            <div className="form-group"><label>Deskripsi Tujuan/Maksud Kunjungan *</label><textarea value={form.tujuan || ''} onChange={e => setForm((f: any) => ({ ...f, tujuan: e.target.value }))} /></div>
           </div>
           <div className="form-grid" style={{ marginTop: '14px' }}>
             <div className="form-group"><label>Nama Ketua Rombongan *</label><input type="text" value={form.namaKetuaRombongan || ''} onChange={e => setForm((f: any) => ({ ...f, namaKetuaRombongan: e.target.value }))} /></div>
@@ -692,6 +735,7 @@ export default function Status() {
       formData.append('no_telp', data.noTelp);
       formData.append('email', data.email);
       formData.append('tujuan', data.tujuan);
+      formData.append('dinas_id', data.dinasId);
       formData.append('nama_ketua_rombongan', data.namaKetuaRombongan);
       formData.append('jabatan_ketua_rombongan', data.jabatanKetuaRombongan);
       formData.append('jumlah_peserta', data.jumlahPeserta);
@@ -955,7 +999,8 @@ export default function Status() {
                       ['NARASUMBER/PENERIMA & JADWAL', result.narasumber || '-'],
                       ['JAM PENERIMAAN KUNJUNGAN', result.jamPenerimaan ? result.jamPenerimaan + ' WIB' : '-'],
                       ['', null],
-                      ['TUJUAN/MAKSUD', result.tujuan || '-'],
+                      ['DINAS TUJUAN', result.dinasTujuan || '-'],
+                      ['DESKRIPSI TUJUAN/MAKSUD', result.tujuan || '-'],
                       ['', null],
                       ['SURAT PERMOHONAN', result.linkSurat1 ? <a href={result.linkSurat1} target="_blank" rel="noreferrer" style={{color: '#0028B3', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '4px'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Lihat Surat</a> : '-'],
                       ['SURAT DAFTAR PERTANYAAN', result.linkSurat2 ? <a href={result.linkSurat2} target="_blank" rel="noreferrer" style={{color: '#0028B3', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '4px'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Lihat Surat</a> : '-'],

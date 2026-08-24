@@ -90,7 +90,7 @@ class KalenderService
             ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
             ->count();
 
-        if ($count >= self::MAKS_PER_HARI) {
+        if ($count >= config('visit.max_per_hari', 2)) {
             return false;
         }
 
@@ -110,7 +110,7 @@ class KalenderService
             ->whereDate('tanggal_kunjungan', '>=', Carbon::today())
             ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
             ->groupBy('tanggal_kunjungan')
-            ->having('total', '>=', self::MAKS_PER_HARI)
+            ->having('total', '>=', config('visit.max_per_hari', 2))
             ->get()
             ->map(fn($p) => $p->tanggal_kunjungan ? Carbon::parse($p->tanggal_kunjungan)->format('Y-m-d') : null)
             ->filter()

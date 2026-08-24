@@ -318,43 +318,35 @@ export default function Landing() {
               </svg>
             </div>
             <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#001178', margin: 0, letterSpacing: '-0.2px' }}>Layanan &amp; Peta Kabupaten Bogor</h3>
-              <p style={{ fontSize: '13px', color: '#64748B', margin: '3px 0 0 0', lineHeight: '1.5' }}>Akses portal integrasi EKABO dan peta sebaran kantor dinas di Kabupaten Bogor.</p>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#001178', margin: 0, letterSpacing: '-0.2px' }}>Peta Kabupaten Bogor</h3>
+              <p style={{ fontSize: '13px', color: '#64748B', margin: '3px 0 0 0', lineHeight: '1.5' }}>Peta Sebaran dan Lokasi Kantor Instansi di Kabupaten Bogor.</p>
             </div>
           </div>
 
           {/* Peta Interaktif Kabupaten Bogor */}
           <BogorMap />
 
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '4px' }}>
-            <a 
-              href="https://ekabo.bogorkab.go.id/" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="btn btn-primary"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', minHeight: '42px', fontSize: '13.5px', textDecoration: 'none', background: '#0028B3', color: '#FFFFFF', borderRadius: '8px', width: 'auto', fontWeight: '700', boxShadow: '0 2px 8px rgba(0,40,179,0.2)' }}
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '16px', height: '16px' }}>
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-              Portal EKABO
-            </a>
-            <a 
-              href="https://www.google.com/maps/search/kantor+dinas+kabupaten+bogor" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="btn btn-outline"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', minHeight: '42px', fontSize: '13.5px', textDecoration: 'none', background: '#FFFFFF', border: '1.5px solid #0028B3', color: '#0028B3', borderRadius: '8px', fontWeight: '700' }}
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '16px', height: '16px' }}>
-                <circle cx="12" cy="10" r="3" />
-                <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z" />
-              </svg>
-              Peta Lokasi Kantor Dinas
-            </a>
-          </div>
+
+        </div>
+
+        {/* ===== EKABO EXPLORE CARD ===== */}
+        <div className="cta-box" style={{ marginTop: '32px' }}>
+          <h3 style={{ textTransform: 'uppercase' }}>explore kabupaten bogor</h3>
+          <p style={{ textTransform: 'capitalize' }}>jelajahi dan temukan tempat wisata menarik</p>
+          <a 
+            href="https://ekabo.bogorkab.go.id/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="btn btn-gold"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', borderRadius: '8px', fontWeight: '700' }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '16px', height: '16px' }}>
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+            Kunjungi Portal EKABO
+          </a>
         </div>
       </div>
     </PublicLayout>

@@ -14,8 +14,8 @@ return new class extends Migration
         ];
 
         foreach ($renames as $from => $to) {
-            if (Schema::hasColumn('permohonan', $from) && !Schema::hasColumn('permohonan', $to)) {
-                Schema::table('permohonan', fn ($table) => $table->renameColumn($from, $to));
+            if (Schema::hasColumn('app_permohonan', $from) && !Schema::hasColumn('app_permohonan', $to)) {
+                Schema::table('app_permohonan', fn ($table) => $table->renameColumn($from, $to));
             }
         }
     }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExportAuditLog extends Model
 {
-    protected $table = 'export_audit_logs';
+    protected $table = 'app_export_audit_logs';
 
     protected $fillable = [
         'admin_id',

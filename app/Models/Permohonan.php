@@ -13,7 +13,7 @@ use Carbon\Carbon;
 class Permohonan extends Model
 {
     use HasFactory;
-    protected $table = 'permohonan';
+    protected $table = 'app_permohonan';
 
     protected $fillable = [
         'kode',
@@ -27,6 +27,8 @@ class Permohonan extends Model
         'email',
         'tanggal_kunjungan',
         'tujuan',
+        'dinas_tujuan',
+        'dinas_id',
         'jumlah_peserta',
         'rencana_menginap',
         'nama_hotel',
@@ -231,7 +233,11 @@ class Permohonan extends Model
         $today = now()->toDateString();
         return $query->where('status', 'Selesai')
             ->whereNotNull('ringkasan_pdf_path')
-            ->whereNull('ringkasan_sent_at')
             ->whereDate('tanggal_selesai_kunjungan', now()->subDays(3)->toDateString());
+    }
+
+    public function dinas()
+    {
+        return $this->belongsTo(Dinas::class, 'dinas_id');
     }
 }

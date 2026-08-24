@@ -14,8 +14,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('permohonan', function (Blueprint $table) {
-            if (!Schema::hasColumn('permohonan', 'tanggal_selesai_kunjungan')) {
+        Schema::table('app_permohonan', function (Blueprint $table) {
+            if (!Schema::hasColumn('app_permohonan', 'tanggal_selesai_kunjungan')) {
                 $table->dateTime('tanggal_selesai_kunjungan')->nullable()->after('updated_at');
             }
             $table->string('status', 30)->default('Pending')->change();
@@ -24,8 +24,8 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('permohonan', function (Blueprint $table) {
-            if (Schema::hasColumn('permohonan', 'tanggal_selesai_kunjungan')) {
+        Schema::table('app_permohonan', function (Blueprint $table) {
+            if (Schema::hasColumn('app_permohonan', 'tanggal_selesai_kunjungan')) {
                 $table->dropColumn('tanggal_selesai_kunjungan');
             }
         });

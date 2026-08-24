@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PermohonanStatusLog extends Model
 {
-    protected $table = 'permohonan_status_logs';
+    protected $table = 'app_permohonan_status_logs';
 
     protected $fillable = [
         'permohonan_id',

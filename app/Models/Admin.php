@@ -11,12 +11,13 @@ class Admin extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = 'admins';
+    protected $table = 'app_admins';
 
     protected $fillable = [
         'username',
         'password',
         'nama',
+        'dinas_id',
     ];
 
     protected $hidden = [
@@ -26,4 +27,9 @@ class Admin extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    public function dinas()
+    {
+        return $this->belongsTo(Dinas::class, 'dinas_id');
+    }
 }

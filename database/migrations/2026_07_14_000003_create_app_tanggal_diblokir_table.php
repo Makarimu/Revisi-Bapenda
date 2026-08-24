@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('permohonan_status_logs', function (Blueprint $table) {
+        Schema::create('app_tanggal_diblokir', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('permohonan_id');
-            $table->string('status_lama', 20)->nullable();
-            $table->string('status_baru', 20);
+            $table->date('tanggal')->unique();
             $table->text('keterangan')->nullable();
-            $table->string('diubah_oleh', 150)->nullable();
+            $table->string('diblokir_oleh', 150)->nullable();
+            $table->dateTime('tgl_diblokir');
             $table->timestamps();
 
-            $table->foreign('permohonan_id')->references('id')->on('permohonan')->onDelete('cascade');
+            $table->index('tanggal');
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('permohonan_status_logs');
+        Schema::dropIfExists('app_tanggal_diblokir');
     }
 };

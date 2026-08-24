@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import L from 'leaflet';
+import * as maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 type LayerType = 'kabupaten' | 'kecamatan' | 'kelurahan';
 
@@ -9,11 +10,11 @@ const LAYER_CONFIGS = {
     nameField: 'NKAB',
     label: 'Kabupaten',
     style: {
-      fillColor: '#1e7d3a',
+      fillColor: '#0028B3',
       weight: 3,
       opacity: 1,
-      color: '#145c2a',
-      fillOpacity: 0.15,
+      color: '#001178',
+      fillOpacity: 0.12,
     }
   },
   kecamatan: {
@@ -21,11 +22,11 @@ const LAYER_CONFIGS = {
     nameField: 'NKEC',
     label: 'Kecamatan',
     style: {
-      fillColor: '#1e7d3a',
+      fillColor: '#0028B3',
       weight: 1.5,
       opacity: 1,
       color: '#ffffff',
-      fillOpacity: 0.4,
+      fillOpacity: 0.3,
     }
   },
   kelurahan: {
@@ -33,53 +34,146 @@ const LAYER_CONFIGS = {
     nameField: 'NKEL',
     label: 'Kelurahan/Desa',
     style: {
-      fillColor: '#1e7d3a',
+      fillColor: '#0028B3',
       weight: 1,
       opacity: 1,
       color: '#ffffff',
-      fillOpacity: 0.5,
+      fillOpacity: 0.4,
     }
   }
 };
 
+// Helper: Calculate bounds of feature coordinates
+function getFeatureBounds(coordinates: any) {
+  let minLng = Infinity;
+  let minLat = Infinity;
+  let maxLng = -Infinity;
+  let maxLat = -Infinity;
+
+  const processCoords = (coords: any) => {
+    coords.forEach((coord: any) => {
+      if (Array.isArray(coord[0])) {
+        processCoords(coord);
+      } else {
+        const [lng, lat] = coord;
+        if (lng < minLng) minLng = lng;
+        if (lat < minLat) minLat = lat;
+        if (lng > maxLng) maxLng = lng;
+        if (lat > maxLat) maxLat = lat;
+      }
+    });
+  };
+
+  processCoords(coordinates);
+  return [[minLng, minLat], [maxLng, maxLat]] as [[number, number], [number, number]];
+}
+
+// Helper: Calculate bounds of all features
+function getCollectionBounds(features: any[]) {
+  let minLng = Infinity;
+  let minLat = Infinity;
+  let maxLng = -Infinity;
+  let maxLat = -Infinity;
+
+  const processCoords = (coords: any) => {
+    coords.forEach((coord: any) => {
+      if (Array.isArray(coord[0])) {
+        processCoords(coord);
+      } else {
+        const [lng, lat] = coord;
+        if (lng < minLng) minLng = lng;
+        if (lat < minLat) minLat = lat;
+        if (lng > maxLng) maxLng = lng;
+        if (lat > maxLat) maxLat = lat;
+      }
+    });
+  };
+
+  features.forEach(f => {
+    if (f.geometry && f.geometry.coordinates) {
+      processCoords(f.geometry.coordinates);
+    }
+  });
+
+  return [[minLng, minLat], [maxLng, maxLat]] as [[number, number], [number, number]];
+}
+
 export default function BogorMap() {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const leafletMap = useRef<L.Map | null>(null);
-  const currentGeoJsonLayer = useRef<L.GeoJSON | null>(null);
-  const markersLayerGroup = useRef<L.LayerGroup | null>(null);
-  
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<maplibregl.Map | null>(null);
+  const markersRef = useRef<maplibregl.Marker[]>([]);
+  const popupRef = useRef<maplibregl.Popup | null>(null);
+  const geoJsonCacheRef = useRef<Record<string, any>>({});
+
   const [activeLayer, setActiveLayer] = useState<LayerType>('kabupaten');
   const [loading, setLoading] = useState(false);
-  const [cachedData, setCachedData] = useState<Record<string, any>>({});
   
   const [dinasPoints, setDinasPoints] = useState<any[]>([]);
   const [showDinas, setShowDinas] = useState(true);
   const [selectedDinas, setSelectedDinas] = useState<any | null>(null);
+  
+  const [basemap, setBasemap] = useState<'default' | 'streets' | 'satellite'>('default');
+  const [is3D, setIs3D] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
-  // 1. Inisialisasi Peta & Ambil Data Titik Dinas (Hanya Sekali)
+  // 1. Initialize Maplibre Map Instance with Static Base Style
   useEffect(() => {
-    if (!mapRef.current || leafletMap.current) return;
+    if (!mapContainerRef.current || mapInstance.current) return;
 
-    leafletMap.current = L.map(mapRef.current, {
-      center: [-6.5971, 106.7996],
-      zoom: 10,
-      zoomControl: false,
+    // Define style statically to guarantee basemap layer is always at the absolute bottom
+    const defaultStyle: maplibregl.StyleSpecification = {
+      version: 8,
+      sources: {
+        'basemap-source': {
+          type: 'raster',
+          tiles: [
+            'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+          ],
+          tileSize: 256,
+          attribution: '&copy; OpenStreetMap &copy; CARTO'
+        }
+      },
+      layers: [
+        {
+          id: 'basemap-layer',
+          type: 'raster',
+          source: 'basemap-source',
+          minzoom: 0,
+          maxzoom: 20
+        }
+      ]
+    };
+
+    const map = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: defaultStyle,
+      center: [106.8288, -6.4831], // Longitude, Latitude
+      zoom: 9.6,
+      pitch: 0,
+      bearing: 0
     });
 
-    // Tambah Zoom Control di kanan bawah agar tidak tertutup menu layer terapung
-    L.control.zoom({ position: 'bottomright' }).addTo(leafletMap.current);
+    mapInstance.current = map;
 
-    // Peta Dasar (Tile Layer) - CartoDB Positron (terang/minimalis)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 20
-    }).addTo(leafletMap.current);
+    // Navigation controls
+    map.addControl(new maplibregl.NavigationControl({
+      showCompass: true,
+      showZoom: true,
+      visualizePitch: true
+    }), 'bottom-right');
 
-    // Inisialisasi Layer Group untuk penanda titik dinas
-    markersLayerGroup.current = L.layerGroup().addTo(leafletMap.current);
+    // Hover Tooltip Popup
+    popupRef.current = new maplibregl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      className: 'custom-tooltip-popup'
+    });
 
-    // Fetch data titik kedinasan
+    map.on('load', () => {
+      setMapLoaded(true);
+    });
+
+    // Load Dinas Points
     fetch('/dinas_points.json')
       .then((res) => {
         if (!res.ok) throw new Error('Gagal memuat koordinat dinas');
@@ -92,170 +186,317 @@ export default function BogorMap() {
         console.error('Error memuat titik dinas:', err);
       });
 
-    // Cleanup saat unmount
     return () => {
-      if (leafletMap.current) {
-        leafletMap.current.remove();
-        leafletMap.current = null;
+      if (mapInstance.current) {
+        mapInstance.current.remove();
+        mapInstance.current = null;
       }
     };
   }, []);
 
-  // 2. Effect untuk me-render Marker Titik Dinas (Setiap kali data/toggle berubah)
+  // 2. React to Basemap Switch
   useEffect(() => {
-    if (!leafletMap.current || !markersLayerGroup.current) return;
+    if (!mapInstance.current || !mapLoaded) return;
+    const map = mapInstance.current;
 
-    // Bersihkan marker sebelumnya
-    markersLayerGroup.current.clearLayers();
+    let tileUrl = '';
+    let attribution = '';
+
+    if (basemap === 'satellite') {
+      tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+      attribution = 'Tiles &copy; Esri &mdash; Source: Esri, USDA, USGS';
+    } else if (basemap === 'streets') {
+      tileUrl = 'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+      attribution = '&copy; OpenStreetMap &copy; CARTO';
+    } else {
+      tileUrl = 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+      attribution = '&copy; OpenStreetMap &copy; CARTO';
+    }
+
+    if (map.getLayer('basemap-layer')) map.removeLayer('basemap-layer');
+    if (map.getSource('basemap-source')) map.removeSource('basemap-source');
+
+    map.addSource('basemap-source', {
+      type: 'raster',
+      tiles: [tileUrl],
+      tileSize: 256,
+      attribution
+    });
+
+    // Find the first non-basemap layer to draw basemap layer behind it
+    const layers = map.getStyle().layers;
+    let beforeId = undefined;
+    if (layers && layers.length > 0) {
+      const firstNonBasemap = layers.find(l => l.id !== 'basemap-layer');
+      if (firstNonBasemap) {
+        beforeId = firstNonBasemap.id;
+      }
+    }
+
+    map.addLayer({
+      id: 'basemap-layer',
+      type: 'raster',
+      source: 'basemap-source',
+      minzoom: 0,
+      maxzoom: 20
+    }, beforeId);
+  }, [basemap, mapLoaded]);
+
+  // 3. React to Dinas Points Markers Drawing
+  useEffect(() => {
+    if (!mapInstance.current || !mapLoaded) return;
+    const map = mapInstance.current;
+
+    // Clear previous markers
+    markersRef.current.forEach(m => m.remove());
+    markersRef.current = [];
 
     if (showDinas && dinasPoints.length > 0) {
-      // Buat penanda kustom berbentuk lingkaran dengan gambar rumah
       dinasPoints.forEach((pt) => {
         if (pt.latitude && pt.longitude) {
-          const dinasIcon = L.divIcon({
-            html: `
-              <div class="premium-dinas-pin" style="
-                width: 42px;
-                height: 42px;
-                background: #ffffff;
-                border: 2.5px solid #e8741c;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-                cursor: pointer;
-                transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-              ">
-                <img src="/image/dinas_icon.png" style="width: 28px; height: 28px; object-fit: contain;" alt="Dinas" />
-              </div>
-            `,
-            className: 'custom-dinas-marker',
-            iconSize: [42, 42],
-            iconAnchor: [21, 21],
-            popupAnchor: [0, -21]
+          const el = document.createElement('div');
+          el.className = 'custom-dinas-marker';
+          el.innerHTML = `
+            <div class="premium-dinas-pin" style="
+              width: 42px;
+              height: 42px;
+              background: #ffffff;
+              border: 2.5px solid #e8741c;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+              cursor: pointer;
+              transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            ">
+              <img src="/image/dinas_icon.png" style="width: 28px; height: 28px; object-fit: contain;" alt="Dinas" />
+            </div>
+          `;
+
+          const hoverPopup = new maplibregl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            offset: 22,
+            className: 'custom-tooltip-popup'
+          }).setHTML(`<div style="font-weight: 700; color: #1e2a3a; font-family: inherit; font-size: 13px;">${pt.nama}</div>`);
+
+          el.addEventListener('mouseenter', () => {
+            hoverPopup.setLngLat([pt.longitude, pt.latitude]).addTo(map);
+          });
+          el.addEventListener('mouseleave', () => {
+            hoverPopup.remove();
           });
 
-          const marker = L.marker([pt.latitude, pt.longitude], { icon: dinasIcon });
-          
-          // Tampilkan nama dinas melayang secara transparan saat kursor berada di atas ikon rumah (hover)
-          marker.bindTooltip(pt.nama, {
-            sticky: true,
-            direction: 'top',
-            className: 'custom-tooltip'
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setSelectedDinas(pt);
+            map.flyTo({
+              center: [pt.longitude, pt.latitude],
+              zoom: 14.8,
+              pitch: 50,
+              bearing: -12,
+              duration: 1500,
+              essential: true
+            });
+            setIs3D(true);
           });
 
-          // Event klik marker zoom-in ke titik tersebut (Tanpa memicu zoom out wilayah GeoJSON di bawahnya, dan Tanpa popup)
-          marker.on('click', (e) => {
-            L.DomEvent.stopPropagation(e); // Mencegah event bubbling ke GeoJSON layer
-            setSelectedDinas(pt); // Memperbarui state dinas terpilih untuk info panel mengambang
-            const currentZoom = leafletMap.current?.getZoom() || 10;
-            const targetZoom = Math.max(currentZoom, 15); // Jangan kurangi zoom jika sudah zoom-in lebih dalam
-            leafletMap.current?.setView([pt.latitude, pt.longitude], targetZoom);
-          });
+          const marker = new maplibregl.Marker({ element: el })
+            .setLngLat([pt.longitude, pt.latitude])
+            .addTo(map);
 
-          markersLayerGroup.current?.addLayer(marker);
+          markersRef.current.push(marker);
         }
       });
     }
-  }, [showDinas, dinasPoints]);
+  }, [showDinas, dinasPoints, mapLoaded]);
 
-  // 3. Effect untuk memuat dan menggambar layer batas wilayah GeoJSON aktif
+  // 4. GeoJSON Batas Wilayah Rendering (Kabupaten/Kecamatan/Kelurahan)
   useEffect(() => {
-    if (!leafletMap.current) return;
+    if (!mapInstance.current || !mapLoaded) return;
+    const map = mapInstance.current;
 
     const config = LAYER_CONFIGS[activeLayer];
 
-    // Hapus layer GeoJSON sebelumnya jika ada
-    if (currentGeoJsonLayer.current) {
-      leafletMap.current.removeLayer(currentGeoJsonLayer.current);
-      currentGeoJsonLayer.current = null;
-    }
-
     const renderGeoJson = (geoJsonData: any) => {
-      if (!leafletMap.current) return;
+      // Clean up previous GeoJSON source and layers
+      if (map.getLayer('area-fill')) map.removeLayer('area-fill');
+      if (map.getLayer('area-fill-hover')) map.removeLayer('area-fill-hover');
+      if (map.getLayer('area-line')) map.removeLayer('area-line');
+      if (map.getSource('area-source')) map.removeSource('area-source');
 
-      const layer = L.geoJSON(geoJsonData, {
-        style: () => ({ ...config.style }),
-        onEachFeature: (feature, layerInstance) => {
-          // Penentuan teks tooltip (hanya nama polos & info kecamatan untuk kelurahan)
-          let tooltipText = '';
+      // Assign numeric feature IDs for filtering
+      geoJsonData.features = geoJsonData.features.map((f: any, idx: number) => ({
+        ...f,
+        id: idx
+      }));
+
+      map.addSource('area-source', {
+        type: 'geojson',
+        data: geoJsonData
+      });
+
+      // Fill Layer (Base)
+      map.addLayer({
+        id: 'area-fill',
+        type: 'fill',
+        source: 'area-source',
+        paint: {
+          'fill-color': config.style.fillColor,
+          'fill-opacity': config.style.fillOpacity
+        }
+      });
+
+      // Hover Fill Layer (Highlighter - replaces feature-state for maximum WebGL compatibility)
+      map.addLayer({
+        id: 'area-fill-hover',
+        type: 'fill',
+        source: 'area-source',
+        paint: {
+          'fill-color': '#e8741c', // Oranye Bappenda
+          'fill-opacity': activeLayer === 'kabupaten' ? 0.35 : 0.75
+        },
+        filter: ['==', ['id'], -1] // Matches nothing initially
+      });
+
+      // Border Layer
+      map.addLayer({
+        id: 'area-line',
+        type: 'line',
+        source: 'area-source',
+        paint: {
+          'line-color': config.style.color,
+          'line-width': config.style.weight
+        }
+      });
+
+      // Hover Event Listeners using simple layer filter highlight
+      map.on('mousemove', 'area-fill', (e) => {
+        if (e.features && e.features.length > 0) {
+          map.getCanvas().style.cursor = 'pointer';
+          const feature = e.features[0];
+          
+          if (feature.id !== undefined) {
+            map.setFilter('area-fill-hover', ['==', ['id'], feature.id]);
+          }
+
           const props = feature.properties || {};
+          let tooltipText = '';
           if (activeLayer === 'kabupaten') {
             tooltipText = props.NKAB || 'KABUPATEN BOGOR';
           } else if (activeLayer === 'kecamatan') {
             tooltipText = props.NKEC || '';
           } else if (activeLayer === 'kelurahan') {
-            // Tampilkan nama kelurahan beserta kecamatan induknya
             tooltipText = props.NKEL ? `${props.NKEL} (Kec. ${props.NKEC || ''})` : '';
           }
 
-          layerInstance.bindTooltip(tooltipText, {
-            sticky: true,
-            direction: 'top',
-            className: 'custom-tooltip'
-          });
-
-          // Efek Interaktif (Hover & Click)
-          layerInstance.on({
-            mouseover: (e) => {
-              const target = e.target;
-              target.setStyle({
-                fillColor: '#e8741c', // Oranye/Emas Bappenda saat hover
-                fillOpacity: activeLayer === 'kabupaten' ? 0.3 : 0.75,
-                weight: activeLayer === 'kabupaten' ? 3.5 : 2,
-                color: activeLayer === 'kabupaten' ? '#c75f10' : '#ffffff',
-              });
-              target.bringToFront();
-            },
-            mouseout: (e) => {
-              layer.resetStyle(e.target);
-            },
-            click: (e) => {
-              // Zoom ke bounds wilayah bersangkutan
-              leafletMap.current?.fitBounds(e.target.getBounds(), { padding: [10, 10] });
-            }
-          });
+          if (popupRef.current) {
+            popupRef.current
+              .setLngLat(e.lngLat)
+              .setHTML(`<div style="font-weight:700; color:#1e2a3a; font-family:inherit; font-size:13px; text-transform: capitalize;">${tooltipText.toLowerCase()}</div>`)
+              .addTo(map);
+          }
         }
-      }).addTo(leafletMap.current);
+      });
 
-      currentGeoJsonLayer.current = layer;
+      map.on('mouseleave', 'area-fill', () => {
+        map.getCanvas().style.cursor = '';
+        map.setFilter('area-fill-hover', ['==', ['id'], -1]);
+        if (popupRef.current) popupRef.current.remove();
+      });
 
-      // Fit peta ke batas wilayah layer yang aktif
-      leafletMap.current.fitBounds(layer.getBounds(), { padding: [20, 20] });
+      // Click Zoom-in Layer Bounds Listener
+      map.on('click', 'area-fill', (e) => {
+        if (e.features && e.features.length > 0) {
+          const feature = e.features[0];
+          if (feature.geometry) {
+            const bounds = getFeatureBounds(feature.geometry.coordinates);
+            map.fitBounds(bounds, { padding: 40, duration: 1200 });
+          }
+        }
+      });
+
+      // Initially fit collection bounds nicely
+      const collectionBounds = getCollectionBounds(geoJsonData.features);
+      map.fitBounds(collectionBounds, { padding: 25, duration: 1000 });
     };
 
-    // Gunakan cache jika data sudah pernah diunduh
-    if (cachedData[activeLayer]) {
-      renderGeoJson(cachedData[activeLayer]);
+    // GeoJSON File caching & Fetch loading flow
+    const cached = geoJsonCacheRef.current[activeLayer];
+    if (cached) {
+      renderGeoJson(cached);
     } else {
       setLoading(true);
       fetch(config.url)
         .then((res) => {
-          if (!res.ok) throw new Error('Gagal memuat file wilayah');
+          if (!res.ok) throw new Error('Gagal memuat batas wilayah');
           return res.json();
         })
         .then((data) => {
-          setCachedData((prev) => ({ ...prev, [activeLayer]: data }));
+          geoJsonCacheRef.current[activeLayer] = data;
           renderGeoJson(data);
           setLoading(false);
         })
         .catch((err) => {
-          console.error(`Gagal memuat layer ${activeLayer}:`, err);
+          console.error(`Gagal memuat batas wilayah ${activeLayer}:`, err);
           setLoading(false);
         });
     }
-  }, [activeLayer, cachedData]);
+  }, [activeLayer, mapLoaded]);
+
+  // 3D Angle Camera Toggle
+  const toggle3D = () => {
+    if (!mapInstance.current) return;
+    const map = mapInstance.current;
+    if (is3D) {
+      map.easeTo({ pitch: 0, bearing: 0, duration: 1200 });
+      setIs3D(false);
+    } else {
+      map.easeTo({ pitch: 55, bearing: -15, duration: 1200 });
+      setIs3D(true);
+    }
+  };
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '500px', background: '#F1F5F9', borderRadius: '14px', overflow: 'hidden', border: '1px solid #E2E8F0', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)' }}>
-      {/* Loading Indicator */}
+      {/* Floating Basemap Selector */}
+      <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 999, display: 'flex', alignItems: 'center', background: '#ffffff', padding: '4px', borderRadius: '10px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', border: '1px solid rgba(0,0,0,0.05)', gap: '4px' }}>
+        {[
+          { key: 'default', label: 'Default' },
+          { key: 'streets', label: 'Jalan' },
+          { key: 'satellite', label: 'Satelit' }
+        ].map((item) => {
+          const isActive = basemap === item.key;
+          return (
+            <button
+              key={item.key}
+              onClick={() => setBasemap(item.key as any)}
+              style={{
+                border: 'none',
+                background: isActive ? '#0028B3' : 'transparent',
+                color: isActive ? '#ffffff' : '#475569',
+                padding: '7px 14px',
+                fontSize: '12px',
+                fontWeight: 600,
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {item.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Loading GeoJSON spinner */}
       {loading && (
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center', justifyContent: 'center', background: 'rgba(255, 255, 255, 0.75)', zIndex: 1000, transition: 'all 0.3s ease' }}>
-          <div style={{ width: '32px', height: '32px', border: '3.5px solid #E2E8F0', borderTopColor: '#1e7d3a', borderRadius: '50%', animation: 'map-spin 0.8s linear infinite' }} />
-          <span style={{ fontSize: '12.5px', color: '#1e7d3a', fontWeight: 600 }}>Memuat batas wilayah...</span>
+          <div style={{ width: '32px', height: '32px', border: '3.5px solid #E2E8F0', borderTopColor: '#0028B3', borderRadius: '50%', animation: 'maplibre-spin 0.8s linear infinite' }} />
+          <span style={{ fontSize: '12.5px', color: '#0028B3', fontWeight: 600 }}>Memuat batas wilayah...</span>
           <style>{`
-            @keyframes map-spin { to { transform: rotate(360deg); } }
+            @keyframes maplibre-spin { to { transform: rotate(360deg); } }
           `}</style>
         </div>
       )}
@@ -270,7 +511,7 @@ export default function BogorMap() {
               onClick={() => setActiveLayer(key)}
               style={{
                 border: 'none',
-                background: isActive ? '#1e7d3a' : 'transparent',
+                background: isActive ? '#0028B3' : 'transparent',
                 color: isActive ? '#ffffff' : '#475569',
                 padding: '7px 14px',
                 fontSize: '12px',
@@ -285,10 +526,9 @@ export default function BogorMap() {
           );
         })}
 
-        {/* Separator line */}
         <div style={{ width: '1px', height: '20px', background: '#E2E8F0', margin: '0 4px' }} />
 
-        {/* Dinas Toggle Button */}
+        {/* Instansi Marker toggle */}
         <button
           onClick={() => setShowDinas(!showDinas)}
           style={{
@@ -310,11 +550,11 @@ export default function BogorMap() {
             <circle cx="12" cy="10" r="3" />
             <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z" />
           </svg>
-          Kantor Dinas
+          Kantor Instansi
         </button>
       </div>
 
-      {/* Floating Information Card for Selected Dinas (Clean React Component, no Leaflet positioning bugs) */}
+      {/* Selected Dinas Floating Detail Card */}
       {selectedDinas && (
         <div style={{
           position: 'absolute',
@@ -378,13 +618,39 @@ export default function BogorMap() {
         </div>
       )}
 
-      {/* Map Container */}
-      <div ref={mapRef} style={{ width: '100%', height: '100%', zIndex: 1 }} />
+      {/* Maplibre container */}
+      <div ref={mapContainerRef} style={{ width: '100%', height: '100%', zIndex: 1 }} />
 
-      {/* Override styling Leaflet untuk custom tooltip & premium popup */}
+      {/* 3D Mode Camera Toggle Circle Button */}
+      <button
+        onClick={toggle3D}
+        style={{
+          position: 'absolute',
+          bottom: '76px',
+          right: '10px',
+          zIndex: 999,
+          background: is3D ? '#0028B3' : '#ffffff',
+          color: is3D ? '#ffffff' : '#475569',
+          border: 'none',
+          borderRadius: '50%',
+          width: '38px',
+          height: '38px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          cursor: 'pointer',
+          transition: 'all 0.2s ease',
+        }}
+        title="Tingkatkan sudut pandang (3D)"
+      >
+        <span style={{ fontSize: '11.5px', fontWeight: '800' }}>3D</span>
+      </button>
+
+      {/* CSS Overrides for Maplibre components */}
       <style>{`
-        /* 1. Hilangkan background putih & pointer segitiga tooltip */
-        .custom-tooltip {
+        /* Maplibre Tooltip design override */
+        .custom-tooltip-popup .maplibregl-popup-content {
           background: transparent !important;
           border: none !important;
           box-shadow: none !important;
@@ -392,7 +658,7 @@ export default function BogorMap() {
           font-size: 13px !important;
           font-weight: 700 !important;
           pointer-events: none !important;
-          /* Outline putih pembatas teks */
+          padding: 0 !important;
           text-shadow: 
             -1.5px -1.5px 0 #ffffff,  
              1.5px -1.5px 0 #ffffff,
@@ -400,11 +666,11 @@ export default function BogorMap() {
              1.5px  1.5px 0 #ffffff,
              0px 2px 4px rgba(0,0,0,0.15) !important;
         }
-        .custom-tooltip::before {
+        .custom-tooltip-popup .maplibregl-popup-tip {
           display: none !important;
         }
-        
-        /* 2. Animasi hover zoom-in untuk marker dinas kustom */
+
+        /* Hover animation for premium marker pins */
         .custom-dinas-marker:hover .premium-dinas-pin {
           transform: scale(1.18) !important;
           box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25) !important;

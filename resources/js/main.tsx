@@ -20,6 +20,8 @@ const PermohonanAdmin = lazy(() => import('./pages/admin/Permohonan'));
 const TanggalDiblokir = lazy(() => import('./pages/admin/TanggalDiblokir'));
 const KontakTelepon = lazy(() => import('./pages/admin/KontakTelepon'));
 const ReviewAdmin = lazy(() => import('./pages/admin/Review'));
+const DinasAdmin = lazy(() => import('./pages/admin/Dinas'));
+const ManajemenAdmin = lazy(() => import('./pages/admin/ManajemenAdmin'));
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -72,6 +74,8 @@ const AppRoutes = () => {
         <Route path="/admin/tanggal-diblokir" element={<ProtectedRoute><TanggalDiblokir /></ProtectedRoute>} />
         <Route path="/admin/kontak" element={<ProtectedRoute><KontakTelepon /></ProtectedRoute>} />
         <Route path="/admin/review" element={<ProtectedRoute><ReviewAdmin /></ProtectedRoute>} />
+        <Route path="/admin/dinas" element={<ProtectedRoute><DinasAdmin /></ProtectedRoute>} />
+        <Route path="/admin/users" element={<ProtectedRoute><ManajemenAdmin /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

@@ -58,6 +58,7 @@ class PermohonanExport implements
             'Jumlah Peserta',
             'Tanggal Kunjungan',
             'Jam Kunjungan',
+            'Dinas Tujuan',
             'Tujuan Kunjungan',
             'Status',
             'Tanggal Persetujuan',
@@ -80,6 +81,7 @@ class PermohonanExport implements
             $row->jumlah_peserta . ' orang',
             $row->tanggal_kunjungan ? Carbon::parse($row->tanggal_kunjungan)->locale('id')->isoFormat('D MMMM YYYY') : '-',
             $row->jam_penerimaan ? $row->jam_penerimaan . ' WIB' : '-',
+            $row->dinas_tujuan ?? '-',
             $row->tujuan,
             $row->status,
             $row->tgl_diproses ? Carbon::parse($row->tgl_diproses)->locale('id')->isoFormat('D MMMM YYYY HH:mm') : '-',
@@ -112,7 +114,7 @@ class PermohonanExport implements
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
-                $totalColumns = 16;
+                $totalColumns = 17;
                 $lastCol      = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($totalColumns);
 
                 // Insert title rows before the data

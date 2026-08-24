@@ -13,17 +13,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('permohonan', function (Blueprint $table) {
-            if (!Schema::hasColumn('permohonan', 'ringkasan_pdf_path')) {
+        Schema::table('app_permohonan', function (Blueprint $table) {
+            if (!Schema::hasColumn('app_permohonan', 'ringkasan_pdf_path')) {
                 $table->text('ringkasan_pdf_path')->nullable()->after('updated_at');
             }
-            if (!Schema::hasColumn('permohonan', 'ringkasan_uploaded_at')) {
+            if (!Schema::hasColumn('app_permohonan', 'ringkasan_uploaded_at')) {
                 $table->dateTime('ringkasan_uploaded_at')->nullable()->after('ringkasan_pdf_path');
             }
-            if (!Schema::hasColumn('permohonan', 'ringkasan_sent_at')) {
+            if (!Schema::hasColumn('app_permohonan', 'ringkasan_sent_at')) {
                 $table->dateTime('ringkasan_sent_at')->nullable()->after('ringkasan_uploaded_at');
             }
-            if (!Schema::hasColumn('permohonan', 'ringkasan_sent_by')) {
+            if (!Schema::hasColumn('app_permohonan', 'ringkasan_sent_by')) {
                 $table->string('ringkasan_sent_by', 200)->nullable()->after('ringkasan_sent_at');
             }
         });
@@ -31,10 +31,10 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('permohonan', function (Blueprint $table) {
+        Schema::table('app_permohonan', function (Blueprint $table) {
             $columns = ['ringkasan_pdf_path', 'ringkasan_uploaded_at', 'ringkasan_sent_at', 'ringkasan_sent_by'];
             foreach ($columns as $col) {
-                if (Schema::hasColumn('permohonan', $col)) {
+                if (Schema::hasColumn('app_permohonan', $col)) {
                     $table->dropColumn($col);
                 }
             }

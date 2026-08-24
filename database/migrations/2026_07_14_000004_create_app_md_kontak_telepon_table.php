@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tanggal_diblokir', function (Blueprint $table) {
+        Schema::create('app_md_kontak_telepon', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggal')->unique();
+            $table->string('nomor_telepon', 20);
+            $table->string('nama_pic', 150);
             $table->text('keterangan')->nullable();
-            $table->string('diblokir_oleh', 150)->nullable();
-            $table->dateTime('tgl_diblokir');
+            $table->enum('status', ['Aktif', 'Nonaktif'])->default('Aktif');
             $table->timestamps();
 
-            $table->index('tanggal');
+            $table->index('status');
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tanggal_diblokir');
+        Schema::dropIfExists('app_md_kontak_telepon');
     }
 };

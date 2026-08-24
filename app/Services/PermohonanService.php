@@ -60,6 +60,13 @@ class PermohonanService
             throw new Exception("Tanggal tidak valid, sudah penuh, atau kurang dari H-7.");
         }
 
+        if (isset($data['dinas_id'])) {
+            $dinas = \App\Models\Dinas::find($data['dinas_id']);
+            if ($dinas) {
+                $data['dinas_tujuan'] = $dinas->nama;
+            }
+        }
+
         $data['status'] = 'Pending';
         $data['tgl_pengajuan_awal'] = Carbon::now();
 
@@ -182,6 +189,13 @@ class PermohonanService
 
         $keteranganLama = $permohonan->keterangan_admin;
         $statusSebelumnya = $permohonan->status;
+
+        if (isset($data['dinas_id'])) {
+            $dinas = \App\Models\Dinas::find($data['dinas_id']);
+            if ($dinas) {
+                $permohonan->dinas_tujuan = $dinas->nama;
+            }
+        }
 
         $permohonan->fill($data);
         $permohonan->status = 'Revisi';

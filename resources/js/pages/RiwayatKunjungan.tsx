@@ -240,11 +240,18 @@ const RiwayatCard = memo(function RiwayatCard({
         </div>
 
         {/* Tujuan */}
-        {item.tujuan && (
-          <div style={{ fontSize: '12.5px', color: '#64748B', marginBottom: '14px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.6' }}>
-            <strong style={{ color: '#475569' }}>Maksud:</strong> {item.tujuan}
-          </div>
-        )}
+        <div style={{ fontSize: '12.5px', color: '#64748B', marginBottom: '14px', lineHeight: '1.6' }}>
+          {item.dinas_tujuan && (
+            <div style={{ marginBottom: '4px' }}>
+              <strong style={{ color: '#475569' }}>Dinas Tujuan:</strong> {item.dinas_tujuan}
+            </div>
+          )}
+          {item.tujuan && (
+            <div style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+              <strong style={{ color: '#475569' }}>Maksud:</strong> {item.tujuan}
+            </div>
+          )}
+        </div>
 
         {/* Rating */}
         <div style={{ marginBottom: '14px' }}>

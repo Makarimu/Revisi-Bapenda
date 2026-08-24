@@ -17,13 +17,13 @@ const LEGEND_DOT_STYLE_TERPAKAI = { background: '#FEE2E2', border: '1.5px solid 
 const LEGEND_DOT_STYLE_TIDAK = { background: '#F1F3F6', border: '1.5px solid #9CA3AF' };
 const INITIAL_FORM = {
   instansi: '', namaPic: '', jabatanPic: '',
-  noTelp: '', email: '', tujuan: '', namaKetuaRombongan: '',
+  noTelp: '', email: '', tujuan: '', dinasId: '', dinasTujuan: '', namaKetuaRombongan: '',
   jabatanKetuaRombongan: '', jumlahPeserta: '', rencanaMenginap: '', namaHotel: '', nomorSurat: '',
 };
 // Style pesan validasi inline
 const ERR_MSG_STYLE: React.CSSProperties = { color: '#B91C1C', fontSize: '12px', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' };
 // Urutan field yang akan digulung saat ada error pertama
-const FIELD_ORDER = ['nomorSurat', 'namaPic', 'instansi', 'jabatanPic', 'noTelp', 'email', 'tujuan', 'namaKetuaRombongan', 'jabatanKetuaRombongan', 'jumlahPeserta', 'rencanaMenginap', 'namaHotel', 'file1', 'file2'];
+const FIELD_ORDER = ['nomorSurat', 'namaPic', 'instansi', 'jabatanPic', 'noTelp', 'email', 'dinasId', 'tujuan', 'namaKetuaRombongan', 'jabatanKetuaRombongan', 'jumlahPeserta', 'rencanaMenginap', 'namaHotel', 'file1', 'file2'];
 
 function formatDate(date: any) {
   const y = date.getFullYear();
@@ -546,6 +546,17 @@ export default function Permohonan() {
   const [minDateStr, setMinDateStr] = useState<string>('');
   const [userBookedDates, setUserBookedDates] = useState<string[]>([]);
   const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
+  const [dinasList, setDinasList] = useState<any[]>([]);
+
+  useEffect(() => {
+    api.get('/dinas')
+      .then(res => {
+        if (res.data.success) {
+          setDinasList(res.data.data);
+        }
+      })
+      .catch(err => console.error('Gagal mengambil daftar dinas:', err));
+  }, []);
 
   const showToast = useCallback((msg: any, type = 'success') => {
     setToast({ show: true, msg, type });
@@ -668,7 +679,8 @@ export default function Permohonan() {
     else if (form.noTelp.replace(/\D/g, '').length < 10) e.noTelp = 'Nomor Telepon tidak valid (min 10 digit).';
     if (!form.email) e.email = 'Email wajib diisi.';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Format email tidak valid.';
-    if (!form.tujuan) e.tujuan = 'Tujuan/Maksud Kunjungan wajib diisi.';
+    if (!form.dinasId) e.dinasId = 'Dinas/Instansi yang Dituju wajib diisi.';
+    if (!form.tujuan) e.tujuan = 'Deskripsi Tujuan/Maksud Kunjungan wajib diisi.';
     if (!form.namaKetuaRombongan) e.namaKetuaRombongan = 'Nama Ketua Rombongan wajib diisi.';
     if (!form.jabatanKetuaRombongan) e.jabatanKetuaRombongan = 'Jabatan Ketua Rombongan wajib diisi.';
     if (!form.jumlahPeserta) e.jumlahPeserta = 'Jumlah Peserta wajib diisi.';
@@ -722,6 +734,7 @@ export default function Permohonan() {
       formData.append('no_telp', form.noTelp);
       formData.append('email', form.email);
       formData.append('tujuan', form.tujuan);
+      formData.append('dinas_id', form.dinasId);
       formData.append('nama_ketua_rombongan', form.namaKetuaRombongan);
       formData.append('jabatan_ketua_rombongan', form.jabatanKetuaRombongan);
       formData.append('jumlah_peserta', form.jumlahPeserta);
@@ -753,6 +766,7 @@ export default function Permohonan() {
         if (errData.no_telp) newErrors.noTelp = true;
         if (errData.email) newErrors.email = true;
         if (errData.tujuan) newErrors.tujuan = true;
+        if (errData.dinas_id) newErrors.dinasId = true;
         if (errData.nama_ketua_rombongan) newErrors.namaKetuaRombongan = true;
         if (errData.jabatan_ketua_rombongan) newErrors.jabatanKetuaRombongan = true;
         if (errData.jumlah_peserta) newErrors.jumlahPeserta = true;
@@ -930,8 +944,42 @@ export default function Permohonan() {
 
                       <div className="form-title">Detail Kunjungan</div>
                       <div className="form-grid full">
+                        <div className="form-group" id="field-dinasId">
+                          <label>Dinas/Instansi yang Dituju *</label>
+                          <select 
+                            className={errors.dinasId ? 'error' : ''} 
+                            value={form.dinasId} 
+                            onChange={e => { 
+                              const selectedId = e.target.value;
+                              const selectedDinas = dinasList.find(d => d.id.toString() === selectedId);
+                              setForm((f: any) => ({ 
+                                ...f, 
+                                dinasId: selectedId,
+                                dinasTujuan: selectedDinas ? selectedDinas.nama : ''
+                              })); 
+                              if (selectedId) clearError('dinasId'); 
+                            }}
+                            style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '13.5px', fontFamily: 'inherit', outline: 'none', background: 'white' }}
+                          >
+                            <option value="">-- Pilih Dinas Tujuan --</option>
+                            {dinasList.map((d: any) => (
+                              <option key={d.id} value={d.id}>
+                                {d.nama} ({d.singkatan})
+                              </option>
+                            ))}
+                          </select>
+                          {errors.dinasId && <p style={ERR_MSG_STYLE}>⚠ {errors.dinasId}</p>}
+                          {form.dinasId && (
+                            <div style={{ marginTop: '8px', fontSize: '12.5px', color: '#0028B3', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                              </svg>
+                              <span>No. Telp Dinas: {dinasList.find(d => d.id.toString() === form.dinasId)?.nomor_telepon || '-'}</span>
+                            </div>
+                          )}
+                        </div>
                         <div className="form-group" id="field-tujuan">
-                          <label>Tujuan/Maksud Kunjungan *</label>
+                          <label>Deskripsi Tujuan/Maksud Kunjungan *</label>
                           <textarea className={errors.tujuan ? 'error' : ''} value={form.tujuan} onChange={e => { setForm((f: any) => ({ ...f, input: e.target.value, tujuan: e.target.value })); if (e.target.value) clearError('tujuan'); }} placeholder="Jelaskan tujuan kunjungan secara singkat dan jelas" />
                           {errors.tujuan && <p style={ERR_MSG_STYLE}>⚠ {errors.tujuan}</p>}
                         </div>
@@ -1020,7 +1068,8 @@ export default function Permohonan() {
                         <div className="confirm-block-title">Detail Kunjungan</div>
                         <table className="confirm-table">
                           <tbody>
-                            <tr><td>Tujuan</td><td>{form.tujuan}</td></tr>
+                            <tr><td>Dinas Tujuan</td><td>{form.dinasTujuan}</td></tr>
+                            <tr><td>Deskripsi Tujuan</td><td>{form.tujuan}</td></tr>
                             <tr><td>Ketua Rombongan</td><td>{form.namaKetuaRombongan} ({form.jabatanKetuaRombongan})</td></tr>
                             <tr><td>Jumlah Peserta</td><td>{form.jumlahPeserta} orang</td></tr>
                             <tr><td>Rencana Menginap</td><td>{form.rencanaMenginap}</td></tr>

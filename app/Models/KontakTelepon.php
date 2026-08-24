@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class KontakTelepon extends Model
 {
-    protected $table = 'kontak_telepon';
+    protected $table = 'app_md_kontak_telepon';
 
     protected $fillable = [
         'nomor_telepon',

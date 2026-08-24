@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('reviews', function (Blueprint $table) {
+        Schema::create('app_reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('permohonan_id')->constrained('permohonan')->onDelete('cascade');
+            $table->foreignId('permohonan_id')->constrained('app_permohonan')->onDelete('cascade');
             $table->tinyInteger('rating')->unsigned(); // 1–5
             $table->text('review');
             $table->string('status', 20)->default('pending'); // pending | approved | rejected
@@ -22,6 +22,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('reviews');
+        Schema::dropIfExists('app_reviews');
     }
 };

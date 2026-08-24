@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { login as apiLogin } from '../../api/admin/auth';
 import { AuthContext } from '../../contexts/AuthContext';
 
-const LOGO_URL = '/image/kab_bogor.png';
+const LOGO_URL = '/image/icon.png';
 const BG_URL = '/image/login_bg.jpg';
 
 export default function Login() {

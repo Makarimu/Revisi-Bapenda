@@ -265,12 +265,30 @@ function ModalEdit({ data, onClose, onSuccess }) {
     no_telp: data.no_telp || '',
     email: data.email || '',
     tujuan: data.tujuan || '',
+    dinas_tujuan: data.dinas_tujuan || '',
+    dinas_id: data.dinas_id !== null && data.dinas_id !== undefined ? data.dinas_id.toString() : '',
     nama_ketua_rombongan: data.nama_ketua_rombongan || '',
     jabatan_ketua_rombongan: data.jabatan_ketua_rombongan || '',
     jumlah_peserta: data.jumlah_peserta || '',
   });
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState('');
+  const [dinasOptions, setDinasOptions] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchDinas = async () => {
+      try {
+        const res = await fetch('/api/dinas');
+        const json = await res.json();
+        if (json.success) {
+          setDinasOptions(json.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDinas();
+  }, []);
 
   const handleSubmit = async () => {
     setErr('');
@@ -306,7 +324,28 @@ function ModalEdit({ data, onClose, onSuccess }) {
         <FField label="Jabatan Ketua Rombongan" name="jabatan_ketua_rombongan" required />
       </div>
       <div style={{ marginBottom: '12px' }}>
-        <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>Tujuan/Maksud Kunjungan <span style={{ color: '#e74c3c' }}>*</span></label>
+        <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>Dinas Tujuan <span style={{ color: '#e74c3c' }}> *</span></label>
+        <select 
+          value={form.dinas_id || ''} 
+          onChange={(e) => {
+            const selectedId = e.target.value;
+            const selectedDinas = dinasOptions.find(d => d.id.toString() === selectedId);
+            setForm((f: any) => ({ 
+              ...f, 
+              dinas_id: selectedId,
+              dinas_tujuan: selectedDinas ? selectedDinas.nama : ''
+            }));
+          }}
+          style={{ width: '100%', border: '1px solid #D9DEE5', borderRadius: '8px', padding: '8px 11px', fontSize: '13px', fontFamily: 'inherit', boxSizing: 'border-box', background: 'white' }}
+        >
+          <option value="">-- Pilih Dinas Tujuan --</option>
+          {dinasOptions.map(d => (
+            <option key={d.id} value={d.id}>{d.nama} ({d.singkatan})</option>
+          ))}
+        </select>
+      </div>
+      <div style={{ marginBottom: '12px' }}>
+        <label style={{ fontSize: '11px', fontWeight: '700', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>Deskripsi Tujuan/Maksud Kunjungan <span style={{ color: '#e74c3c' }}>*</span></label>
         <textarea value={form.tujuan} onChange={e => setForm((f: any) => ({ ...f, tujuan: e.target.value }))} rows={3}
           style={{ width: '100%', border: '1px solid #D9DEE5', borderRadius: '8px', padding: '8px 11px', fontSize: '13px', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }} />
       </div>
@@ -763,7 +802,19 @@ export default function ProsesPermohonanModal({ data: initialData, onClose, onSu
 
             <div style={{ height: '8px' }} />
             <DetailSection title="Tujuan Kunjungan">
-              <div style={{ background: '#F0F8F1', border: '1px solid #DDEFE0', borderRadius: '6px', padding: '8px 10px', fontSize: '11px', color: '#334155', lineHeight: '1.5' }}>{data.tujuan || '-'}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div>
+                  <span style={{ fontSize: '9.5px', fontWeight: '700', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '2px' }}>Dinas Tujuan</span>
+                  <div style={{ fontSize: '12px', fontWeight: '500', color: '#1E293B' }}>
+                    {data.dinas_tujuan || '-'} 
+                    {data.dinas?.nomor_telepon && <span style={{ color: '#0028B3', marginLeft: '6px', fontWeight: '600' }}>(Telp: {data.dinas.nomor_telepon})</span>}
+                  </div>
+                </div>
+                <div>
+                  <span style={{ fontSize: '9.5px', fontWeight: '700', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '2px' }}>Deskripsi Tujuan</span>
+                  <div style={{ background: '#F0F8F1', border: '1px solid #DDEFE0', borderRadius: '6px', padding: '8px 10px', fontSize: '11px', color: '#334155', lineHeight: '1.5' }}>{data.tujuan || '-'}</div>
+                </div>
+              </div>
             </DetailSection>
 
             {/* Dokumen */}

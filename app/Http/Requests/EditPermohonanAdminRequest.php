@@ -11,6 +11,23 @@ class EditPermohonanAdminRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        if (empty($this->dinas_id) && !empty($this->dinas_tujuan)) {
+            $cleanDinasTujuan = strtolower(trim($this->dinas_tujuan));
+            $dinas = \App\Models\Dinas::whereRaw('LOWER(singkatan) = ?', [$cleanDinasTujuan])
+                ->orWhereRaw('LOWER(nama) = ?', [$cleanDinasTujuan])
+                ->orWhereRaw('LOWER(nama) LIKE ?', ["%{$cleanDinasTujuan}%"])
+                ->first();
+                
+            if ($dinas) {
+                $this->merge([
+                    'dinas_id' => $dinas->id,
+                ]);
+            }
+        }
+    }
+
     public function rules(): array
     {
         return [
@@ -24,6 +41,7 @@ class EditPermohonanAdminRequest extends FormRequest
             'no_telp' => ['required', 'string', 'min:10', 'max:20'],
             'email' => ['required', 'email', 'max:150'],
             'tujuan' => ['required', 'string'],
+            'dinas_id' => ['required', 'exists:app_md_dinas,id'],
             'jumlah_peserta' => ['required', 'integer', 'min:1'],
             'rencana_menginap' => ['required', 'in:Ya,Tidak'],
             'nama_hotel' => ['required_if:rencana_menginap,Ya', 'nullable', 'string', 'max:200'],

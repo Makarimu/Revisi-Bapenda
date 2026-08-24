@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class TanggalDiblokir extends Model
 {
-    protected $table = 'tanggal_diblokir';
+    protected $table = 'app_tanggal_diblokir';
 
     protected $fillable = [
         'tanggal',

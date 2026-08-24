@@ -13,12 +13,15 @@ use App\Http\Controllers\Api\RiwayatKunjunganController;
 use App\Http\Controllers\Api\HasilKunjunganController;
 use App\Http\Controllers\Api\Admin\ReviewAdminController;
 use App\Http\Controllers\Api\Admin\RingkasanController;
+use App\Http\Controllers\Api\Admin\DinasController;
+use App\Http\Controllers\Api\Admin\AdminUserController;
 
 // Auth Routes
 Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
 // Public Routes (Permohonan & Review)
 Route::middleware('throttle:public-api')->group(function () {
+    Route::get('/dinas', [DinasController::class, 'listPublic']);
     Route::get('/permohonan/tanggal-terpakai', [PermohonanController::class, 'getTanggalTerpakai']);
     Route::post('/permohonan', [PermohonanController::class, 'submit']);
     Route::get('/permohonan/{kode}', [PermohonanController::class, 'status']);
@@ -77,4 +80,16 @@ Route::middleware(['auth:sanctum', 'throttle:admin-api'])->group(function () {
     Route::post('/admin/permohonan/{kode}/ringkasan/upload', [RingkasanController::class, 'upload']);
     Route::post('/admin/permohonan/{kode}/ringkasan/kirim', [RingkasanController::class, 'kirim']);
     Route::get('/admin/ringkasan/expiring', [RingkasanController::class, 'expiring']);
+
+    // Admin Dinas CRUD
+    Route::get('/admin/dinas', [DinasController::class, 'index']);
+    Route::post('/admin/dinas', [DinasController::class, 'store']);
+    Route::put('/admin/dinas/{id}', [DinasController::class, 'update']);
+    Route::delete('/admin/dinas/{id}', [DinasController::class, 'destroy']);
+
+    // Admin User CRUD
+    Route::get('/admin/users', [AdminUserController::class, 'index']);
+    Route::post('/admin/users', [AdminUserController::class, 'store']);
+    Route::put('/admin/users/{id}', [AdminUserController::class, 'update']);
+    Route::delete('/admin/users/{id}', [AdminUserController::class, 'destroy']);
 });

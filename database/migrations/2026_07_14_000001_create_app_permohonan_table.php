@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('permohonan', function (Blueprint $table) {
+        Schema::create('app_permohonan', function (Blueprint $table) {
             $table->id();
             $table->string('kode', 30)->unique();
             $table->string('nomor_surat', 100);
@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('email', 150);
             $table->date('tanggal_kunjungan');
             $table->text('tujuan');
+            $table->string('dinas_tujuan', 200)->nullable();
             $table->unsignedInteger('jumlah_peserta');
             $table->enum('rencana_menginap', ['Ya', 'Tidak'])->default('Tidak');
             $table->string('nama_hotel', 200)->nullable();
@@ -51,6 +52,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('permohonan');
+        Schema::dropIfExists('app_permohonan');
     }
 };

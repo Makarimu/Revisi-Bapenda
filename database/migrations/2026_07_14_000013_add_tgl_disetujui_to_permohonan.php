@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,8 +8,8 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('permohonan', function (Blueprint $table) {
-            if (!Schema::hasColumn('permohonan', 'tgl_disetujui')) {
+        Schema::table('app_permohonan', function (Blueprint $table) {
+            if (!Schema::hasColumn('app_permohonan', 'tgl_disetujui')) {
                 $table->dateTime('tgl_disetujui')->nullable()->after('tgl_revisi');
             }
         });
@@ -17,8 +17,8 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('permohonan', function (Blueprint $table) {
-            if (Schema::hasColumn('permohonan', 'tgl_disetujui')) {
+        Schema::table('app_permohonan', function (Blueprint $table) {
+            if (Schema::hasColumn('app_permohonan', 'tgl_disetujui')) {
                 $table->dropColumn('tgl_disetujui');
             }
         });

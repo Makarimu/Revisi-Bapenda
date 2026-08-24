@@ -10,14 +10,25 @@ use Carbon\Carbon;
 
 class PermohonanRepository implements PermohonanRepositoryInterface
 {
+    private function applyDinasFilter($query)
+    {
+        if (auth()->check() && auth()->user()->dinas_id !== null) {
+            $query->where('dinas_id', auth()->user()->dinas_id);
+        }
+        return $query;
+    }
+
     public function findByKode(string $kode): ?Permohonan
     {
-        return Permohonan::where('kode', $kode)->with('review')->first();
+        $query = Permohonan::where('kode', $kode)->with('review');
+        $this->applyDinasFilter($query);
+        return $query->first();
     }
     
     public function getAll(array $filters): LengthAwarePaginator
     {
         $query = Permohonan::query()->orderBy('created_at', 'desc');
+        $this->applyDinasFilter($query);
         
         if (isset($filters['status']) && $filters['status'] !== 'Semua') {
             $query->where('status', $filters['status']);
@@ -65,7 +76,7 @@ class PermohonanRepository implements PermohonanRepositoryInterface
             ->whereDate('tanggal_kunjungan', '>=', Carbon::today())
             ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
             ->groupBy('tanggal_kunjungan')
-            ->havingRaw('COUNT(*) >= 2')
+            ->havingRaw('COUNT(*) >= ' . (int) config('visit.max_per_hari', 2))
             ->get()
             ->map(fn($p) => $p->tanggal_kunjungan ? Carbon::parse($p->tanggal_kunjungan)->format('Y-m-d') : null)
             ->filter()
@@ -77,8 +88,10 @@ class PermohonanRepository implements PermohonanRepositoryInterface
 
     public function getStatistik(): array
     {
-        $totals = Permohonan::select('status', DB::raw('count(*) as total'))
-            ->groupBy('status')
+        $query = Permohonan::select('status', DB::raw('count(*) as total'));
+        $this->applyDinasFilter($query);
+        
+        $totals = $query->groupBy('status')
             ->pluck('total', 'status')->toArray();
 
         $allTotal = array_sum($totals);
@@ -94,17 +107,21 @@ class PermohonanRepository implements PermohonanRepositoryInterface
     
     public function getHariIni(): array
     {
-        return Permohonan::whereDate('tanggal_kunjungan', Carbon::today())
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->toArray();
+        $query = Permohonan::whereDate('tanggal_kunjungan', Carbon::today())
+            ->orderBy('created_at', 'desc');
+        $this->applyDinasFilter($query);
+        
+        return $query->get()->toArray();
     }
     
     public function getGrafikBulanan(): array
     {
         $year = Carbon::now()->year;
         
-        $records = Permohonan::whereYear('tanggal_kunjungan', $year)->get(['tanggal_kunjungan']);
+        $query = Permohonan::whereYear('tanggal_kunjungan', $year);
+        $this->applyDinasFilter($query);
+        
+        $records = $query->get(['tanggal_kunjungan']);
         $grouped = $records->groupBy(function ($item) {
             return (int) Carbon::parse($item->tanggal_kunjungan)->format('n');
         });
@@ -119,15 +136,17 @@ class PermohonanRepository implements PermohonanRepositoryInterface
     
     public function getAktivitasTerbaru(): array
     {
-        return Permohonan::orderBy('updated_at', 'desc')
-            ->limit(5)
-            ->get()
-            ->toArray();
+        $query = Permohonan::orderBy('updated_at', 'desc')
+            ->limit(5);
+        $this->applyDinasFilter($query);
+        
+        return $query->get()->toArray();
     }
 
     public function getExportData(array $filters): \Illuminate\Support\Collection
     {
         $query = Permohonan::query()->orderBy('created_at', 'asc');
+        $this->applyDinasFilter($query);
 
         // Filter status (array of statuses)
         if (!empty($filters['status']) && is_array($filters['status'])) {
