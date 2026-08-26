@@ -9,6 +9,16 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ReviewRepository implements ReviewRepositoryInterface
 {
+    private function applyDinasFilter($query)
+    {
+        if (auth()->check() && auth()->user()->dinas_id !== null) {
+            $query->whereHas('permohonan', function ($q) {
+                $q->where('dinas_id', auth()->user()->dinas_id);
+            });
+        }
+        return $query;
+    }
+
     public function create(array $data): Review
     {
         return Review::create($data);
@@ -16,17 +26,22 @@ class ReviewRepository implements ReviewRepositoryInterface
 
     public function findByPermohonanId(int $permohonanId): ?Review
     {
-        return Review::where('permohonan_id', $permohonanId)->first();
+        $query = Review::where('permohonan_id', $permohonanId);
+        $this->applyDinasFilter($query);
+        return $query->first();
     }
 
     public function findById(int $id): ?Review
     {
-        return Review::find($id);
+        $query = Review::where('id', $id);
+        $this->applyDinasFilter($query);
+        return $query->first();
     }
 
     public function getAll(array $filters = []): LengthAwarePaginator
     {
         $query = Review::with(['permohonan'])->orderBy('created_at', 'desc');
+        $this->applyDinasFilter($query);
 
         if (!empty($filters['status'])) {
             $query->where('status', $filters['status']);

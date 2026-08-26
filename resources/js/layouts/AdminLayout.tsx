@@ -137,7 +137,6 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
           <img src={LOGO_URL} alt="Bappenda" className="admin-sidebar-logo" referrerPolicy="no-referrer"/>
           <div>
             <div className="admin-sidebar-title">Sistem Kunjungan Kerja</div>
-            <div className="admin-sidebar-sub">Bappenda Kab. Bogor</div>
           </div>
         </div>
 

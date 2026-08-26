@@ -1,184 +1,2685 @@
-[
-  {
-    "id": 1,
-    "nama": "Dinas Pendidikan",
-    "singkatan": "Disdik",
-    "latitude": -6.4831,
-    "longitude": 106.8288
-  },
-  {
-    "id": 2,
-    "nama": "Dinas Pemuda dan Olahraga",
-    "singkatan": "Dispora",
-    "latitude": -6.4912,
-    "longitude": 106.8325
-  },
-  {
-    "id": 3,
-    "nama": "Dinas Kebudayaan dan Pariwisata",
-    "singkatan": "Disbudpar",
-    "latitude": -6.4815,
-    "longitude": 106.8291
-  },
-  {
-    "id": 4,
-    "nama": "Dinas Kesehatan",
-    "singkatan": "Dinkes",
-    "latitude": -6.481,
-    "longitude": 106.8285
-  },
-  {
-    "id": 5,
-    "nama": "Dinas Sosial",
-    "singkatan": "Dinsos",
-    "latitude": -6.482,
-    "longitude": 106.8289
-  },
-  {
-    "id": 6,
-    "nama": "Dinas Pemberdayaan Perempuan, Perlindungan Anak, Pengendalian Penduduk, dan Keluarga Berencana",
-    "singkatan": "DP3AP2KB",
-    "latitude": -6.4822,
-    "longitude": 106.8295
-  },
-  {
-    "id": 7,
-    "nama": "Dinas Kependudukan dan Pencatatan Sipil",
-    "singkatan": "Disdukcapil",
-    "latitude": -6.4805,
-    "longitude": 106.8278
-  },
-  {
-    "id": 8,
-    "nama": "Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu",
-    "singkatan": "DPMPTSP",
-    "latitude": -6.48,
-    "longitude": 106.828
-  },
-  {
-    "id": 9,
-    "nama": "Dinas Komunikasi dan Informatika",
-    "singkatan": "Diskominfo",
-    "latitude": -6.4795,
-    "longitude": 106.8275
-  },
-  {
-    "id": 10,
-    "nama": "Dinas Arsip dan Perpustakaan Daerah",
-    "singkatan": "DAPD",
-    "latitude": -6.4818,
-    "longitude": 106.829
-  },
-  {
-    "id": 11,
-    "nama": "Dinas Pekerjaan Umum dan Penataan Ruang",
-    "singkatan": "PUPR",
-    "latitude": -6.4802,
-    "longitude": 106.8282
-  },
-  {
-    "id": 12,
-    "nama": "Dinas Perumahan, Kawasan Permukiman, dan Pertanahan",
-    "singkatan": "DPKPP",
-    "latitude": -6.4804,
-    "longitude": 106.8284
-  },
-  {
-    "id": 13,
-    "nama": "Dinas Lingkungan Hidup",
-    "singkatan": "DLH",
-    "latitude": -6.4825,
-    "longitude": 106.8292
-  },
-  {
-    "id": 14,
-    "nama": "Dinas Perhubungan",
-    "singkatan": "Dishub",
-    "latitude": -6.485,
-    "longitude": 106.833
-  },
-  {
-    "id": 15,
-    "nama": "Dinas Pemadam Kebakaran",
-    "singkatan": "Damkar",
-    "latitude": -6.4812,
-    "longitude": 106.8286
-  },
-  {
-    "id": 16,
-    "nama": "Dinas Tanaman Pangan, Hortikultura, dan Perkebunan",
-    "singkatan": "Distanhorbun",
-    "latitude": -6.4828,
-    "longitude": 106.8294
-  },
-  {
-    "id": 17,
-    "nama": "Dinas Perikanan dan Peternakan",
-    "singkatan": "Diskannak",
-    "latitude": -6.4826,
-    "longitude": 106.8293
-  },
-  {
-    "id": 18,
-    "nama": "Dinas Perdagangan dan Perindustrian",
-    "singkatan": "Disdagin",
-    "latitude": -6.4801,
-    "longitude": 106.8281
-  },
-  {
-    "id": 19,
-    "nama": "Dinas Koperasi, Usaha Kecil dan Menengah",
-    "singkatan": "Diskop UKM",
-    "latitude": -6.4803,
-    "longitude": 106.8283
-  },
-  {
-    "id": 20,
-    "nama": "Dinas Ketahanan Pangan",
-    "singkatan": "DKP",
-    "latitude": -6.483,
-    "longitude": 106.8296
-  },
-  {
-    "id": 21,
-    "nama": "Dinas Tenaga Kerja",
-    "singkatan": "Disnaker",
-    "latitude": -6.4816,
-    "longitude": 106.8288
-  },
-  {
-    "id": 22,
-    "nama": "Dinas Pemberdayaan Masyarakat dan Desa",
-    "singkatan": "DPMD",
-    "latitude": -6.4814,
-    "longitude": 106.8287
-  },
-  {
-    "id": 23,
-    "nama": "Sekretariat Daerah",
-    "singkatan": "Setda",
-    "latitude": -6.479,
-    "longitude": 106.8272
-  },
-  {
-    "id": 24,
-    "nama": "Badan Perencanaan Pembangunan, Penelitian, dan Pengembangan Daerah",
-    "singkatan": "Bappedalitbang",
-    "latitude": -6.4788,
-    "longitude": 106.827
-  },
-  {
-    "id": 25,
-    "nama": "Badan Penanggulangan Bencana Daerah",
-    "singkatan": "BPBD",
-    "latitude": -6.4792,
-    "longitude": 106.8276
-  },
-  {
-    "id": 26,
-    "nama": "Satuan Polisi Pamong Praja",
-    "singkatan": "Satpol PP",
-    "latitude": -6.4791,
-    "longitude": 106.8274
-  }
-]
+{
+    "kabupaten": "Kabupaten Bogor",
+    "provinsi": "Jawa Barat",
+    "dinas_dan_instansi": [
+        {
+            "id": 1,
+            "nama": "Dinas Pendidikan",
+            "singkatan": "Disdik",
+            "latitude": -6.4831,
+            "longitude": 106.8288
+        },
+        {
+            "id": 2,
+            "nama": "Dinas Pemuda dan Olahraga",
+            "singkatan": "Dispora",
+            "latitude": -6.4912,
+            "longitude": 106.8325
+        },
+        {
+            "id": 3,
+            "nama": "Dinas Kebudayaan dan Pariwisata",
+            "singkatan": "Disbudpar",
+            "latitude": -6.4815,
+            "longitude": 106.8291
+        },
+        {
+            "id": 4,
+            "nama": "Dinas Kesehatan",
+            "singkatan": "Dinkes",
+            "latitude": -6.481,
+            "longitude": 106.8285
+        },
+        {
+            "id": 5,
+            "nama": "Dinas Sosial",
+            "singkatan": "Dinsos",
+            "latitude": -6.482,
+            "longitude": 106.8289
+        },
+        {
+            "id": 6,
+            "nama": "Dinas Pemberdayaan Perempuan, Perlindungan Anak, Pengendalian Penduduk, dan Keluarga Berencana",
+            "singkatan": "DP3AP2KB",
+            "latitude": -6.4822,
+            "longitude": 106.8295
+        },
+        {
+            "id": 7,
+            "nama": "Dinas Kependudukan dan Pencatatan Sipil",
+            "singkatan": "Disdukcapil",
+            "latitude": -6.4805,
+            "longitude": 106.8278
+        },
+        {
+            "id": 8,
+            "nama": "Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu",
+            "singkatan": "DPMPTSP",
+            "latitude": -6.48,
+            "longitude": 106.828
+        },
+        {
+            "id": 9,
+            "nama": "Dinas Komunikasi dan Informatika",
+            "singkatan": "Diskominfo",
+            "latitude": -6.4795,
+            "longitude": 106.8275
+        },
+        {
+            "id": 10,
+            "nama": "Dinas Arsip dan Perpustakaan Daerah",
+            "singkatan": "DAPD",
+            "latitude": -6.4818,
+            "longitude": 106.829
+        },
+        {
+            "id": 11,
+            "nama": "Dinas Pekerjaan Umum dan Penataan Ruang",
+            "singkatan": "PUPR",
+            "latitude": -6.4802,
+            "longitude": 106.8282
+        },
+        {
+            "id": 12,
+            "nama": "Dinas Perumahan, Kawasan Permukiman, dan Pertanahan",
+            "singkatan": "DPKPP",
+            "latitude": -6.4804,
+            "longitude": 106.8284
+        },
+        {
+            "id": 13,
+            "nama": "Dinas Lingkungan Hidup",
+            "singkatan": "DLH",
+            "latitude": -6.4825,
+            "longitude": 106.8292
+        },
+        {
+            "id": 14,
+            "nama": "Dinas Perhubungan",
+            "singkatan": "Dishub",
+            "latitude": -6.485,
+            "longitude": 106.833
+        },
+        {
+            "id": 15,
+            "nama": "Dinas Pemadam Kebakaran",
+            "singkatan": "Damkar",
+            "latitude": -6.4812,
+            "longitude": 106.8286
+        },
+        {
+            "id": 16,
+            "nama": "Dinas Tanaman Pangan, Hortikultura, dan Perkebunan",
+            "singkatan": "Distanhorbun",
+            "latitude": -6.4828,
+            "longitude": 106.8294
+        },
+        {
+            "id": 17,
+            "nama": "Dinas Perikanan dan Peternakan",
+            "singkatan": "Diskannak",
+            "latitude": -6.4826,
+            "longitude": 106.8293
+        },
+        {
+            "id": 18,
+            "nama": "Dinas Perdagangan dan Perindustrian",
+            "singkatan": "Disdagin",
+            "latitude": -6.4801,
+            "longitude": 106.8281
+        },
+        {
+            "id": 19,
+            "nama": "Dinas Koperasi, Usaha Kecil dan Menengah",
+            "singkatan": "Diskop UKM",
+            "latitude": -6.4803,
+            "longitude": 106.8283
+        },
+        {
+            "id": 20,
+            "nama": "Dinas Ketahanan Pangan",
+            "singkatan": "DKP",
+            "latitude": -6.483,
+            "longitude": 106.8296
+        },
+        {
+            "id": 21,
+            "nama": "Dinas Tenaga Kerja",
+            "singkatan": "Disnaker",
+            "latitude": -6.4816,
+            "longitude": 106.8288
+        },
+        {
+            "id": 22,
+            "nama": "Dinas Pemberdayaan Masyarakat dan Desa",
+            "singkatan": "DPMD",
+            "latitude": -6.4814,
+            "longitude": 106.8287
+        },
+        {
+            "id": 23,
+            "nama": "Sekretariat Daerah",
+            "singkatan": "Setda",
+            "latitude": -6.479,
+            "longitude": 106.8272
+        },
+        {
+            "id": 24,
+            "nama": "Badan Perencanaan Pembangunan, Penelitian, dan Pengembangan Daerah",
+            "singkatan": "Bappedalitbang",
+            "latitude": -6.4788,
+            "longitude": 106.827
+        },
+        {
+            "id": 25,
+            "nama": "Badan Penanggulangan Bencana Daerah",
+            "singkatan": "BPBD",
+            "latitude": -6.4792,
+            "longitude": 106.8276
+        },
+        {
+            "id": 26,
+            "nama": "Satuan Polisi Pamong Praja",
+            "singkatan": "Satpol PP",
+            "latitude": -6.4791,
+            "longitude": 106.8274
+        }
+    ],
+    "kecamatan": [
+        {
+            "kode_kecamatan": "5",
+            "nama_kecamatan": "Babakanmadang",
+            "latitude": -6.57702,
+            "longitude": 106.89177,
+            "kelurahan": [
+                {
+                    "nama": "Babakan Madang",
+                    "latitude": -6.56569,
+                    "longitude": 106.86525
+                },
+                {
+                    "nama": "Bojong Koneng",
+                    "latitude": -6.60894,
+                    "longitude": 106.89806
+                },
+                {
+                    "nama": "Cijayanti",
+                    "latitude": -6.609,
+                    "longitude": 106.87956
+                },
+                {
+                    "nama": "Cipambuan",
+                    "latitude": -6.56054,
+                    "longitude": 106.84426
+                },
+                {
+                    "nama": "Citaringgul",
+                    "latitude": -6.56805,
+                    "longitude": 106.85401
+                },
+                {
+                    "nama": "Kadumangu",
+                    "latitude": -6.54369,
+                    "longitude": 106.85127
+                },
+                {
+                    "nama": "Karang Tengah",
+                    "latitude": -6.58946,
+                    "longitude": 106.93644
+                },
+                {
+                    "nama": "Sentul",
+                    "latitude": -6.5148,
+                    "longitude": 106.8511
+                },
+                {
+                    "nama": "Sumur Batu",
+                    "latitude": -6.57229,
+                    "longitude": 106.8807
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "13",
+            "nama_kecamatan": "Bojonggede",
+            "latitude": -6.48383,
+            "longitude": 106.78819,
+            "kelurahan": [
+                {
+                    "nama": "Bojong Baru",
+                    "latitude": -6.47735,
+                    "longitude": 106.81019
+                },
+                {
+                    "nama": "Bojonggede",
+                    "latitude": -6.4861,
+                    "longitude": 106.79865
+                },
+                {
+                    "nama": "Cimanggis",
+                    "latitude": -6.505,
+                    "longitude": 106.77531
+                },
+                {
+                    "nama": "Kedung Waringin",
+                    "latitude": -6.49559,
+                    "longitude": 106.79397
+                },
+                {
+                    "nama": "Pabuaran",
+                    "latitude": -6.46161,
+                    "longitude": 106.79801
+                },
+                {
+                    "nama": "Raga Jaya",
+                    "latitude": -6.44719,
+                    "longitude": 106.77806
+                },
+                {
+                    "nama": "Rawa Panjang",
+                    "latitude": -6.45993,
+                    "longitude": 106.80939
+                },
+                {
+                    "nama": "Susukan",
+                    "latitude": -6.47129,
+                    "longitude": 106.78912
+                },
+                {
+                    "nama": "Waringin Jaya",
+                    "latitude": -6.5099,
+                    "longitude": 106.78979
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "27",
+            "nama_kecamatan": "Caringin",
+            "latitude": -6.72971,
+            "longitude": 106.85917,
+            "kelurahan": [
+                {
+                    "nama": "Caringin",
+                    "latitude": -6.71006,
+                    "longitude": 106.82433
+                },
+                {
+                    "nama": "Ciderum",
+                    "latitude": -6.69735,
+                    "longitude": 106.84832
+                },
+                {
+                    "nama": "Ciherang Pondok",
+                    "latitude": -6.68631,
+                    "longitude": 106.82899
+                },
+                {
+                    "nama": "Cimande",
+                    "latitude": -6.7343,
+                    "longitude": 106.87341
+                },
+                {
+                    "nama": "Cimande Hilir",
+                    "latitude": -6.69819,
+                    "longitude": 106.82439
+                },
+                {
+                    "nama": "Cinagara",
+                    "latitude": -6.74441,
+                    "longitude": 106.84897
+                },
+                {
+                    "nama": "Lemah Duhur",
+                    "latitude": -6.7239,
+                    "longitude": 106.84935
+                },
+                {
+                    "nama": "Muara Jaya",
+                    "latitude": -6.72288,
+                    "longitude": 106.81786
+                },
+                {
+                    "nama": "Pancawati",
+                    "latitude": -6.73068,
+                    "longitude": 106.88634
+                },
+                {
+                    "nama": "Pasir Buncir",
+                    "latitude": -6.75515,
+                    "longitude": 106.8502
+                },
+                {
+                    "nama": "Pasir Muncang",
+                    "latitude": -6.7236,
+                    "longitude": 106.83255
+                },
+                {
+                    "nama": "Tangkil",
+                    "latitude": -6.74525,
+                    "longitude": 106.86529
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "8",
+            "nama_kecamatan": "Cariu",
+            "latitude": -6.51213,
+            "longitude": 107.14517,
+            "kelurahan": [
+                {
+                    "nama": "Babakan Raden",
+                    "latitude": -6.47541,
+                    "longitude": 107.13519
+                },
+                {
+                    "nama": "Bantar Kuning",
+                    "latitude": -6.55905,
+                    "longitude": 107.14099
+                },
+                {
+                    "nama": "Cariu",
+                    "latitude": -6.5091,
+                    "longitude": 107.13031
+                },
+                {
+                    "nama": "Cibatu Tiga",
+                    "latitude": -6.54023,
+                    "longitude": 107.1381
+                },
+                {
+                    "nama": "Cikutamahi",
+                    "latitude": -6.5469,
+                    "longitude": 107.1746
+                },
+                {
+                    "nama": "Karya Mekar",
+                    "latitude": -6.54675,
+                    "longitude": 107.10238
+                },
+                {
+                    "nama": "Kutamekar",
+                    "latitude": -6.51297,
+                    "longitude": 107.15479
+                },
+                {
+                    "nama": "Mekarwangi",
+                    "latitude": -6.52636,
+                    "longitude": 107.11034
+                },
+                {
+                    "nama": "Sukajadi",
+                    "latitude": -6.48696,
+                    "longitude": 107.16247
+                },
+                {
+                    "nama": "Tegal Panjang",
+                    "latitude": -6.49052,
+                    "longitude": 107.1132
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "15",
+            "nama_kecamatan": "Ciampea",
+            "latitude": -6.57691,
+            "longitude": 106.69701,
+            "kelurahan": [
+                {
+                    "nama": "Benteng",
+                    "latitude": -6.54747,
+                    "longitude": 106.70476
+                },
+                {
+                    "nama": "Bojong Jengkol",
+                    "latitude": -6.57441,
+                    "longitude": 106.70904
+                },
+                {
+                    "nama": "Bojong Rangkas",
+                    "latitude": -6.55839,
+                    "longitude": 106.6953
+                },
+                {
+                    "nama": "Ciampea",
+                    "latitude": -6.54084,
+                    "longitude": 106.68877
+                },
+                {
+                    "nama": "Ciampea Udik",
+                    "latitude": -6.61329,
+                    "longitude": 106.68236
+                },
+                {
+                    "nama": "Cibadak",
+                    "latitude": -6.56199,
+                    "longitude": 106.68926
+                },
+                {
+                    "nama": "Cibanteng",
+                    "latitude": -6.5562,
+                    "longitude": 106.7107
+                },
+                {
+                    "nama": "Cibuntu",
+                    "latitude": -6.5921,
+                    "longitude": 106.68332
+                },
+                {
+                    "nama": "Cicadas",
+                    "latitude": -6.57973,
+                    "longitude": 106.68182
+                },
+                {
+                    "nama": "Cihideung Ilir",
+                    "latitude": -6.56923,
+                    "longitude": 106.7221
+                },
+                {
+                    "nama": "Cihideung Udik",
+                    "latitude": -6.58028,
+                    "longitude": 106.71564
+                },
+                {
+                    "nama": "Cinangka",
+                    "latitude": -6.59058,
+                    "longitude": 106.70003
+                },
+                {
+                    "nama": "Tegal Waru",
+                    "latitude": -6.5718,
+                    "longitude": 106.69885
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "24",
+            "nama_kecamatan": "Ciawi",
+            "latitude": -7.6912,
+            "longitude": 10.87412,
+            "kelurahan": [
+                {
+                    "nama": "Banjar Wangi",
+                    "latitude": -6.68283,
+                    "longitude": 106.86049
+                },
+                {
+                    "nama": "Banjar Waru",
+                    "latitude": -6.66981,
+                    "longitude": 106.85726
+                },
+                {
+                    "nama": "Bantar Sari",
+                    "latitude": -6.68463,
+                    "longitude": 106.87011
+                },
+                {
+                    "nama": "Bendungan",
+                    "latitude": -6.66635,
+                    "longitude": 106.86418
+                },
+                {
+                    "nama": "Bitungsari",
+                    "latitude": -6.67992,
+                    "longitude": 106.84097
+                },
+                {
+                    "nama": "Bojong Murni",
+                    "latitude": -6.74034,
+                    "longitude": 106.93596
+                },
+                {
+                    "nama": "Ciawi",
+                    "latitude": -6.66068,
+                    "longitude": 106.84789
+                },
+                {
+                    "nama": "Cibedug",
+                    "latitude": -6.71054,
+                    "longitude": 106.8935
+                },
+                {
+                    "nama": "Cileungsi",
+                    "latitude": -6.71882,
+                    "longitude": 106.88737
+                },
+                {
+                    "nama": "Citapen",
+                    "latitude": -6.70142,
+                    "longitude": 106.87343
+                },
+                {
+                    "nama": "Jambuluwuk",
+                    "latitude": -6.69808,
+                    "longitude": 106.89078
+                },
+                {
+                    "nama": "Pandan Sari",
+                    "latitude": -6.64883,
+                    "longitude": 106.85425
+                },
+                {
+                    "nama": "Teluk Pinang",
+                    "latitude": -6.68121,
+                    "longitude": 106.85027
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "1",
+            "nama_kecamatan": "Cibinong",
+            "latitude": -6.48764,
+            "longitude": 106.83835,
+            "kelurahan": [
+                {
+                    "nama": "Cibinong",
+                    "latitude": -6.48452,
+                    "longitude": 106.85711
+                },
+                {
+                    "nama": "Cirimekar",
+                    "latitude": -6.47514,
+                    "longitude": 106.85567
+                },
+                {
+                    "nama": "Ciriung",
+                    "latitude": -6.4673,
+                    "longitude": 106.86804
+                },
+                {
+                    "nama": "Harapan Jaya",
+                    "latitude": -6.46525,
+                    "longitude": 106.83636
+                },
+                {
+                    "nama": "Karadenan",
+                    "latitude": -6.51425,
+                    "longitude": 106.81004
+                },
+                {
+                    "nama": "Nanggewer",
+                    "latitude": -6.51241,
+                    "longitude": 106.82976
+                },
+                {
+                    "nama": "Nanggewer Mekar",
+                    "latitude": -6.50286,
+                    "longitude": 106.84558
+                },
+                {
+                    "nama": "Pabuaran",
+                    "latitude": -6.4556,
+                    "longitude": 106.84838
+                },
+                {
+                    "nama": "Pabuaran Mekar",
+                    "latitude": -6.44964,
+                    "longitude": 106.84911
+                },
+                {
+                    "nama": "Pakansari",
+                    "latitude": -6.48875,
+                    "longitude": 106.83205
+                },
+                {
+                    "nama": "Pondok Rajeg",
+                    "latitude": -6.45797,
+                    "longitude": 106.81904
+                },
+                {
+                    "nama": "Sukahati",
+                    "latitude": -6.48484,
+                    "longitude": 106.81537
+                },
+                {
+                    "nama": "Tengah",
+                    "latitude": -6.47475,
+                    "longitude": 106.82376
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "16",
+            "nama_kecamatan": "Cibungbulang",
+            "latitude": -6.58063,
+            "longitude": 106.66582,
+            "kelurahan": [
+                {
+                    "nama": "Cemplang",
+                    "latitude": -6.57847,
+                    "longitude": 106.64971
+                },
+                {
+                    "nama": "Ciaruteun Ilir",
+                    "latitude": -6.53916,
+                    "longitude": 106.67747
+                },
+                {
+                    "nama": "Ciaruteun Udik",
+                    "latitude": -6.6048,
+                    "longitude": 106.67416
+                },
+                {
+                    "nama": "Cibatok I",
+                    "latitude": -6.58226,
+                    "longitude": 106.66605
+                },
+                {
+                    "nama": "Cibatok Ii",
+                    "latitude": -6.59295,
+                    "longitude": 106.66699
+                },
+                {
+                    "nama": "Cijujung",
+                    "latitude": -6.55037,
+                    "longitude": 106.6552
+                },
+                {
+                    "nama": "Cimanggu I",
+                    "latitude": -6.56251,
+                    "longitude": 106.66607
+                },
+                {
+                    "nama": "Cimanggu Ii",
+                    "latitude": -6.5688,
+                    "longitude": 106.66076
+                },
+                {
+                    "nama": "Dukuh",
+                    "latitude": -6.56604,
+                    "longitude": 106.65315
+                },
+                {
+                    "nama": "Galuga",
+                    "latitude": -6.56424,
+                    "longitude": 106.64244
+                },
+                {
+                    "nama": "Girimulya",
+                    "latitude": -6.57131,
+                    "longitude": 106.67839
+                },
+                {
+                    "nama": "Leuweung Kolot",
+                    "latitude": -6.55946,
+                    "longitude": 106.67233
+                },
+                {
+                    "nama": "Situ Ilir",
+                    "latitude": -6.60061,
+                    "longitude": 106.65635
+                },
+                {
+                    "nama": "Situ Udik",
+                    "latitude": -6.61809,
+                    "longitude": 106.65476
+                },
+                {
+                    "nama": "Suka Maju",
+                    "latitude": -6.58666,
+                    "longitude": 106.65427
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "38",
+            "nama_kecamatan": "Cigombong",
+            "latitude": -6.7474,
+            "longitude": 106.82114,
+            "kelurahan": [
+                {
+                    "nama": "Ciadeg",
+                    "latitude": -6.71715,
+                    "longitude": 106.80836
+                },
+                {
+                    "nama": "Ciburayut",
+                    "latitude": -6.71953,
+                    "longitude": 106.7908
+                },
+                {
+                    "nama": "Ciburuy",
+                    "latitude": -6.73422,
+                    "longitude": 106.81097
+                },
+                {
+                    "nama": "Cigombong",
+                    "latitude": -6.74464,
+                    "longitude": 106.80367
+                },
+                {
+                    "nama": "Cisalada",
+                    "latitude": -6.73647,
+                    "longitude": 106.79332
+                },
+                {
+                    "nama": "Pasirjaya",
+                    "latitude": -6.72611,
+                    "longitude": 106.77704
+                },
+                {
+                    "nama": "Srogol",
+                    "latitude": -6.76462,
+                    "longitude": 106.85255
+                },
+                {
+                    "nama": "Tugu Jaya",
+                    "latitude": -6.74145,
+                    "longitude": 106.78156
+                },
+                {
+                    "nama": "Watesjaya",
+                    "latitude": -6.7518,
+                    "longitude": 106.80983
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "22",
+            "nama_kecamatan": "Cigudeg",
+            "latitude": -6.48509,
+            "longitude": 106.54537,
+            "kelurahan": [
+                {
+                    "nama": "Argapura",
+                    "latitude": -6.46494,
+                    "longitude": 106.50137
+                },
+                {
+                    "nama": "Bangunjaya",
+                    "latitude": -6.44692,
+                    "longitude": 106.53674
+                },
+                {
+                    "nama": "Banyuasih",
+                    "latitude": -6.48657,
+                    "longitude": 106.59357
+                },
+                {
+                    "nama": "Banyuresmi",
+                    "latitude": -6.51036,
+                    "longitude": 106.583
+                },
+                {
+                    "nama": "Banyuwangi",
+                    "latitude": -6.50025,
+                    "longitude": 106.55875
+                },
+                {
+                    "nama": "Batujajar",
+                    "latitude": -6.43567,
+                    "longitude": 106.58284
+                },
+                {
+                    "nama": "Bunar",
+                    "latitude": -6.52703,
+                    "longitude": 106.5055
+                },
+                {
+                    "nama": "Cigudeg",
+                    "latitude": -6.55376,
+                    "longitude": 106.53691
+                },
+                {
+                    "nama": "Cintamanik",
+                    "latitude": -6.48976,
+                    "longitude": 106.52471
+                },
+                {
+                    "nama": "Mekarjaya",
+                    "latitude": -6.5097,
+                    "longitude": 106.51094
+                },
+                {
+                    "nama": "Rengasjajar",
+                    "latitude": -6.44285,
+                    "longitude": 106.56151
+                },
+                {
+                    "nama": "Suka Maju",
+                    "latitude": -6.55431,
+                    "longitude": 106.51742
+                },
+                {
+                    "nama": "Sukaraksa",
+                    "latitude": -6.58627,
+                    "longitude": 106.52546
+                },
+                {
+                    "nama": "Tegallega",
+                    "latitude": -6.45714,
+                    "longitude": 106.59148
+                },
+                {
+                    "nama": "Wargajaya",
+                    "latitude": -6.53022,
+                    "longitude": 106.53167
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "28",
+            "nama_kecamatan": "Cijeruk",
+            "latitude": -6.67352,
+            "longitude": 106.79016,
+            "kelurahan": [
+                {
+                    "nama": "Cibalung",
+                    "latitude": -6.68392,
+                    "longitude": 106.81048
+                },
+                {
+                    "nama": "Cijeruk",
+                    "latitude": -6.70841,
+                    "longitude": 106.77962
+                },
+                {
+                    "nama": "Cipelang",
+                    "latitude": -6.6955,
+                    "longitude": 106.78133
+                },
+                {
+                    "nama": "Cipicung",
+                    "latitude": -6.67255,
+                    "longitude": 106.80498
+                },
+                {
+                    "nama": "Palasari",
+                    "latitude": -6.65752,
+                    "longitude": 106.79952
+                },
+                {
+                    "nama": "Sukaharja",
+                    "latitude": -6.66972,
+                    "longitude": 106.76803
+                },
+                {
+                    "nama": "Tajurhalang",
+                    "latitude": -6.68368,
+                    "longitude": 106.77072
+                },
+                {
+                    "nama": "Tanjung Sari",
+                    "latitude": -6.68038,
+                    "longitude": 106.78429
+                },
+                {
+                    "nama": "Warung Menteng",
+                    "latitude": -6.70349,
+                    "longitude": 106.80863
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "7",
+            "nama_kecamatan": "Cileungsi",
+            "latitude": -6.40508,
+            "longitude": 107.01497,
+            "kelurahan": [
+                {
+                    "nama": "Cileungsi",
+                    "latitude": -6.3987,
+                    "longitude": 106.96063
+                },
+                {
+                    "nama": "Cileungsi Kidul",
+                    "latitude": -6.4125,
+                    "longitude": 106.96783
+                },
+                {
+                    "nama": "Cipenjo",
+                    "latitude": -6.38541,
+                    "longitude": 106.99788
+                },
+                {
+                    "nama": "Cipeucang",
+                    "latitude": -6.4181,
+                    "longitude": 107.04136
+                },
+                {
+                    "nama": "Dayeuh",
+                    "latitude": -6.43183,
+                    "longitude": 106.96615
+                },
+                {
+                    "nama": "Gandoang",
+                    "latitude": -6.40791,
+                    "longitude": 107.01875
+                },
+                {
+                    "nama": "Jatisari",
+                    "latitude": -6.41211,
+                    "longitude": 107.05323
+                },
+                {
+                    "nama": "Limus Nunggal",
+                    "latitude": -6.36722,
+                    "longitude": 106.97155
+                },
+                {
+                    "nama": "Mampir",
+                    "latitude": -6.432,
+                    "longitude": 106.99893
+                },
+                {
+                    "nama": "Mekarsari",
+                    "latitude": -6.40373,
+                    "longitude": 107.00247
+                },
+                {
+                    "nama": "Pasirangin",
+                    "latitude": -6.37373,
+                    "longitude": 106.98861
+                },
+                {
+                    "nama": "Situsari",
+                    "latitude": -6.43621,
+                    "longitude": 107.01851
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "29",
+            "nama_kecamatan": "Ciomas",
+            "latitude": -6.61483,
+            "longitude": 106.77044,
+            "kelurahan": [
+                {
+                    "nama": "Ciapus",
+                    "latitude": -6.60046,
+                    "longitude": 106.747
+                },
+                {
+                    "nama": "Ciomas",
+                    "latitude": -6.6064,
+                    "longitude": 106.7692
+                },
+                {
+                    "nama": "Ciomas Rahayu",
+                    "latitude": -6.59431,
+                    "longitude": 106.76601
+                },
+                {
+                    "nama": "Kota Batu",
+                    "latitude": -6.63024,
+                    "longitude": 106.78485
+                },
+                {
+                    "nama": "Laladon",
+                    "latitude": -6.58314,
+                    "longitude": 106.75512
+                },
+                {
+                    "nama": "Mekarjaya",
+                    "latitude": -6.61052,
+                    "longitude": 106.77918
+                },
+                {
+                    "nama": "Padasuka",
+                    "latitude": -6.59361,
+                    "longitude": 106.75917
+                },
+                {
+                    "nama": "Pagelaran",
+                    "latitude": -6.61401,
+                    "longitude": 106.76024
+                },
+                {
+                    "nama": "Parakan",
+                    "latitude": -6.62253,
+                    "longitude": 106.76908
+                },
+                {
+                    "nama": "Sukaharja",
+                    "latitude": -6.61386,
+                    "longitude": 106.74309
+                },
+                {
+                    "nama": "Sukamakmur",
+                    "latitude": -6.61211,
+                    "longitude": 106.75277
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "25",
+            "nama_kecamatan": "Cisarua",
+            "latitude": -6.69513,
+            "longitude": 106.94335,
+            "kelurahan": [
+                {
+                    "nama": "Batulayang",
+                    "latitude": -6.67587,
+                    "longitude": 106.95025
+                },
+                {
+                    "nama": "Cibeureum",
+                    "latitude": -6.72336,
+                    "longitude": 106.94913
+                },
+                {
+                    "nama": "Cilember",
+                    "latitude": -6.65313,
+                    "longitude": 106.9252
+                },
+                {
+                    "nama": "Cisarua",
+                    "latitude": -6.67495,
+                    "longitude": 106.93559
+                },
+                {
+                    "nama": "Citeko",
+                    "latitude": -6.69758,
+                    "longitude": 106.93338
+                },
+                {
+                    "nama": "Jogjogan",
+                    "latitude": -6.66186,
+                    "longitude": 106.9304
+                },
+                {
+                    "nama": "Kopo",
+                    "latitude": -6.67056,
+                    "longitude": 106.91259
+                },
+                {
+                    "nama": "Leuwimalang",
+                    "latitude": -6.66401,
+                    "longitude": 106.9228
+                },
+                {
+                    "nama": "Tugu Selatan",
+                    "latitude": -6.71926,
+                    "longitude": 106.9714
+                },
+                {
+                    "nama": "Tugu Utara",
+                    "latitude": -6.6836,
+                    "longitude": 106.97237
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "33",
+            "nama_kecamatan": "Ciseeng",
+            "latitude": -6.4714,
+            "longitude": 106.68528,
+            "kelurahan": [
+                {
+                    "nama": "Babakan",
+                    "latitude": -6.46622,
+                    "longitude": 106.69187
+                },
+                {
+                    "nama": "Cibentang",
+                    "latitude": -6.44238,
+                    "longitude": 106.67493
+                },
+                {
+                    "nama": "Cibeuteung Muara",
+                    "latitude": -6.44319,
+                    "longitude": 106.66588
+                },
+                {
+                    "nama": "Cibeuteung Udik",
+                    "latitude": -6.48571,
+                    "longitude": 106.69512
+                },
+                {
+                    "nama": "Cihowe",
+                    "latitude": -6.43315,
+                    "longitude": 106.68501
+                },
+                {
+                    "nama": "Ciseeng",
+                    "latitude": -6.45346,
+                    "longitude": 106.68531
+                },
+                {
+                    "nama": "Karihkil",
+                    "latitude": -6.49603,
+                    "longitude": 106.68245
+                },
+                {
+                    "nama": "Kuripan",
+                    "latitude": -6.42391,
+                    "longitude": 106.66999
+                },
+                {
+                    "nama": "Parigi Mekar",
+                    "latitude": -6.44809,
+                    "longitude": 106.6947
+                },
+                {
+                    "nama": "Putat Nutug",
+                    "latitude": -6.46601,
+                    "longitude": 106.67142
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "3",
+            "nama_kecamatan": "Citeureup",
+            "latitude": -6.52241,
+            "longitude": 106.89452,
+            "kelurahan": [
+                {
+                    "nama": "Citeureup",
+                    "latitude": -6.4768,
+                    "longitude": 106.88993
+                },
+                {
+                    "nama": "Gunungsari",
+                    "latitude": -6.49426,
+                    "longitude": 106.90251
+                },
+                {
+                    "nama": "Hambalang",
+                    "latitude": -6.54647,
+                    "longitude": 106.9028
+                },
+                {
+                    "nama": "Karang Asem Bara",
+                    "latitude": -6.48742,
+                    "longitude": 106.86505
+                },
+                {
+                    "nama": "Karang Asem Timu",
+                    "latitude": -6.49958,
+                    "longitude": 106.88044
+                },
+                {
+                    "nama": "Leuwinutug",
+                    "latitude": -6.51058,
+                    "longitude": 106.86041
+                },
+                {
+                    "nama": "Pasirmukti",
+                    "latitude": -6.5102,
+                    "longitude": 106.8949
+                },
+                {
+                    "nama": "Puspanegara",
+                    "latitude": -6.4876,
+                    "longitude": 106.88113
+                },
+                {
+                    "nama": "Puspasari",
+                    "latitude": -6.47561,
+                    "longitude": 106.87357
+                },
+                {
+                    "nama": "Sanja",
+                    "latitude": -6.50761,
+                    "longitude": 106.86942
+                },
+                {
+                    "nama": "Sukahati",
+                    "latitude": -6.51353,
+                    "longitude": 106.88947
+                },
+                {
+                    "nama": "Tajur",
+                    "latitude": -6.54445,
+                    "longitude": 106.91867
+                },
+                {
+                    "nama": "Tangkil",
+                    "latitude": -6.53459,
+                    "longitude": 106.87373
+                },
+                {
+                    "nama": "Tarikolot",
+                    "latitude": -6.49453,
+                    "longitude": 106.89034
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "30",
+            "nama_kecamatan": "Dramaga",
+            "latitude": -6.58359,
+            "longitude": 106.73131,
+            "kelurahan": [
+                {
+                    "nama": "Babakan",
+                    "latitude": -6.55582,
+                    "longitude": 106.72534
+                },
+                {
+                    "nama": "Ciherang",
+                    "latitude": -6.58214,
+                    "longitude": 106.74431
+                },
+                {
+                    "nama": "Cikarawang",
+                    "latitude": -6.54707,
+                    "longitude": 106.73153
+                },
+                {
+                    "nama": "Dramaga",
+                    "latitude": -6.57104,
+                    "longitude": 106.73598
+                },
+                {
+                    "nama": "Neglasari",
+                    "latitude": -6.58556,
+                    "longitude": 106.72641
+                },
+                {
+                    "nama": "Petir",
+                    "latitude": -6.60667,
+                    "longitude": 106.7237
+                },
+                {
+                    "nama": "Purwasari",
+                    "latitude": -6.62211,
+                    "longitude": 106.71625
+                },
+                {
+                    "nama": "Sinarsari",
+                    "latitude": -6.58323,
+                    "longitude": 106.7318
+                },
+                {
+                    "nama": "Sukadamai",
+                    "latitude": -6.61821,
+                    "longitude": 106.73145
+                },
+                {
+                    "nama": "Sukawening",
+                    "latitude": -6.60369,
+                    "longitude": 106.73594
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "2",
+            "nama_kecamatan": "Gunungputri",
+            "latitude": -6.37555,
+            "longitude": 106.93682,
+            "kelurahan": [
+                {
+                    "nama": "Bojong Kulur",
+                    "latitude": -6.31503,
+                    "longitude": 106.96624
+                },
+                {
+                    "nama": "Bojong Nangka",
+                    "latitude": -6.42474,
+                    "longitude": 106.9015
+                },
+                {
+                    "nama": "Ciangsana",
+                    "latitude": -6.34985,
+                    "longitude": 106.95578
+                },
+                {
+                    "nama": "Cicadas",
+                    "latitude": -6.43181,
+                    "longitude": 106.92597
+                },
+                {
+                    "nama": "Cikeas Udik",
+                    "latitude": -6.39556,
+                    "longitude": 106.92352
+                },
+                {
+                    "nama": "Gunungputri",
+                    "latitude": -6.46535,
+                    "longitude": 106.89227
+                },
+                {
+                    "nama": "Karanggan",
+                    "latitude": -6.45362,
+                    "longitude": 106.88239
+                },
+                {
+                    "nama": "Nagrak",
+                    "latitude": -6.37929,
+                    "longitude": 106.94183
+                },
+                {
+                    "nama": "Tlajung Udik",
+                    "latitude": -6.4462,
+                    "longitude": 106.91456
+                },
+                {
+                    "nama": "Wanaherang",
+                    "latitude": -6.41665,
+                    "longitude": 106.94641
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "11",
+            "nama_kecamatan": "Gunungsindur",
+            "latitude": -6.3799,
+            "longitude": 106.7046,
+            "kelurahan": [
+                {
+                    "nama": "Cibadung",
+                    "latitude": -6.40029,
+                    "longitude": 106.67245
+                },
+                {
+                    "nama": "Cibinong",
+                    "latitude": -6.39447,
+                    "longitude": 106.69331
+                },
+                {
+                    "nama": "Cidokom",
+                    "latitude": -6.40601,
+                    "longitude": 106.70597
+                },
+                {
+                    "nama": "Curug",
+                    "latitude": -6.39583,
+                    "longitude": 106.72447
+                },
+                {
+                    "nama": "Gunung Sindur",
+                    "latitude": -6.3866,
+                    "longitude": 106.66721
+                },
+                {
+                    "nama": "Jampang",
+                    "latitude": -6.39754,
+                    "longitude": 106.66068
+                },
+                {
+                    "nama": "Pabuaran",
+                    "latitude": -6.36829,
+                    "longitude": 106.66859
+                },
+                {
+                    "nama": "Padurenan",
+                    "latitude": -6.3894,
+                    "longitude": 106.70139
+                },
+                {
+                    "nama": "Pangasinan",
+                    "latitude": -6.36985,
+                    "longitude": 106.68988
+                },
+                {
+                    "nama": "Rawakalong",
+                    "latitude": -6.36899,
+                    "longitude": 106.71452
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "19",
+            "nama_kecamatan": "Jasinga",
+            "latitude": -6.46334,
+            "longitude": 106.45173,
+            "kelurahan": [
+                {
+                    "nama": "Bagoang",
+                    "latitude": -6.42736,
+                    "longitude": 106.45413
+                },
+                {
+                    "nama": "Barengkok",
+                    "latitude": -6.43031,
+                    "longitude": 106.48311
+                },
+                {
+                    "nama": "Cikopomayak",
+                    "latitude": -6.44514,
+                    "longitude": 106.46938
+                },
+                {
+                    "nama": "Curug",
+                    "latitude": -6.4992,
+                    "longitude": 106.42714
+                },
+                {
+                    "nama": "Jasinga",
+                    "latitude": -6.48333,
+                    "longitude": 106.4507
+                },
+                {
+                    "nama": "Jugala Jaya",
+                    "latitude": -6.54127,
+                    "longitude": 106.46097
+                },
+                {
+                    "nama": "Kalong Sawah",
+                    "latitude": -6.50115,
+                    "longitude": 106.49569
+                },
+                {
+                    "nama": "Koleang",
+                    "latitude": -6.4657,
+                    "longitude": 106.43736
+                },
+                {
+                    "nama": "Neglasari",
+                    "latitude": -6.44782,
+                    "longitude": 106.44864
+                },
+                {
+                    "nama": "Pamagersari",
+                    "latitude": -6.48782,
+                    "longitude": 106.46381
+                },
+                {
+                    "nama": "Pangaur",
+                    "latitude": -6.40051,
+                    "longitude": 106.4585
+                },
+                {
+                    "nama": "Pangradin",
+                    "latitude": -6.5194,
+                    "longitude": 106.47551
+                },
+                {
+                    "nama": "Setu",
+                    "latitude": -6.46842,
+                    "longitude": 106.46896
+                },
+                {
+                    "nama": "Sipak",
+                    "latitude": -6.48592,
+                    "longitude": 106.48336
+                },
+                {
+                    "nama": "Tegalwangi",
+                    "latitude": -6.46101,
+                    "longitude": 106.41296
+                },
+                {
+                    "nama": "Wirajaya",
+                    "latitude": -6.52338,
+                    "longitude": 106.4162
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "6",
+            "nama_kecamatan": "Jonggol",
+            "latitude": -6.48198,
+            "longitude": 107.05977,
+            "kelurahan": [
+                {
+                    "nama": "Bale Kambang",
+                    "latitude": -6.51138,
+                    "longitude": 107.09104
+                },
+                {
+                    "nama": "Bendungan",
+                    "latitude": -6.49488,
+                    "longitude": 107.08739
+                },
+                {
+                    "nama": "Cibodas",
+                    "latitude": -6.50191,
+                    "longitude": 107.02816
+                },
+                {
+                    "nama": "Jonggol",
+                    "latitude": -6.46735,
+                    "longitude": 107.07044
+                },
+                {
+                    "nama": "Singajaya",
+                    "latitude": -6.47536,
+                    "longitude": 107.04727
+                },
+                {
+                    "nama": "Singasari",
+                    "latitude": -6.48334,
+                    "longitude": 107.01167
+                },
+                {
+                    "nama": "Sirnagalih",
+                    "latitude": -6.47568,
+                    "longitude": 107.1081
+                },
+                {
+                    "nama": "Sukagalih",
+                    "latitude": -6.48774,
+                    "longitude": 107.09811
+                },
+                {
+                    "nama": "Sukajaya",
+                    "latitude": -6.55039,
+                    "longitude": 107.01281
+                },
+                {
+                    "nama": "Sukamaju",
+                    "latitude": -6.44715,
+                    "longitude": 107.04923
+                },
+                {
+                    "nama": "Sukamanah",
+                    "latitude": -6.43906,
+                    "longitude": 107.06163
+                },
+                {
+                    "nama": "Sukanegara",
+                    "latitude": -6.5207,
+                    "longitude": 107.02782
+                },
+                {
+                    "nama": "Sukasirna",
+                    "latitude": -6.49095,
+                    "longitude": 107.05449
+                },
+                {
+                    "nama": "Wening Galih",
+                    "latitude": -6.46223,
+                    "longitude": 107.10704
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "12",
+            "nama_kecamatan": "Kemang",
+            "latitude": -6.50742,
+            "longitude": 106.73863,
+            "kelurahan": [
+                {
+                    "nama": "Atang Sanjaya",
+                    "latitude": -6.54268,
+                    "longitude": 106.76115
+                },
+                {
+                    "nama": "Bojong",
+                    "latitude": -6.52438,
+                    "longitude": 106.75104
+                },
+                {
+                    "nama": "Jampang",
+                    "latitude": -6.47334,
+                    "longitude": 106.72901
+                },
+                {
+                    "nama": "Kemang",
+                    "latitude": -6.50798,
+                    "longitude": 106.74648
+                },
+                {
+                    "nama": "Pabuaran",
+                    "latitude": -6.50262,
+                    "longitude": 106.72257
+                },
+                {
+                    "nama": "Parakan Jaya",
+                    "latitude": -6.52132,
+                    "longitude": 106.76341
+                },
+                {
+                    "nama": "Pondok Udik",
+                    "latitude": -6.49145,
+                    "longitude": 106.74606
+                },
+                {
+                    "nama": "Semplak Barat",
+                    "latitude": -6.54533,
+                    "longitude": 106.74989
+                },
+                {
+                    "nama": "Tegal",
+                    "latitude": -6.48842,
+                    "longitude": 106.70757
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "32",
+            "nama_kecamatan": "Klapanunggal",
+            "latitude": -6.47669,
+            "longitude": 106.97362,
+            "kelurahan": [
+                {
+                    "nama": "Bantarjati",
+                    "latitude": -6.46871,
+                    "longitude": 106.90675
+                },
+                {
+                    "nama": "Bojong",
+                    "latitude": -6.45515,
+                    "longitude": 107.00398
+                },
+                {
+                    "nama": "Cikahuripan",
+                    "latitude": -6.4526,
+                    "longitude": 106.97442
+                },
+                {
+                    "nama": "Kembang Kuning",
+                    "latitude": -6.44369,
+                    "longitude": 106.9389
+                },
+                {
+                    "nama": "Klapanunggal",
+                    "latitude": -6.45919,
+                    "longitude": 106.96415
+                },
+                {
+                    "nama": "Leuwikaret",
+                    "latitude": -6.52298,
+                    "longitude": 106.9431
+                },
+                {
+                    "nama": "Ligarmukti",
+                    "latitude": -6.49703,
+                    "longitude": 106.98648
+                },
+                {
+                    "nama": "Lulut",
+                    "latitude": -6.48998,
+                    "longitude": 106.91681
+                },
+                {
+                    "nama": "Nambo",
+                    "latitude": -6.48041,
+                    "longitude": 106.92523
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "14",
+            "nama_kecamatan": "Leuwiliang",
+            "latitude": -6.62684,
+            "longitude": 106.622,
+            "kelurahan": [
+                {
+                    "nama": "Barengkok",
+                    "latitude": -6.59811,
+                    "longitude": 106.63401
+                },
+                {
+                    "nama": "Cibeber I",
+                    "latitude": -6.57474,
+                    "longitude": 106.62193
+                },
+                {
+                    "nama": "Cibeber Ii",
+                    "latitude": -6.60437,
+                    "longitude": 106.61494
+                },
+                {
+                    "nama": "Karacak",
+                    "latitude": -6.61794,
+                    "longitude": 106.62912
+                },
+                {
+                    "nama": "Karehkel",
+                    "latitude": -6.5479,
+                    "longitude": 106.63733
+                },
+                {
+                    "nama": "Karyasari",
+                    "latitude": -6.6353,
+                    "longitude": 106.62809
+                },
+                {
+                    "nama": "Leuwiliang",
+                    "latitude": -6.5665,
+                    "longitude": 106.63162
+                },
+                {
+                    "nama": "Leuwimekar",
+                    "latitude": -6.58306,
+                    "longitude": 106.6297
+                },
+                {
+                    "nama": "Pabangbon",
+                    "latitude": -6.61457,
+                    "longitude": 106.59433
+                },
+                {
+                    "nama": "Purasari",
+                    "latitude": -6.68821,
+                    "longitude": 106.60738
+                },
+                {
+                    "nama": "Puraseda",
+                    "latitude": -6.67248,
+                    "longitude": 106.60525
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "39",
+            "nama_kecamatan": "Leuwisadeng",
+            "latitude": -6.56724,
+            "longitude": 106.58906,
+            "kelurahan": [
+                {
+                    "nama": "Babakan Sadeng",
+                    "latitude": -6.57409,
+                    "longitude": 106.58152
+                },
+                {
+                    "nama": "Kalong I",
+                    "latitude": -6.55819,
+                    "longitude": 106.56107
+                },
+                {
+                    "nama": "Kalong Ii",
+                    "latitude": -6.55158,
+                    "longitude": 106.56771
+                },
+                {
+                    "nama": "Leuwisadeng",
+                    "latitude": -6.57619,
+                    "longitude": 106.60553
+                },
+                {
+                    "nama": "Sadeng",
+                    "latitude": -6.55374,
+                    "longitude": 106.58446
+                },
+                {
+                    "nama": "Sadeng Kolot",
+                    "latitude": -6.58856,
+                    "longitude": 106.58739
+                },
+                {
+                    "nama": "Sibanteng",
+                    "latitude": -6.5534,
+                    "longitude": 106.60442
+                },
+                {
+                    "nama": "Wangunjaya",
+                    "latitude": -6.59663,
+                    "longitude": 106.57897
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "26",
+            "nama_kecamatan": "Megamendung",
+            "latitude": -6.66796,
+            "longitude": 106.90703,
+            "kelurahan": [
+                {
+                    "nama": "Cipayung",
+                    "latitude": -6.65263,
+                    "longitude": 106.88465
+                },
+                {
+                    "nama": "Cipayung Girang",
+                    "latitude": -6.64762,
+                    "longitude": 106.90565
+                },
+                {
+                    "nama": "Gadog",
+                    "latitude": -6.65966,
+                    "longitude": 106.8699
+                },
+                {
+                    "nama": "Kuta",
+                    "latitude": -6.69326,
+                    "longitude": 106.92024
+                },
+                {
+                    "nama": "Megamendung",
+                    "latitude": -6.65104,
+                    "longitude": 106.94076
+                },
+                {
+                    "nama": "Pasir Angin",
+                    "latitude": -6.64254,
+                    "longitude": 106.87572
+                },
+                {
+                    "nama": "Suka Galih",
+                    "latitude": -6.69924,
+                    "longitude": 106.91499
+                },
+                {
+                    "nama": "Suka Karya",
+                    "latitude": -6.67233,
+                    "longitude": 106.89471
+                },
+                {
+                    "nama": "Suka Maju",
+                    "latitude": -6.67958,
+                    "longitude": 106.88612
+                },
+                {
+                    "nama": "Sukamahi",
+                    "latitude": -6.66955,
+                    "longitude": 106.86797
+                },
+                {
+                    "nama": "Sukamanah",
+                    "latitude": -6.68875,
+                    "longitude": 106.89546
+                },
+                {
+                    "nama": "Sukaresmi",
+                    "latitude": -6.70181,
+                    "longitude": 106.9072
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "21",
+            "nama_kecamatan": "Nanggung",
+            "latitude": -6.65418,
+            "longitude": 106.53224,
+            "kelurahan": [
+                {
+                    "nama": "Bantarkaret",
+                    "latitude": -6.71006,
+                    "longitude": 106.55436
+                },
+                {
+                    "nama": "Batutulis",
+                    "latitude": -6.57355,
+                    "longitude": 106.54887
+                },
+                {
+                    "nama": "Cisarua",
+                    "latitude": -6.64915,
+                    "longitude": 106.5551
+                },
+                {
+                    "nama": "Curugbitung",
+                    "latitude": -6.62766,
+                    "longitude": 106.55906
+                },
+                {
+                    "nama": "Hambaro",
+                    "latitude": -6.58207,
+                    "longitude": 106.56396
+                },
+                {
+                    "nama": "Kalongliud",
+                    "latitude": -6.5785,
+                    "longitude": 106.55877
+                },
+                {
+                    "nama": "Malasari",
+                    "latitude": -6.70273,
+                    "longitude": 106.5272
+                },
+                {
+                    "nama": "Nanggung",
+                    "latitude": -6.62487,
+                    "longitude": 106.52162
+                },
+                {
+                    "nama": "Pangkaljaya",
+                    "latitude": -6.60393,
+                    "longitude": 106.54984
+                },
+                {
+                    "nama": "Parakanmuncang",
+                    "latitude": -6.59526,
+                    "longitude": 106.53258
+                },
+                {
+                    "nama": "Sukaluyu",
+                    "latitude": -6.59706,
+                    "longitude": 106.56648
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "17",
+            "nama_kecamatan": "Pamijahan",
+            "latitude": -6.67876,
+            "longitude": 106.66044,
+            "kelurahan": [
+                {
+                    "nama": "Ciasihan",
+                    "latitude": -6.70452,
+                    "longitude": 106.67361
+                },
+                {
+                    "nama": "Ciasmara",
+                    "latitude": -6.71122,
+                    "longitude": 106.64887
+                },
+                {
+                    "nama": "Cibening",
+                    "latitude": -6.63171,
+                    "longitude": 106.67475
+                },
+                {
+                    "nama": "Cibitung Kulon",
+                    "latitude": -6.66242,
+                    "longitude": 106.64182
+                },
+                {
+                    "nama": "Cibitung Wetan",
+                    "latitude": -6.64677,
+                    "longitude": 106.63859
+                },
+                {
+                    "nama": "Cibunian",
+                    "latitude": -6.69848,
+                    "longitude": 106.62399
+                },
+                {
+                    "nama": "Cimayang",
+                    "latitude": -6.61061,
+                    "longitude": 106.666
+                },
+                {
+                    "nama": "Gunung Bunder I",
+                    "latitude": -6.64907,
+                    "longitude": 106.68289
+                },
+                {
+                    "nama": "Gunung Bunder Ii",
+                    "latitude": -6.68272,
+                    "longitude": 106.6964
+                },
+                {
+                    "nama": "Gunung Menyan",
+                    "latitude": -6.62957,
+                    "longitude": 106.66789
+                },
+                {
+                    "nama": "Gunung Picung",
+                    "latitude": -6.67661,
+                    "longitude": 106.68041
+                },
+                {
+                    "nama": "Gunung Sari",
+                    "latitude": -6.6915,
+                    "longitude": 106.6761
+                },
+                {
+                    "nama": "Pamijahan",
+                    "latitude": -6.64521,
+                    "longitude": 106.65059
+                },
+                {
+                    "nama": "Pasarean",
+                    "latitude": -6.63741,
+                    "longitude": 106.65911
+                },
+                {
+                    "nama": "Purwabakti",
+                    "latitude": -6.73241,
+                    "longitude": 106.62278
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "10",
+            "nama_kecamatan": "Parung",
+            "latitude": -6.43775,
+            "longitude": 106.71893,
+            "kelurahan": [
+                {
+                    "nama": "Bojong Indah",
+                    "latitude": -6.43264,
+                    "longitude": 106.70416
+                },
+                {
+                    "nama": "Bojong Sempu",
+                    "latitude": -6.44118,
+                    "longitude": 106.70477
+                },
+                {
+                    "nama": "Cogreg",
+                    "latitude": -6.42129,
+                    "longitude": 106.6933
+                },
+                {
+                    "nama": "Iwul",
+                    "latitude": -6.45779,
+                    "longitude": 106.7176
+                },
+                {
+                    "nama": "Jabon Mekar",
+                    "latitude": -6.45349,
+                    "longitude": 106.72697
+                },
+                {
+                    "nama": "Pamagersari",
+                    "latitude": -6.4434,
+                    "longitude": 106.73342
+                },
+                {
+                    "nama": "Parung",
+                    "latitude": -6.42585,
+                    "longitude": 106.73043
+                },
+                {
+                    "nama": "Waru",
+                    "latitude": -6.42373,
+                    "longitude": 106.71985
+                },
+                {
+                    "nama": "Warujaya",
+                    "latitude": -6.4302,
+                    "longitude": 106.71032
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "20",
+            "nama_kecamatan": "Parungpanjang",
+            "latitude": -6.35566,
+            "longitude": 106.54671,
+            "kelurahan": [
+                {
+                    "nama": "Cibunar",
+                    "latitude": -6.34008,
+                    "longitude": 106.55264
+                },
+                {
+                    "nama": "Cikuda",
+                    "latitude": -6.37519,
+                    "longitude": 106.58653
+                },
+                {
+                    "nama": "Dago",
+                    "latitude": -6.40576,
+                    "longitude": 106.5807
+                },
+                {
+                    "nama": "Gintung Cilejet",
+                    "latitude": -6.364,
+                    "longitude": 106.52624
+                },
+                {
+                    "nama": "Gorowong",
+                    "latitude": -6.39589,
+                    "longitude": 106.55802
+                },
+                {
+                    "nama": "Jagabaya",
+                    "latitude": -6.39257,
+                    "longitude": 106.53253
+                },
+                {
+                    "nama": "Jagabita",
+                    "latitude": -6.33293,
+                    "longitude": 106.52599
+                },
+                {
+                    "nama": "Kabasiran",
+                    "latitude": -6.35296,
+                    "longitude": 106.58169
+                },
+                {
+                    "nama": "Lumpang",
+                    "latitude": -6.36303,
+                    "longitude": 106.54599
+                },
+                {
+                    "nama": "Parung Panjang",
+                    "latitude": -6.34522,
+                    "longitude": 106.56846
+                },
+                {
+                    "nama": "Pingku",
+                    "latitude": -6.37963,
+                    "longitude": 106.56903
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "34",
+            "nama_kecamatan": "Rancabungur",
+            "latitude": -6.51587,
+            "longitude": 106.70951,
+            "kelurahan": [
+                {
+                    "nama": "Bantar Jaya",
+                    "latitude": -6.53516,
+                    "longitude": 106.73036
+                },
+                {
+                    "nama": "Bantarsari",
+                    "latitude": -6.5228,
+                    "longitude": 106.73345
+                },
+                {
+                    "nama": "Candali",
+                    "latitude": -6.5047,
+                    "longitude": 106.69927
+                },
+                {
+                    "nama": "Cimulang",
+                    "latitude": -6.52155,
+                    "longitude": 106.71053
+                },
+                {
+                    "nama": "Mekarsari",
+                    "latitude": -6.51028,
+                    "longitude": 106.6908
+                },
+                {
+                    "nama": "Pasirgaok",
+                    "latitude": -6.53379,
+                    "longitude": 106.71662
+                },
+                {
+                    "nama": "Rancabungur",
+                    "latitude": -6.52957,
+                    "longitude": 106.7041
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "18",
+            "nama_kecamatan": "Rumpin",
+            "latitude": -6.44507,
+            "longitude": 106.62497,
+            "kelurahan": [
+                {
+                    "nama": "Cibodas",
+                    "latitude": -6.48957,
+                    "longitude": 106.65935
+                },
+                {
+                    "nama": "Cidokom",
+                    "latitude": -6.51742,
+                    "longitude": 106.67371
+                },
+                {
+                    "nama": "Cipinang",
+                    "latitude": -6.44754,
+                    "longitude": 106.61044
+                },
+                {
+                    "nama": "Gobang",
+                    "latitude": -6.51401,
+                    "longitude": 106.6312
+                },
+                {
+                    "nama": "Kampungsawah",
+                    "latitude": -6.45673,
+                    "longitude": 106.62678
+                },
+                {
+                    "nama": "Kertajaya",
+                    "latitude": -6.39171,
+                    "longitude": 106.60484
+                },
+                {
+                    "nama": "Leuwibatu",
+                    "latitude": -6.53701,
+                    "longitude": 106.62147
+                },
+                {
+                    "nama": "Mekarjaya",
+                    "latitude": -6.53428,
+                    "longitude": 106.65803
+                },
+                {
+                    "nama": "Mekarsari",
+                    "latitude": -6.36967,
+                    "longitude": 106.60038
+                },
+                {
+                    "nama": "Rabak",
+                    "latitude": -6.48669,
+                    "longitude": 106.6319
+                },
+                {
+                    "nama": "Rumpin",
+                    "latitude": -6.43991,
+                    "longitude": 106.64484
+                },
+                {
+                    "nama": "Sukamulya",
+                    "latitude": -6.36587,
+                    "longitude": 106.63076
+                },
+                {
+                    "nama": "Sukasari",
+                    "latitude": -6.41853,
+                    "longitude": 106.62372
+                },
+                {
+                    "nama": "Tamansari",
+                    "latitude": -6.39709,
+                    "longitude": 106.62294
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "35",
+            "nama_kecamatan": "Sukajaya",
+            "latitude": -6.61836,
+            "longitude": 106.47557,
+            "kelurahan": [
+                {
+                    "nama": "Cileuksa",
+                    "latitude": -6.58793,
+                    "longitude": 106.43978
+                },
+                {
+                    "nama": "Cisarua",
+                    "latitude": -6.66874,
+                    "longitude": 106.45399
+                },
+                {
+                    "nama": "Harkat Jaya",
+                    "latitude": -6.60171,
+                    "longitude": 106.51076
+                },
+                {
+                    "nama": "Jayaraharja",
+                    "latitude": -6.5953,
+                    "longitude": 106.49571
+                },
+                {
+                    "nama": "Kiarapandak",
+                    "latitude": -6.6287,
+                    "longitude": 106.49588
+                },
+                {
+                    "nama": "Kiarasari",
+                    "latitude": -6.6617,
+                    "longitude": 106.49803
+                },
+                {
+                    "nama": "Pasir Madang",
+                    "latitude": -6.58487,
+                    "longitude": 106.46868
+                },
+                {
+                    "nama": "Sipayung",
+                    "latitude": -6.56738,
+                    "longitude": 106.50517
+                },
+                {
+                    "nama": "Sukajaya",
+                    "latitude": -6.59317,
+                    "longitude": 106.51058
+                },
+                {
+                    "nama": "Sukamulih",
+                    "latitude": -6.57078,
+                    "longitude": 106.48147
+                },
+                {
+                    "nama": "Urug",
+                    "latitude": -6.62892,
+                    "longitude": 106.49883
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "9",
+            "nama_kecamatan": "Sukamakmur",
+            "latitude": -6.59855,
+            "longitude": 107.01552,
+            "kelurahan": [
+                {
+                    "nama": "Cibadak",
+                    "latitude": -6.58125,
+                    "longitude": 106.95398
+                },
+                {
+                    "nama": "Pabuaran",
+                    "latitude": -6.54155,
+                    "longitude": 106.95807
+                },
+                {
+                    "nama": "Sirnajaya",
+                    "latitude": -6.61397,
+                    "longitude": 107.00214
+                },
+                {
+                    "nama": "Sukadamai",
+                    "latitude": -6.55168,
+                    "longitude": 107.06307
+                },
+                {
+                    "nama": "Sukaharja",
+                    "latitude": -6.59452,
+                    "longitude": 107.05364
+                },
+                {
+                    "nama": "Sukamakmur",
+                    "latitude": -6.58466,
+                    "longitude": 106.98303
+                },
+                {
+                    "nama": "Sukamulya",
+                    "latitude": -6.58921,
+                    "longitude": 106.99713
+                },
+                {
+                    "nama": "Sukaresmi",
+                    "latitude": -6.5377,
+                    "longitude": 107.05087
+                },
+                {
+                    "nama": "Sukawangi",
+                    "latitude": -6.65723,
+                    "longitude": 107.03551
+                },
+                {
+                    "nama": "Wargajaya",
+                    "latitude": -6.62606,
+                    "longitude": 107.01408
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "4",
+            "nama_kecamatan": "Sukaraja",
+            "latitude": -6.57192,
+            "longitude": 106.83731,
+            "kelurahan": [
+                {
+                    "nama": "Cadasngampar",
+                    "latitude": -6.57292,
+                    "longitude": 106.83952
+                },
+                {
+                    "nama": "Cibanon",
+                    "latitude": -6.63034,
+                    "longitude": 106.84676
+                },
+                {
+                    "nama": "Cijujung",
+                    "latitude": -6.52984,
+                    "longitude": 106.83756
+                },
+                {
+                    "nama": "Cikeas",
+                    "latitude": -6.594,
+                    "longitude": 106.85281
+                },
+                {
+                    "nama": "Cilebut Barat",
+                    "latitude": -6.53209,
+                    "longitude": 106.794
+                },
+                {
+                    "nama": "Cilebut Timur",
+                    "latitude": -6.52948,
+                    "longitude": 106.80106
+                },
+                {
+                    "nama": "Cimandala",
+                    "latitude": -6.52974,
+                    "longitude": 106.82325
+                },
+                {
+                    "nama": "Gunung Geulis",
+                    "latitude": -6.63132,
+                    "longitude": 106.884
+                },
+                {
+                    "nama": "Nagrak",
+                    "latitude": -6.61651,
+                    "longitude": 106.85514
+                },
+                {
+                    "nama": "Pasirjambu",
+                    "latitude": -6.53915,
+                    "longitude": 106.8106
+                },
+                {
+                    "nama": "Pasirlaja",
+                    "latitude": -6.55135,
+                    "longitude": 106.83479
+                },
+                {
+                    "nama": "Sukaraja",
+                    "latitude": -6.60177,
+                    "longitude": 106.83467
+                },
+                {
+                    "nama": "Sukatani",
+                    "latitude": -6.60787,
+                    "longitude": 106.84098
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "37",
+            "nama_kecamatan": "Tajurhalang",
+            "latitude": -6.47259,
+            "longitude": 106.75544,
+            "kelurahan": [
+                {
+                    "nama": "Citayam",
+                    "latitude": -6.44558,
+                    "longitude": 106.74877
+                },
+                {
+                    "nama": "Kalisuren",
+                    "latitude": -6.46878,
+                    "longitude": 106.73763
+                },
+                {
+                    "nama": "Nanggerang",
+                    "latitude": -6.46702,
+                    "longitude": 106.77844
+                },
+                {
+                    "nama": "Sasakpanjang",
+                    "latitude": -6.45493,
+                    "longitude": 106.7545
+                },
+                {
+                    "nama": "Sukmajaya",
+                    "latitude": -6.48282,
+                    "longitude": 106.77831
+                },
+                {
+                    "nama": "Tajurhalang",
+                    "latitude": -6.47985,
+                    "longitude": 106.76339
+                },
+                {
+                    "nama": "Tonjong",
+                    "latitude": -6.49058,
+                    "longitude": 106.75499
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "31",
+            "nama_kecamatan": "Tamansari",
+            "latitude": -6.65292,
+            "longitude": 106.74989,
+            "kelurahan": [
+                {
+                    "nama": "Pasir Eurih",
+                    "latitude": -6.63786,
+                    "longitude": 106.76276
+                },
+                {
+                    "nama": "Sirnagalih",
+                    "latitude": -6.63332,
+                    "longitude": 106.77172
+                },
+                {
+                    "nama": "Sukajadi",
+                    "latitude": -6.65303,
+                    "longitude": 106.72652
+                },
+                {
+                    "nama": "Sukajaya",
+                    "latitude": -6.62919,
+                    "longitude": 106.7406
+                },
+                {
+                    "nama": "Sukaluyu",
+                    "latitude": -6.64264,
+                    "longitude": 106.74378
+                },
+                {
+                    "nama": "Sukamantri",
+                    "latitude": -6.65019,
+                    "longitude": 106.77307
+                },
+                {
+                    "nama": "Sukaresmi",
+                    "latitude": -6.63055,
+                    "longitude": 106.75435
+                },
+                {
+                    "nama": "Tamansari",
+                    "latitude": -6.67428,
+                    "longitude": 106.74421
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "36",
+            "nama_kecamatan": "Tanjungsari",
+            "latitude": -6.62765,
+            "longitude": 107.12678,
+            "kelurahan": [
+                {
+                    "nama": "Antajaya",
+                    "latitude": -6.5854,
+                    "longitude": 107.17397
+                },
+                {
+                    "nama": "Buanajaya",
+                    "latitude": -6.61744,
+                    "longitude": 107.18041
+                },
+                {
+                    "nama": "Cibadak",
+                    "latitude": -6.61668,
+                    "longitude": 107.11574
+                },
+                {
+                    "nama": "Pasirtanjung",
+                    "latitude": -6.60007,
+                    "longitude": 107.14027
+                },
+                {
+                    "nama": "Selawangi",
+                    "latitude": -6.58171,
+                    "longitude": 107.08721
+                },
+                {
+                    "nama": "Sirnarasa",
+                    "latitude": -6.63959,
+                    "longitude": 107.14341
+                },
+                {
+                    "nama": "Sirnasari",
+                    "latitude": -6.62559,
+                    "longitude": 107.14868
+                },
+                {
+                    "nama": "Sukarasa",
+                    "latitude": -6.60939,
+                    "longitude": 107.08321
+                },
+                {
+                    "nama": "Tanjungrasa",
+                    "latitude": -6.57949,
+                    "longitude": 107.13508
+                },
+                {
+                    "nama": "Tanjungsari",
+                    "latitude": -6.6226,
+                    "longitude": 107.14166
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "23",
+            "nama_kecamatan": "Tenjo",
+            "latitude": -6.37846,
+            "longitude": 106.47748,
+            "kelurahan": [
+                {
+                    "nama": "Babakan",
+                    "latitude": -6.36167,
+                    "longitude": 106.4687
+                },
+                {
+                    "nama": "Batok",
+                    "latitude": -6.36426,
+                    "longitude": 106.50483
+                },
+                {
+                    "nama": "Bojong",
+                    "latitude": -6.38489,
+                    "longitude": 106.43929
+                },
+                {
+                    "nama": "Cilaku",
+                    "latitude": -6.33383,
+                    "longitude": 106.47663
+                },
+                {
+                    "nama": "Ciomas",
+                    "latitude": -6.42148,
+                    "longitude": 106.52351
+                },
+                {
+                    "nama": "Singabangsa",
+                    "latitude": -6.31478,
+                    "longitude": 106.47162
+                },
+                {
+                    "nama": "Singabraja",
+                    "latitude": -6.3528,
+                    "longitude": 106.43898
+                },
+                {
+                    "nama": "Tapos",
+                    "latitude": -6.40054,
+                    "longitude": 106.5
+                },
+                {
+                    "nama": "Tenjo",
+                    "latitude": -6.32988,
+                    "longitude": 106.45219
+                }
+            ]
+        },
+        {
+            "kode_kecamatan": "40",
+            "nama_kecamatan": "Tenjolaya",
+            "latitude": -6.65203,
+            "longitude": 106.71083,
+            "kelurahan": [
+                {
+                    "nama": "Cibitung Tengah",
+                    "latitude": -6.61766,
+                    "longitude": 106.69292
+                },
+                {
+                    "nama": "Cinangneng",
+                    "latitude": -6.60112,
+                    "longitude": 106.70544
+                },
+                {
+                    "nama": "Gunung Malang",
+                    "latitude": -6.67489,
+                    "longitude": 106.72074
+                },
+                {
+                    "nama": "Gunung Mulya",
+                    "latitude": -6.64191,
+                    "longitude": 106.70942
+                },
+                {
+                    "nama": "Situ Daun",
+                    "latitude": -6.61793,
+                    "longitude": 106.70826
+                },
+                {
+                    "nama": "Tapos I",
+                    "latitude": -6.67144,
+                    "longitude": 106.70372
+                },
+                {
+                    "nama": "Tapos Ii",
+                    "latitude": -6.63569,
+                    "longitude": 106.69345
+                }
+            ]
+        }
+    ]
+}

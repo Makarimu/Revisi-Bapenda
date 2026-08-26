@@ -9,10 +9,19 @@ use App\Services\RingkasanService;
 
 class DashboardService
 {
+    private function applyDinasFilter($query)
+    {
+        if (auth()->check() && auth()->user()->dinas_id !== null) {
+            $query->where('dinas_id', auth()->user()->dinas_id);
+        }
+        return $query;
+    }
+
     public function getStatistik(): array
     {
-        $counts = Permohonan::select('status', DB::raw('count(*) as total'))
-            ->groupBy('status')
+        $query = Permohonan::select('status', DB::raw('count(*) as total'));
+        $this->applyDinasFilter($query);
+        $counts = $query->groupBy('status')
             ->pluck('total', 'status')
             ->toArray();
 
@@ -27,17 +36,20 @@ class DashboardService
 
     public function getPermohonanHariIni()
     {
-        return Permohonan::where('tanggal_kunjungan', Carbon::today()->toDateString())
+        $query = Permohonan::where('tanggal_kunjungan', Carbon::today()->toDateString())
             ->whereIn('status', ['Disetujui', 'Pending', 'Revisi'])
-            ->orderBy('jam_penerimaan', 'asc')
-            ->get();
+            ->orderBy('jam_penerimaan', 'asc');
+        $this->applyDinasFilter($query);
+        return $query->get();
     }
 
     public function getGrafikBulanan(): array
     {
         $year = Carbon::now()->year;
         
-        $data = Permohonan::whereYear('tanggal_kunjungan', $year)->get();
+        $query = Permohonan::whereYear('tanggal_kunjungan', $year);
+        $this->applyDinasFilter($query);
+        $data = $query->get();
         
         $grouped = $data->groupBy(function ($item) {
             return Carbon::parse($item->tanggal_kunjungan)->format('n'); // 1-12
@@ -53,7 +65,9 @@ class DashboardService
 
     public function getAktivitasTerbaru()
     {
-        return Permohonan::orderBy('updated_at', 'desc')->limit(5)->get();
+        $query = Permohonan::orderBy('updated_at', 'desc')->limit(5);
+        $this->applyDinasFilter($query);
+        return $query->get();
     }
 
     /**
@@ -62,9 +76,10 @@ class DashboardService
      */
     public function getRingkasanExpiring(): array
     {
-        $expiring = Permohonan::ringkasanExpiresToday()
-            ->orderBy('tanggal_selesai_kunjungan', 'asc')
-            ->get();
+        $query = Permohonan::ringkasanExpiresToday()
+            ->orderBy('tanggal_selesai_kunjungan', 'asc');
+        $this->applyDinasFilter($query);
+        $expiring = $query->get();
 
         return $expiring->map(function ($p) {
             return [

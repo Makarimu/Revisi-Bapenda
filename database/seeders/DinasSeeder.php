@@ -22,7 +22,7 @@ class DinasSeeder extends Seeder
             return;
         }
 
-        foreach ($dinasData as $d) {
+        foreach ($dinasData['dinas_dan_instansi'] as $d) {
             Dinas::updateOrCreate(
                 ['id' => $d['id']],
                 [
