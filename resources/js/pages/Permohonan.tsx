@@ -175,8 +175,8 @@ const CalendarDay = memo(function CalendarDay({ dateStr, day, cls, isSelected, i
   const title = cls === 'busy'
     ? 'Tanggal ini sudah penuh (maksimal 2 kunjungan kerja)'
     : cls === 'user-booked'
-    ? 'Anda sudah memiliki pengajuan pada tanggal ini'
-    : undefined;
+      ? 'Anda sudah memiliki pengajuan pada tanggal ini'
+      : undefined;
 
   return (
     <div
@@ -390,6 +390,8 @@ const KonfirmasiKirimModal = memo(function KonfirmasiKirimModal({ open, onYes, o
   );
 });
 
+
+
 // ---- Google reCAPTCHA v2 — React.memo ----
 const RecaptchaModal = memo(function RecaptchaModal({ open, onVerified, onClose, loading }: any) {
   const captchaRef = useRef<HTMLDivElement | null>(null);
@@ -416,7 +418,7 @@ const RecaptchaModal = memo(function RecaptchaModal({ open, onVerified, onClose,
           if (!isSubscribed || !captchaRef.current || !window.grecaptcha) return;
           if (renderingRef.current || captchaRef.current.children.length > 0) {
             if (widgetIdRef.current !== null) {
-              try { window.grecaptcha.reset(widgetIdRef.current); } catch {}
+              try { window.grecaptcha.reset(widgetIdRef.current); } catch { }
             }
             return;
           }
@@ -427,7 +429,7 @@ const RecaptchaModal = memo(function RecaptchaModal({ open, onVerified, onClose,
               callback: (token: string) => { onVerifiedRef.current(token); },
               'expired-callback': () => {
                 if (widgetIdRef.current !== null && window.grecaptcha) {
-                  try { window.grecaptcha.reset(widgetIdRef.current); } catch {}
+                  try { window.grecaptcha.reset(widgetIdRef.current); } catch { }
                 }
               },
               'error-callback': () => {
@@ -459,7 +461,7 @@ const RecaptchaModal = memo(function RecaptchaModal({ open, onVerified, onClose,
   useEffect(() => {
     if (!open) {
       if (widgetIdRef.current !== null && window.grecaptcha) {
-        try { window.grecaptcha.reset(widgetIdRef.current); } catch {}
+        try { window.grecaptcha.reset(widgetIdRef.current); } catch { }
       }
       widgetIdRef.current = null;
       renderingRef.current = false;
@@ -486,12 +488,14 @@ const RecaptchaModal = memo(function RecaptchaModal({ open, onVerified, onClose,
         </div>
         <div className="modal-body">
           <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-sub)', marginBottom: '18px' }}>
-            Silakan selesaikan verifikasi reCAPTCHA sebelum mengirim permohonan.
+            Silakan centang kotak <strong>"Saya bukan robot"</strong> di bawah untuk melanjutkan pengiriman:
           </p>
           {siteKey ? (
-            <div ref={captchaRef} style={{ minHeight: '78px' }} />
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '14px 0', minHeight: '78px' }}>
+              <div ref={captchaRef} />
+            </div>
           ) : (
-            <p style={{ fontSize: '13px', color: '#B91C1C' }}>reCAPTCHA belum dikonfigurasi.</p>
+            <p style={{ fontSize: '13px', color: '#B91C1C' }}>reCAPTCHA belum dikonfigurasi di .env.</p>
           )}
           {captchaError && (
             <div style={{ marginTop: '10px' }}>
@@ -510,8 +514,8 @@ const RecaptchaModal = memo(function RecaptchaModal({ open, onVerified, onClose,
             </div>
           )}
           <div className="modal-actions" style={{ marginTop: '18px' }}>
-            <button className="btn-outline" onClick={handleClose} disabled={loading}>
-              Kembali
+            <button className="btn-outline" onClick={handleClose} disabled={loading} style={{ width: '100%' }}>
+              Batal
             </button>
           </div>
         </div>
@@ -535,7 +539,7 @@ export default function Permohonan() {
   const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    loadRecaptchaScript().catch(() => {});
+    loadRecaptchaScript().catch(() => { });
   }, []);
 
   const [form, setForm] = useState<any>(INITIAL_FORM);
@@ -622,10 +626,6 @@ export default function Permohonan() {
   const handleCloseInfoMenginap = useCallback(() => setShowInfoMenginap(false), []);
   const handleCloseSubmitConfirm = useCallback(() => setShowSubmitConfirm(false), []);
   const handleCloseRecaptcha = useCallback(() => setShowRecaptcha(false), []);
-  const handleYesSubmitConfirm = useCallback(() => {
-    setShowSubmitConfirm(false);
-    setShowRecaptcha(true);
-  }, []);
 
   // Helper: hapus error satu field tertentu
   const clearError = useCallback((field: string) => {
@@ -787,17 +787,10 @@ export default function Permohonan() {
     }
   }, [selectedDate, form, file1, file2]);
 
-  // Bypass reCAPTCHA di localhost/development — useEffect ini harus di BAWAH submitPermohonan
-  useEffect(() => {
-    if (!showRecaptcha) return;
-    const isDev = import.meta.env.DEV ||
-      window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1';
-    if (isDev) {
-      setShowRecaptcha(false);
-      submitPermohonan('dev-bypass');
-    }
-  }, [showRecaptcha, submitPermohonan]);
+  const handleYesSubmitConfirm = useCallback(() => {
+    setShowSubmitConfirm(false);
+    setShowRecaptcha(true);
+  }, []);
 
   const handleGoToStatus = useCallback(() => {
     navigate('/status?kode=' + submittedKode);
@@ -946,18 +939,18 @@ export default function Permohonan() {
                       <div className="form-grid full">
                         <div className="form-group" id="field-dinasId">
                           <label>Dinas/Instansi yang Dituju *</label>
-                          <select 
-                            className={errors.dinasId ? 'error' : ''} 
-                            value={form.dinasId} 
-                            onChange={e => { 
+                          <select
+                            className={errors.dinasId ? 'error' : ''}
+                            value={form.dinasId}
+                            onChange={e => {
                               const selectedId = e.target.value;
                               const selectedDinas = dinasList.find(d => d.id.toString() === selectedId);
-                              setForm((f: any) => ({ 
-                                ...f, 
+                              setForm((f: any) => ({
+                                ...f,
                                 dinasId: selectedId,
                                 dinasTujuan: selectedDinas ? selectedDinas.nama : ''
-                              })); 
-                              if (selectedId) clearError('dinasId'); 
+                              }));
+                              if (selectedId) clearError('dinasId');
                             }}
                             style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '13.5px', fontFamily: 'inherit', outline: 'none', background: 'white' }}
                           >
@@ -972,7 +965,7 @@ export default function Permohonan() {
                           {form.dinasId && (
                             <div style={{ marginTop: '8px', fontSize: '12.5px', color: '#0028B3', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
                               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                               </svg>
                               <span>No. Telp Dinas: {dinasList.find(d => d.id.toString() === form.dinasId)?.nomor_telepon || '-'}</span>
                             </div>
@@ -1108,11 +1101,11 @@ export default function Permohonan() {
             </div>
           </div>
         )}
-      {toast.show && (
-        <div style={{ position: 'fixed', bottom: '28px', right: '28px', padding: '14px 22px', borderRadius: '12px', color: 'white', fontSize: '13.5px', fontWeight: '600', zIndex: 9999, maxWidth: '340px', boxShadow: '0 8px 24px rgba(0,17,120,0.22)', background: toast.type === 'error' ? '#B91C1C' : '#001178' }}>
-          {toast.msg}
-        </div>
-      )}
+        {toast.show && (
+          <div style={{ position: 'fixed', bottom: '28px', right: '28px', padding: '14px 22px', borderRadius: '12px', color: 'white', fontSize: '13.5px', fontWeight: '600', zIndex: 9999, maxWidth: '340px', boxShadow: '0 8px 24px rgba(0,17,120,0.22)', background: toast.type === 'error' ? '#B91C1C' : '#001178' }}>
+            {toast.msg}
+          </div>
+        )}
       </div>
     </PublicLayout>
   );

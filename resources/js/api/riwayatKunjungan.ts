@@ -3,6 +3,7 @@ import api from '../services/api';
 export interface RiwayatKunjunganItem {
   id: number;
   instansi: string;
+  dinas_tujuan?: string | null;
   tanggal_kunjungan: string;
   tujuan: string;
   jumlah_peserta: number;

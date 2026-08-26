@@ -399,7 +399,7 @@ export default function RiwayatKunjungan() {
     <PublicLayout>
       <div style={{ background: '#F6F7FA', minHeight: 'calc(100vh - 80px)', padding: '48px 20px 80px' }}>
         <div style={{ maxWidth: '1140px', margin: '0 auto' }}>
-          
+
           {/* Header Title */}
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <h1 style={{ fontSize: '28px', fontWeight: '800', color: '#001178', marginBottom: '10px', letterSpacing: '-0.4px' }}>

@@ -300,7 +300,7 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {hariIni.length === 0 && <tr><td colSpan={6} style={{textAlign:'center',padding:'36px 16px',color:'#64748B',fontSize:'13.5px'}}>Tidak ada kunjungan yang dijadwalkan hari ini.</td></tr>}
+                {hariIni.length === 0 && <tr><td colSpan={6} style={{ textAlign: 'center', padding: '36px 16px', color: '#64748B', fontSize: '13.5px' }}>Tidak ada kunjungan yang dijadwalkan hari ini.</td></tr>}
                 {hariIni.map((d: any, i: number) => (
                   <tr key={i} style={{ borderTop: '1px solid #F1F5F9' }}>
                     <td style={{ padding: '12px 16px', fontSize: '13px', fontWeight: '700', color: '#0028B3', fontFamily: 'monospace' }}>{d.kode_permohonan}</td>
@@ -387,7 +387,7 @@ export default function Dashboard() {
         )}
       </div>
 
-     {/* CTA ke Halaman Permohonan */}
+      {/* CTA ke Halaman Permohonan */}
       <div style={{ background: 'linear-gradient(135deg,#001178 0%,#1883FF 50%,#75C3FF 100%)', borderRadius: '18px', padding: '24px 30px', marginTop: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', boxShadow: '0 8px 24px rgba(0,17,120,0.16)' }}>
         <div style={{ color: 'white' }}>
           <div style={{ fontSize: '16px', fontWeight: '700', letterSpacing: '-0.2px' }}>Lihat semua permohonan</div>

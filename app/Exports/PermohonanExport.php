@@ -122,7 +122,7 @@ class PermohonanExport implements
 
                 // Row 1: Title
                 $sheet->mergeCells("A1:{$lastCol}1");
-                $sheet->setCellValue('A1', 'DATA PERMOHONAN KUNJUNGAN KERJA BAPPENDA');
+                $sheet->setCellValue('A1', 'DATA PERMOHONAN KUNJUNGAN KERJA');
                 $sheet->getStyle('A1')->applyFromArray([
                     'font'      => ['bold' => true, 'size' => 14, 'color' => ['rgb' => '1B4332']],
                     'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],

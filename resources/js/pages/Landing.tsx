@@ -66,7 +66,7 @@ export default function Landing() {
           <h1>Selamat Datang!</h1>
           <p>
             Halaman ini menyediakan layanan pengajuan permohonan kunjungan kerja secara online bagi pihak yang ingin
-            melakukan kunjungan kerja ke Bappenda Kabupaten Bogor.
+            melakukan kunjungan kerja ke Kabupaten Bogor.
           </p>
           <div className="hero-actions">
             <button className="btn btn-gold" onClick={() => navigate('/permohonan')}>
@@ -272,7 +272,7 @@ export default function Landing() {
             <div className="section-head">
               <div className="section-tag">Testimonial</div>
               <h2>Apa Kata Instansi yang Pernah Berkunjung</h2>
-              <p>Ulasan dan pengalaman dari instansi yang telah melaksanakan kunjungan kerja di Bappenda Kabupaten Bogor.</p>
+              <p>Ulasan dan pengalaman dari instansi yang telah melaksanakan kunjungan kerja di Kabupaten Bogor.</p>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px', marginTop: '28px' }}>
               {reviews.slice(0, 6).map((rev: any) => (

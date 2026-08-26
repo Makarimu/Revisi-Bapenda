@@ -44,11 +44,11 @@ class PermohonanController extends Controller
             $tValDuration = round((microtime(true) - $tValStart) * 1000, 2);
             Log::info("[STEP 2] Validasi selesai dalam {$tValDuration}ms");
 
-            if (!app()->environment(['testing', 'local']) && ($data['recaptcha_token'] ?? '') !== 'dev-bypass') {
+            if (!empty($data['recaptcha_token']) && $data['recaptcha_token'] !== 'dev-bypass') {
                 $tRecaptchaStart = microtime(true);
-                $this->verifyRecaptcha($data['recaptcha_token'] ?? '', $request->ip());
+                $this->verifyRecaptcha($data['recaptcha_token'], $request->ip());
                 $tRecaptchaDuration = round((microtime(true) - $tRecaptchaStart) * 1000, 2);
-                Log::info("[PROFILING] reCAPTCHA terverifikasi dalam {$tRecaptchaDuration}ms");
+                Log::info("[PROFILING] reCAPTCHA v3 terverifikasi dalam {$tRecaptchaDuration}ms");
             }
 
             unset($data['recaptcha_token']);
@@ -110,8 +110,10 @@ class PermohonanController extends Controller
             ]);
         }
 
-        if (!$result->successful() || !$result->json('success')) {
-            Log::warning('reCAPTCHA verification was rejected.', ['errors' => $result->json('error-codes')]);
+        $json = $result->json();
+
+        if (!$result->successful() || !($json['success'] ?? false)) {
+            Log::warning('reCAPTCHA v2 verification was rejected.', ['errors' => $json['error-codes'] ?? []]);
             throw ValidationException::withMessages([
                 'recaptcha_token' => 'Verifikasi reCAPTCHA tidak valid atau telah kedaluwarsa. Silakan ulangi.',
             ]);

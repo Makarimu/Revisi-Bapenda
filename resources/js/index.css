@@ -10,52 +10,67 @@
 
 :root {
   /* Mandatory Blue Scale */
-  --blue-900: #001178;   /* Paling gelap — teks pada elemen terang, hero gradient stop gelap, warna aktif kuat */
-  --blue-800: #0028B3;   /* PRIMARY — tombol utama, header nav aktif, hero gradient stop terang, section-tag */
-  --blue-500: #1883FF;   /* Aksen cerah — ikon, link, border fokus, hover, angka step aktif */
-  --blue-200: #75C3FF;   /* Background lembut untuk badge/icon-box, border kalender available */
-  --blue-100: #C5DBFF;   /* Tint sangat muda — background section selingan, hover ringan, background info-card icon */
+  --blue-900: #001178;
+  /* Paling gelap — teks pada elemen terang, hero gradient stop gelap, warna aktif kuat */
+  --blue-800: #0028B3;
+  /* PRIMARY — tombol utama, header nav aktif, hero gradient stop terang, section-tag */
+  --blue-500: #1883FF;
+  /* Aksen cerah — ikon, link, border fokus, hover, angka step aktif */
+  --blue-200: #75C3FF;
+  /* Background lembut untuk badge/icon-box, border kalender available */
+  --blue-100: #C5DBFF;
+  /* Tint sangat muda — background section selingan, hover ringan, background info-card icon */
 
   /* Neutral System */
-  --white:    #FFFFFF;
-  --bg:       #F6F7FA;   /* Background halaman netral */
-  --surface:  #FFFFFF;   /* Background card */
-  --border:   #E4E7ED;   /* Border ultra-halus card / input */
-  --text-main:#0F172A;   /* Teks utama */
-  --text-sub: #64748B;   /* Teks sekunder / keterangan */
+  --white: #FFFFFF;
+  --bg: #F6F7FA;
+  /* Background halaman netral */
+  --surface: #FFFFFF;
+  /* Background card */
+  --border: #E4E7ED;
+  /* Border ultra-halus card / input */
+  --text-main: #0F172A;
+  /* Teks utama */
+  --text-sub: #64748B;
+  /* Teks sekunder / keterangan */
 
   /* Shadows (Multi-layer subtle modern shadows) */
-  --shadow-xs:    0 1px 2px rgba(0, 17, 120, 0.04);
-  --shadow-sm:    0 1px 3px rgba(0, 17, 120, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02);
-  --shadow-md:    0 4px 20px -2px rgba(0, 17, 120, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
-  --shadow-lg:    0 12px 32px -4px rgba(0, 17, 120, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
-  --shadow-xl:    0 20px 48px -8px rgba(0, 17, 120, 0.14), 0 8px 16px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xs: 0 1px 2px rgba(0, 17, 120, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 17, 120, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 20px -2px rgba(0, 17, 120, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 12px 32px -4px rgba(0, 17, 120, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+  --shadow-xl: 0 20px 48px -8px rgba(0, 17, 120, 0.14), 0 8px 16px -4px rgba(0, 0, 0, 0.04);
   --shadow-modal: 0 25px 60px -12px rgba(0, 17, 120, 0.22), 0 12px 24px -8px rgba(0, 0, 0, 0.08);
 
   /* Border Radii */
-  --radius-xs:   6px;
-  --radius-sm:   8px;    /* Input, badge, button kecil, tags */
-  --radius-md:   14px;   /* Medium component, dropdown, upload area */
-  --radius-lg:   18px;   /* Standard card, info card, ketentuan card */
-  --radius-xl:   24px;   /* Hero container, large container, modals */
-  --radius-pill: 9999px; /* Pill badges & tags */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  /* Input, badge, button kecil, tags */
+  --radius-md: 14px;
+  /* Medium component, dropdown, upload area */
+  --radius-lg: 18px;
+  /* Standard card, info card, ketentuan card */
+  --radius-xl: 24px;
+  /* Hero container, large container, modals */
+  --radius-pill: 9999px;
+  /* Pill badges & tags */
 
   /* Status Colors (Strictly Preserved Semantic Colors) */
-  --status-pending:          #B45309;
-  --status-pending-bg:       #FEF3C7;
-  --status-pending-border:   #FCD34D;
+  --status-pending: #B45309;
+  --status-pending-bg: #FEF3C7;
+  --status-pending-border: #FCD34D;
 
-  --status-disetujui:        #15803D;
-  --status-disetujui-bg:     #DCFCE7;
+  --status-disetujui: #15803D;
+  --status-disetujui-bg: #DCFCE7;
   --status-disetujui-border: #86EFAC;
 
-  --status-ditolak:          #B91C1C;
-  --status-ditolak-bg:       #FEE2E2;
-  --status-ditolak-border:   #FCA5A5;
+  --status-ditolak: #B91C1C;
+  --status-ditolak-bg: #FEE2E2;
+  --status-ditolak-border: #FCA5A5;
 
-  --status-revisi:           #6D28D9;
-  --status-revisi-bg:        #EDE9FE;
-  --status-revisi-border:    #C4B5FD;
+  --status-revisi: #6D28D9;
+  --status-revisi-bg: #EDE9FE;
+  --status-revisi-border: #C4B5FD;
 
   /* Aliases mapped to new blue scale */
   --navy-950: var(--blue-900);
@@ -63,31 +78,42 @@
   --navy-800: #001A94;
   --navy-600: var(--blue-500);
   --navy-100: var(--blue-100);
-  --navy:       var(--blue-800);
-  --navy-dark:  var(--blue-900);
+  --navy: var(--blue-800);
+  --navy-dark: var(--blue-900);
   --navy-light: var(--blue-500);
-  --gold:       #D97706;
-  --gold-dark:  #B45309;
-  --white-bg:   #FFFFFF;
-  --green:      #15803D;
-  --gray-bg:    var(--bg);
+  --gold: #D97706;
+  --gold-dark: #B45309;
+  --white-bg: #FFFFFF;
+  --green: #15803D;
+  --gray-bg: var(--bg);
 }
 
 [data-theme='dark'] {
   /* Neutral System Override */
-  --white:    #1E293B;   /* Slate 800 */
-  --bg:       #0F172A;   /* Slate 900 */
-  --surface:  #1E293B;   /* Slate 800 */
-  --border:   #334155;   /* Slate 700 */
-  --text-main:#F8FAFC;   /* Slate 50 */
-  --text-sub: #94A3B8;   /* Slate 400 */
+  --white: #1E293B;
+  /* Slate 800 */
+  --bg: #0F172A;
+  /* Slate 900 */
+  --surface: #1E293B;
+  /* Slate 800 */
+  --border: #334155;
+  /* Slate 700 */
+  --text-main: #F8FAFC;
+  /* Slate 50 */
+  --text-sub: #94A3B8;
+  /* Slate 400 */
 
   /* Blue Scale Adjustments for Dark Mode */
-  --blue-900: #E2E8F0;   /* Light gray/blue text color */
-  --blue-800: #3B82F6;   /* Bright primary blue */
-  --blue-500: #60A5FA;   /* Bright accent blue */
-  --blue-200: #1E3A8A;   /* Dark navy/blue container bg */
-  --blue-100: #172554;   /* Very dark navy container bg */
+  --blue-900: #E2E8F0;
+  /* Light gray/blue text color */
+  --blue-800: #3B82F6;
+  /* Bright primary blue */
+  --blue-500: #60A5FA;
+  /* Bright accent blue */
+  --blue-200: #1E3A8A;
+  /* Dark navy/blue container bg */
+  --blue-100: #172554;
+  /* Very dark navy container bg */
 
   /* Aliases mapped to new blue scale */
   --navy-950: #0F172A;
@@ -95,11 +121,11 @@
   --navy-800: #3B82F6;
   --navy-600: #60A5FA;
   --navy-100: #172554;
-  --navy:       #3B82F6;
-  --navy-dark:  #60A5FA;
+  --navy: #3B82F6;
+  --navy-dark: #60A5FA;
   --navy-light: #93C5FD;
-  --white-bg:   #1E293B;
-  --gray-bg:    #0F172A;
+  --white-bg: #1E293B;
+  --gray-bg: #0F172A;
 }
 
 [data-theme='dark'] .leaflet-tile-container {
@@ -376,9 +402,11 @@ body {
   .hero {
     padding: 44px 20px 52px;
   }
+
   .hero h1 {
     font-size: 25px;
   }
+
   .hero p {
     font-size: 14px;
   }
@@ -881,7 +909,7 @@ body {
   padding: 48px 20px 64px;
 }
 
-.layout-grid > div {
+.layout-grid>div {
   min-width: 0;
 }
 
@@ -1019,6 +1047,7 @@ body {
   .cal-day {
     font-size: 10.5px;
   }
+
   .cal-day-header {
     font-size: 9.5px;
   }
@@ -1769,6 +1798,7 @@ body {
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;

@@ -16,7 +16,7 @@
             <td style="padding: 40px 40px 30px;">
                 <p style="margin: 0 0 24px 0; font-size: 14px; line-height: 1.6; color: #4b5563;">
                     Yth. Bapak/Ibu <strong>{{ $permohonan->nama_pic }}</strong>,<br><br>
-                    Terima kasih telah melakukan kunjungan kerja ke BAPPENDA Kabupaten Bogor.<br>
+                    Terima kasih telah melakukan kunjungan kerja ke Kabupaten Bogor.<br>
                     Silakan memberikan Rating &amp; Review terhadap pelayanan kami.<br>
                     Masukan Anda sangat membantu peningkatan kualitas pelayanan.
                 </p>
@@ -43,7 +43,7 @@
         <tr>
             <td style="background-color: #ffffff; padding: 0 40px 40px; text-align: center;">
                 <p style="margin: 0; font-size: 10px; color: #94a3b8; line-height: 1.6;">
-                    Email ini dikirim otomatis oleh Sistem Kunjungan Kerja Bappenda Kabupaten Bogor.<br>
+                    Email ini dikirim otomatis oleh Sistem Kunjungan Kerja Kabupaten Bogor.<br>
                     Mohon tidak membalas email ini.
                 </p>
             </td>

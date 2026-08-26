@@ -27,7 +27,7 @@ export default function BogorMap() {
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const tileLayer = useRef<L.TileLayer | null>(null);
   const geoLayer = useRef<L.GeoJSON | null>(null);
-  const markerGroup = useRef<L.LayerGroup | null>(null);
+  const markerGroup = useRef<L.FeatureGroup | null>(null);
   const cache = useRef<Record<string, any>>({});
 
   const [activeLayer, setActiveLayer] = useState<LayerType>('kabupaten');
@@ -48,7 +48,7 @@ export default function BogorMap() {
     L.control.zoom({ position: 'bottomright' }).addTo(m);
 
     tileLayer.current = L.tileLayer(TILES.default, { subdomains: 'abcd', maxZoom: 20 }).addTo(m);
-    markerGroup.current = L.layerGroup().addTo(m);
+    markerGroup.current = L.featureGroup().addTo(m);
     setMapInstance(m);
 
     return () => { m.remove(); setMapInstance(null); };
@@ -128,8 +128,8 @@ export default function BogorMap() {
         const icon = L.divIcon({
           className: '',
           html: `<div style="filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));cursor:pointer;transition:transform .2s;"><img src="/image/titik.svg" style="width:36px;height:36px;" /></div>`,
-          iconSize:    [36, 36],
-          iconAnchor:  [18, 33],
+          iconSize: [36, 36],
+          iconAnchor: [18, 33],
           popupAnchor: [0, -35],
         });
 

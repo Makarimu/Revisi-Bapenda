@@ -34,7 +34,7 @@
         <tr>
             <td style="background-color: #ffffff; padding: 0 40px 40px; text-align: center;">
                 <p style="margin: 0; font-size: 10px; color: #94a3b8; line-height: 1.6;">
-                    Email ini dikirim otomatis oleh Sistem Kunjungan Kerja Bappenda Kabupaten Bogor.<br>
+                    Email ini dikirim otomatis oleh Sistem Kunjungan Kerja Kabupaten Bogor.<br>
                     Mohon tidak membalas email ini.
                 </p>
             </td>

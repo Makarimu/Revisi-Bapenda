@@ -19,7 +19,7 @@
             <td style="padding: 40px 30px;">
                 <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.7; color: #4b5563;">
                     Yth. <strong>{{ $permohonan->nama_pic }}</strong>,<br><br>
-                    Terima kasih telah melakukan kunjungan kerja ke <strong>Badan Pengelolaan Pendapatan Daerah (Bappenda) Kabupaten Bogor</strong>.
+                    Terima kasih telah melakukan kunjungan kerja ke <strong>Badan Pengelolaan Pendapatan Daerah Kabupaten Bogor</strong>.
                 </p>
 
                 <!-- Kode Permohonan -->
@@ -64,7 +64,7 @@
             <td style="background-color: #f8fafc; padding: 20px 30px; text-align: center; border-top: 1px solid #e2e8f0;">
                 <p style="margin: 0; font-size: 12px; color: #94a3b8; line-height: 1.6;">
                     Email ini dikirim secara otomatis oleh sistem.<br>
-                    Sistem Kunjungan Kerja — Bappenda Kabupaten Bogor<br>
+                    Sistem Kunjungan Kerja — Kabupaten Bogor<br>
                     Mohon tidak membalas email ini.
                 </p>
             </td>

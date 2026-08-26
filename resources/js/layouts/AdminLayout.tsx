@@ -20,10 +20,10 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
         setSidebarOpen(false);
       }
     };
-    
+
     // Set initial state
     handleResize();
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
   };
 
   return (
-    <div style={{minHeight:'100vh', display:'flex', flexDirection:'column'}}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <style>{`
         /* Reset & Base Admin Variables */
         :root {
@@ -109,26 +109,26 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
       {/* Topbar (Hanya muncul di mobile) */}
       <div className="admin-topbar">
         <div className="admin-topbar-inner">
-          <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <button
-              style={{width:'36px',height:'36px',borderRadius:'8px',border:'1px solid var(--border)',background:'var(--surface)',color:'var(--text-main)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}
+              style={{ width: '36px', height: '36px', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-main)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}
               onClick={() => setSidebarOpen(true)}
               aria-label="Buka Menu"
             >
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" />
               </svg>
             </button>
-            <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
-              <img src={LOGO_URL} alt="Bappenda" style={{height:'32px',width:'auto'}} referrerPolicy="no-referrer"/>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <img src={LOGO_URL} alt="Bappenda" style={{ height: '32px', width: 'auto' }} referrerPolicy="no-referrer" />
               <div>
-                <div style={{fontSize:'13.5px',fontWeight:'700',color:'var(--text-main)',lineHeight:'1.2'}}>{getPageTitle()}</div>
-                <div style={{fontSize:'11px',color:'var(--text-sub)'}}>Sistem Kunjungan Kerja</div>
+                <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-main)', lineHeight: '1.2' }}>{getPageTitle()}</div>
+                <div style={{ fontSize: '11px', color: 'var(--text-sub)' }}>Sistem Kunjungan Kerja</div>
               </div>
             </div>
           </div>
-          
-          <button 
+
+          <button
             onClick={toggle}
             style={{
               background: 'transparent',
@@ -146,11 +146,11 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
           >
             {theme === 'dark' ? (
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
               </svg>
             ) : (
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
               </svg>
             )}
           </button>
@@ -163,7 +163,7 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
       {/* Sidebar */}
       <div className={`admin-sidebar ${sidebarOpen ? 'active' : ''}`}>
         <div className="admin-sidebar-header">
-          <img src={LOGO_URL} alt="Bappenda" className="admin-sidebar-logo" referrerPolicy="no-referrer"/>
+          <img src={LOGO_URL} alt="Bappenda" className="admin-sidebar-logo" referrerPolicy="no-referrer" />
           <div>
             <div className="admin-sidebar-title">Sistem Kunjungan Kerja</div>
           </div>
@@ -171,33 +171,33 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
 
         <div className="admin-sidebar-nav">
           <Link to="/admin/dashboard" className={`admin-nav-btn ${location.pathname === '/admin/dashboard' || location.pathname === '/admin' ? 'active' : ''}`} onClick={() => setSidebarOpen(false)}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9" /><rect x="14" y="3" width="7" height="5" /><rect x="14" y="12" width="7" height="9" /><rect x="3" y="16" width="7" height="5" /></svg>
             Dashboard Utama
           </Link>
           <Link to="/admin/permohonan" className={`admin-nav-btn ${location.pathname.startsWith('/admin/permohonan') ? 'active' : ''}`} onClick={() => setSidebarOpen(false)}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>
             Data Permohonan
           </Link>
           <Link to="/admin/tanggal-diblokir" className={`admin-nav-btn ${location.pathname.startsWith('/admin/tanggal-diblokir') ? 'active' : ''}`} onClick={() => setSidebarOpen(false)}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
             Kalender & Blokir
           </Link>
           <Link to="/admin/kontak" className={`admin-nav-btn ${location.pathname.startsWith('/admin/kontak') ? 'active' : ''}`} onClick={() => setSidebarOpen(false)}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
             Kontak & Telepon
           </Link>
           <Link to="/admin/review" className={`admin-nav-btn ${location.pathname.startsWith('/admin/review') ? 'active' : ''}`} onClick={() => setSidebarOpen(false)}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
             Rating & Review
           </Link>
           {user?.dinas_id === null && (
             <>
               <Link to="/admin/dinas" className={`admin-nav-btn ${location.pathname.startsWith('/admin/dinas') ? 'active' : ''}`} onClick={() => setSidebarOpen(false)}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></svg>
                 Master Data Dinas
               </Link>
               <Link to="/admin/users" className={`admin-nav-btn ${location.pathname.startsWith('/admin/users') ? 'active' : ''}`} onClick={() => setSidebarOpen(false)}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
                 Manajemen Admin
               </Link>
             </>
@@ -213,8 +213,8 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
                 <div className="admin-side-role">{user?.dinas ? `Admin ${user.dinas.singkatan}` : 'Super Admin'}</div>
               </div>
             </div>
-            
-            <button 
+
+            <button
               onClick={toggle}
               style={{
                 background: 'transparent',
@@ -232,11 +232,11 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
             >
               {theme === 'dark' ? (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                  <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
                 </svg>
               ) : (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
                 </svg>
               )}
             </button>

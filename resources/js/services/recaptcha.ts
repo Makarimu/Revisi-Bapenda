@@ -4,6 +4,7 @@ declare global {
       ready: (callback: () => void) => void;
       render: (container: HTMLElement | string, options: Record<string, any>) => number;
       reset: (widgetId?: number) => void;
+      getResponse: (widgetId?: number) => string;
     };
     onGrecaptchaLoaded?: () => void;
   }
@@ -12,9 +13,8 @@ declare global {
 let recaptchaPromise: Promise<void> | null = null;
 
 /**
- * Singleton Loader untuk Google reCAPTCHA v2.
- * HANYA memuat script satu kali selama aplikasi berjalan.
- * Menggunakan Promise dan callback grecaptcha.ready() resmi dari Google.
+ * Singleton Loader untuk Google reCAPTCHA v2 (Checkbox).
+ * Memuat script Google reCAPTCHA v2 eksplisit dan memicu callback onGrecaptchaLoaded.
  */
 export function loadRecaptchaScript(): Promise<void> {
   if (recaptchaPromise) {
@@ -56,9 +56,9 @@ export function loadRecaptchaScript(): Promise<void> {
     }
 
     const handleError = () => {
-      recaptchaPromise = null; // Izinkan retry jika gagal dimuat
+      recaptchaPromise = null;
       reject(
-        new Error('Skrip reCAPTCHA tidak dapat dimuat. Periksa koneksi internet Anda atau pemblokir iklan.')
+        new Error('Skrip reCAPTCHA tidak dapat dimuat. Periksa koneksi internet Anda.')
       );
     };
 
