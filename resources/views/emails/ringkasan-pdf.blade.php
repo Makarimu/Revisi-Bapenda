@@ -8,8 +8,8 @@
     <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
         <!-- Header -->
         <tr>
-            <td style="background-color: #279447; padding: 30px; text-align: center;">
-                <img src="{{ $message->embed(public_path('image/icon.png')) }}" alt="Kabupaten Bogor" style="height: 48px; width: auto; max-width: 260px; margin-bottom: 12px; display: inline-block;">
+            <td style="background-color: #0028B3; padding: 30px; text-align: center;">
+                <img src="https://iili.io/CbJhe7S.png" alt="Kabupaten Bogor" style="height: 48px; width: auto; max-width: 260px; margin-bottom: 12px; display: inline-block;">
                 <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">Ringkasan Hasil Kunjungan Kerja</h1>
             </td>
         </tr>
@@ -23,49 +23,51 @@
                 </p>
 
                 <!-- Kode Permohonan -->
-                <div style="background-color: #f8fafc; border-left: 4px solid #1a5276; padding: 20px; border-radius: 0 8px 8px 0; margin-bottom: 24px;">
-                    <p style="margin: 0 0 6px 0; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">KODE PERMOHONAN</p>
-                    <p style="margin: 0; font-size: 22px; font-weight: 800; color: #1a5276; letter-spacing: 1px;">{{ $permohonan->kode }}</p>
+                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 24px; margin-bottom: 24px;">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td style="font-size: 12px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Kode Permohonan</td>
+                            <td style="font-size: 12px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">Tanggal Kunjungan</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 18px; font-weight: 700; color: #0028B3; letter-spacing: 1px; padding-top: 4px;">{{ $permohonan->kode }}</td>
+                            <td style="font-size: 14px; font-weight: 600; color: #1e293b; text-align: right; padding-top: 4px;">{{ \Carbon\Carbon::parse($permohonan->tanggal_kunjungan)->translatedFormat('d F Y') }}</td>
+                        </tr>
+                    </table>
                 </div>
 
-                <!-- Terima kasih rating -->
-                <div style="background-color: #fef9e7; border: 1.5px solid #f0c040; padding: 18px 20px; border-radius: 8px; margin-bottom: 24px;">
-                    <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; color: #92400e;">⭐ Terima Kasih atas Penilaian Anda</p>
-                    <p style="margin: 0; font-size: 13px; color: #78350f; line-height: 1.6;">
-                        Kami sangat menghargai rating dan ulasan yang telah Anda berikan. Masukan Anda adalah motivasi kami untuk terus meningkatkan kualitas layanan kunjungan kerja.
+                <!-- Info Lampiran PDF -->
+                <div style="background-color: #eff6ff; border-left: 4px solid #1883FF; border-radius: 0 8px 8px 0; padding: 16px 20px; margin-bottom: 28px;">
+                    <p style="margin: 0 0 6px 0; font-size: 13.5px; font-weight: 700; color: #0028B3;">
+                        📎 Dokumen PDF Terlampir
+                    </p>
+                    <p style="margin: 0; font-size: 13px; color: #1e40af; line-height: 1.6;">
+                        Dokumen <strong>Ringkasan Hasil Kunjungan Kerja</strong> telah dilampirkan langsung pada email ini dalam format PDF. Anda dapat mengunduh atau mencetaknya sebagai bukti dan dokumentasi resmi.
                     </p>
                 </div>
 
-                <!-- Ringkasan tersedia -->
-                <div style="background-color: #f0fdf4; border: 1.5px solid #bbf7d0; padding: 18px 20px; border-radius: 8px; margin-bottom: 28px;">
-                    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #166534;">📄 Ringkasan Hasil Kunjungan Tersedia</p>
-                    <p style="margin: 0; font-size: 13px; color: #15803d; line-height: 1.6;">
-                        Ringkasan hasil kunjungan kerja Anda telah disusun dan tersedia dalam format PDF. Silakan unduh melalui tombol di bawah ini atau dari lampiran email ini.
-                    </p>
-                </div>
+                <p style="margin: 0 0 28px 0; font-size: 13px; color: #64748b; line-height: 1.6;">
+                    Anda juga dapat melihat riwayat dan memantau status permohonan kapan saja melalui tautan di bawah:
+                </p>
 
-                <!-- Tombol unduh -->
-                <div style="margin: 28px 0; text-align: center;">
-                    <a href="{{ url(env('FRONTEND_URL', 'http://localhost:5173') . '/?page=status&kode=' . $permohonan->kode) }}"
-                       style="display: inline-block; background-color: #1a5276; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(26,82,118,0.2);">
-                        Lihat Status &amp; Unduh Ringkasan
+                <!-- Tombol CTA -->
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <a href="{{ url(env('FRONTEND_URL', 'http://localhost:5173') . '/status?kode=' . $permohonan->kode) }}"
+                       style="display: inline-block; background-color: #0028B3; color: #ffffff; text-decoration: none; padding: 13px 32px; border-radius: 8px; font-weight: 700; font-size: 13.5px; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(0,40,179,0.2);">
+                        Lihat Status &amp; Detail Permohonan
                     </a>
                 </div>
-
-                <p style="margin: 20px 0 0 0; font-size: 13px; color: #6b7280; line-height: 1.6;">
-                    PDF ringkasan juga dilampirkan langsung pada email ini untuk kemudahan akses Anda.<br>
-                    Jika Anda memiliki pertanyaan, silakan hubungi kami melalui kontak yang tersedia.
-                </p>
             </td>
         </tr>
 
         <!-- Footer -->
         <tr>
             <td style="background-color: #f8fafc; padding: 20px 30px; text-align: center; border-top: 1px solid #e2e8f0;">
-                <p style="margin: 0; font-size: 12px; color: #94a3b8; line-height: 1.6;">
-                    Email ini dikirim secara otomatis oleh sistem.<br>
-                    Sistem Kunjungan Kerja — Kabupaten Bogor<br>
-                    Mohon tidak membalas email ini.
+                <p style="margin: 0 0 4px 0; font-size: 12px; color: #94a3b8;">
+                    Email ini dikirim secara otomatis oleh Sistem Kunjungan Kerja BAPPENDA Kabupaten Bogor.
+                </p>
+                <p style="margin: 0; font-size: 11px; color: #cbd5e1;">
+                    Mohon tidak membalas email ini secara langsung.
                 </p>
             </td>
         </tr>
