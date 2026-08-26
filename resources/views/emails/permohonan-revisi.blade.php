@@ -7,8 +7,8 @@
 <body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1f2937;">
     <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
         <tr>
-            <td style="background: linear-gradient(135deg, #7d3c98 0%, #9b59b6 100%); padding: 30px; text-align: center;">
-                <img src="https://lh3.googleusercontent.com/d/1UJLWaokvtdtss1PGlPt4skw8lJwIi3Su" alt="Bappenda Juara" style="height: 38px; width: auto; margin-bottom: 12px; display: inline-block;">
+            <td style="background-color: #7d3c98; padding: 30px; text-align: center;">
+                <img src="{{ $message->embed(public_path('image/icon.png')) }}" alt="Kabupaten Bogor" style="height: 48px; width: auto; max-width: 260px; margin-bottom: 12px; display: inline-block;">
                 <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">Revisi Diterima</h1>
             </td>
         </tr>
@@ -19,7 +19,7 @@
                     Revisi untuk permohonan kunjungan kerja Anda dengan kode <strong>{{ $permohonan->kode }}</strong> telah kami terima dan akan direview kembali oleh admin.
                 </p>
                 <div style="margin: 30px 0; text-align: center;">
-                    <a href="{{ url(env('FRONTEND_URL', 'http://localhost:5173') . '/?page=status&kode=' . $permohonan->kode) }}" style="display: inline-block; background-color: #7d3c98; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(125,60,152,0.2);">Pantau Status Permohonan</a>
+                    <a href="{{ url(env('FRONTEND_URL', 'http://localhost:5173') . '/status?kode=' . $permohonan->kode) }}" style="display: inline-block; background-color: #7d3c98; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(125,60,152,0.2);">Pantau Status Permohonan</a>
                 </div>
             </td>
         </tr>
