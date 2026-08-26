@@ -121,28 +121,28 @@ export default function BogorMap() {
     g.clearLayers();
     if (!showDinas) return;
 
-    fetch('/dinas_points.json')
+    fetch('/api/dinas')
       .then(r => r.json())
-      .then(data => {
-        const pts: any[] = data.dinas_dan_instansi || [];
+      .then(res => {
+        const pts: any[] = res.data || [];
         const icon = L.divIcon({
           className: '',
-          html: `<div style="filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));cursor:pointer;transition:transform .2s;">${PIN}</div>`,
-          iconSize: [36, 44],
-          iconAnchor: [18, 44],
-          popupAnchor: [0, -46],
+          html: `<div style="filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));cursor:pointer;transition:transform .2s;"><img src="/image/titik.svg" style="width:36px;height:36px;" /></div>`,
+          iconSize:    [36, 36],
+          iconAnchor:  [18, 33],
+          popupAnchor: [0, -35],
         });
 
         pts.forEach(pt => {
           if (!pt.latitude || !pt.longitude) return;
           L.marker([pt.latitude, pt.longitude], { icon })
-            .bindTooltip(`<b style="font-size:12px;">${pt.nama}</b>`, { direction: 'top', offset: [0, -46], className: 'bmap-tip' })
+            .bindTooltip(`<b style="font-size:12px;">${pt.nama}</b>`, { direction: 'top', offset: [0, -35], className: 'bmap-tip' })
             .on('click', () => { setSelectedDinas(pt); m.flyTo([pt.latitude, pt.longitude], 15, { duration: 1.5 }); })
             .addTo(g);
         });
       })
       .catch(e => console.error('Dinas load error:', e));
-  }, [mapInstance, showDinas]); // runs on mount (after effect 1) AND when toggle changes
+  }, [mapInstance, showDinas]);
 
   // ── JSX ─────────────────────────────────────────────────────────────────
   return (

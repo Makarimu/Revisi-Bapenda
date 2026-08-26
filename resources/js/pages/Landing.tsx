@@ -276,18 +276,18 @@ export default function Landing() {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px', marginTop: '28px' }}>
               {reviews.slice(0, 6).map((rev: any) => (
-                <div key={rev.id} style={{ background: '#ffffff', border: '1px solid rgba(228, 231, 237, 0.7)', borderRadius: '16px', padding: '24px', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transition: 'all 0.2s ease' }}>
+                <div key={rev.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transition: 'all 0.2s ease' }}>
                   <div>
                     <div style={{ color: '#F59E0B', fontSize: '18px', marginBottom: '12px' }}>
                       {'★'.repeat(rev.rating)}{'☆'.repeat(5 - rev.rating)}
                     </div>
-                    <p style={{ fontSize: '13.5px', color: '#334155', lineHeight: '1.7', fontStyle: 'italic', marginBottom: '18px' }}>
+                    <p style={{ fontSize: '13.5px', color: 'var(--text-main)', lineHeight: '1.7', fontStyle: 'italic', marginBottom: '18px' }}>
                       "{rev.review}"
                     </p>
                   </div>
-                  <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '14px' }}>
-                    <div style={{ fontSize: '13.5px', fontWeight: '700', color: '#0F172A' }}>{rev.instansi || '-'}</div>
-                    <div style={{ fontSize: '12px', color: '#64748B', marginTop: '3px' }}>PIC: {rev.nama_pic || '-'}</div>
+                  <div style={{ borderTop: '1px solid var(--border)', paddingTop: '14px' }}>
+                    <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-main)' }}>{rev.instansi || '-'}</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-sub)', marginTop: '3px' }}>PIC: {rev.nama_pic || '-'}</div>
                   </div>
                 </div>
               ))}
@@ -310,16 +310,16 @@ export default function Landing() {
         </div>
 
         {/* ===== LAYANAN & PETA CARD ===== */}
-        <div style={{ marginTop: '32px', background: '#ffffff', borderRadius: '18px', padding: '28px', border: '1px solid rgba(197, 219, 255, 0.5)', boxShadow: 'var(--shadow-md)', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <div style={{ marginTop: '32px', background: 'var(--surface)', borderRadius: '18px', padding: '28px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)', display: 'flex', flexDirection: 'column', gap: '18px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#C5DBFF', color: '#0028B3', flexShrink: 0, border: '1px solid rgba(117,195,255,0.5)', boxShadow: '0 2px 8px rgba(0,40,179,0.1)' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--blue-100)', color: 'var(--blue-800)', flexShrink: 0, border: '1px solid var(--border)', boxShadow: '0 2px 8px rgba(0,40,179,0.1)' }}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ width: '22px', height: '22px' }}>
                 <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
               </svg>
             </div>
             <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#001178', margin: 0, letterSpacing: '-0.2px' }}>Peta Kabupaten Bogor</h3>
-              <p style={{ fontSize: '13px', color: '#64748B', margin: '3px 0 0 0', lineHeight: '1.5' }}>Peta Sebaran dan Lokasi Kantor Instansi di Kabupaten Bogor.</p>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-main)', margin: 0, letterSpacing: '-0.2px' }}>Peta Kabupaten Bogor</h3>
+              <p style={{ fontSize: '13px', color: 'var(--text-sub)', margin: '3px 0 0 0', lineHeight: '1.5' }}>Peta Sebaran dan Lokasi Kantor Instansi di Kabupaten Bogor.</p>
             </div>
           </div>
 

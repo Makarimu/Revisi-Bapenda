@@ -183,6 +183,13 @@
             "singkatan": "Satpol PP",
             "latitude": -6.4791,
             "longitude": 106.8274
+        },
+        {
+            "id": 27,
+            "nama": "Badan Pengelolaan Pendapatan Daerah",
+            "singkatan": "Bappenda",
+            "latitude": -6.4815,
+            "longitude": 106.8378
         }
     ],
     "kecamatan": [

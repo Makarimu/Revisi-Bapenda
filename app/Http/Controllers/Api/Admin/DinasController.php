@@ -11,7 +11,7 @@ class DinasController extends Controller
     // Public endpoint for visitor form dropdown
     public function listPublic()
     {
-        $dinas = Dinas::orderBy('nama', 'asc')->get(['id', 'nama', 'singkatan', 'nomor_telepon']);
+        $dinas = Dinas::orderBy('nama', 'asc')->get(['id', 'nama', 'singkatan', 'nomor_telepon', 'latitude', 'longitude']);
         return response()->json([
             'success' => true,
             'data' => $dinas

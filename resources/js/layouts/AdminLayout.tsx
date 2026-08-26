@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../hooks/useTheme';
 
 const LOGO_URL = '/image/icon.png';
 
@@ -8,6 +9,7 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
   const location = useLocation();
   const { user, logoutContext } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { theme, toggle } = useTheme();
 
   // Pada desktop (min-width 901px), sidebar permanen terbuka berdasarkan CSS
   useEffect(() => {
@@ -109,7 +111,7 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
         <div className="admin-topbar-inner">
           <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
             <button
-              style={{width:'36px',height:'36px',borderRadius:'8px',border:'1px solid #E5E7EB',background:'white',color:'#222',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}
+              style={{width:'36px',height:'36px',borderRadius:'8px',border:'1px solid var(--border)',background:'var(--surface)',color:'var(--text-main)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}
               onClick={() => setSidebarOpen(true)}
               aria-label="Buka Menu"
             >
@@ -120,11 +122,38 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
             <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
               <img src={LOGO_URL} alt="Bappenda" style={{height:'32px',width:'auto'}} referrerPolicy="no-referrer"/>
               <div>
-                <div style={{fontSize:'13.5px',fontWeight:'700',color:'#001178',lineHeight:'1.2'}}>{getPageTitle()}</div>
-                <div style={{fontSize:'11px',color:'#6B7280'}}>Sistem Kunjungan Kerja</div>
+                <div style={{fontSize:'13.5px',fontWeight:'700',color:'var(--text-main)',lineHeight:'1.2'}}>{getPageTitle()}</div>
+                <div style={{fontSize:'11px',color:'var(--text-sub)'}}>Sistem Kunjungan Kerja</div>
               </div>
             </div>
           </div>
+          
+          <button 
+            onClick={toggle}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--text-main)',
+              transition: 'background 0.2s',
+            }}
+            title={theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}
+          >
+            {theme === 'dark' ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+              </svg>
+            )}
+          </button>
         </div>
       </div>
 
@@ -176,12 +205,41 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
         </div>
 
         <div className="admin-sidebar-footer">
-          <div className="admin-side-info">
-            <div className="admin-side-avatar">{adminName ? adminName.charAt(0).toUpperCase() : 'A'}</div>
-            <div>
-              <div className="admin-side-name">{adminName}</div>
-              <div className="admin-side-role">{user?.dinas ? `Admin ${user.dinas.singkatan}` : 'Super Admin'}</div>
+          <div className="admin-side-info" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div className="admin-side-avatar">{adminName ? adminName.charAt(0).toUpperCase() : 'A'}</div>
+              <div>
+                <div className="admin-side-name">{adminName}</div>
+                <div className="admin-side-role">{user?.dinas ? `Admin ${user.dinas.singkatan}` : 'Super Admin'}</div>
+              </div>
             </div>
+            
+            <button 
+              onClick={toggle}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '6px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--text-main)',
+                transition: 'background 0.2s',
+              }}
+              title={theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}
+            >
+              {theme === 'dark' ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                </svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                </svg>
+              )}
+            </button>
           </div>
           <button className="admin-logout-btn" onClick={doLogout}>Keluar Sesi</button>
         </div>
