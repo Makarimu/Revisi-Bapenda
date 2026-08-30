@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../hooks/useTheme';
 
 const LOGO_URL = '/image/icon.png';
 
@@ -9,7 +8,6 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
   const location = useLocation();
   const { user, logoutContext } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { theme, toggle } = useTheme();
 
   // Pada desktop (min-width 901px), sidebar permanen terbuka berdasarkan CSS
   useEffect(() => {
@@ -127,35 +125,9 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
               </div>
             </div>
           </div>
-
-          <button
-            onClick={toggle}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '8px',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--text-main)',
-              transition: 'background 0.2s',
-            }}
-            title={theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}
-          >
-            {theme === 'dark' ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-              </svg>
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-              </svg>
-            )}
-          </button>
         </div>
       </div>
+
 
       {/* Sidebar Overlay */}
       <div className={`admin-overlay ${sidebarOpen ? 'active' : ''}`} onClick={() => setSidebarOpen(false)}></div>
@@ -213,34 +185,8 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
                 <div className="admin-side-role">{user?.dinas ? `Admin ${user.dinas.singkatan}` : 'Super Admin'}</div>
               </div>
             </div>
-
-            <button
-              onClick={toggle}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '6px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--text-main)',
-                transition: 'background 0.2s',
-              }}
-              title={theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}
-            >
-              {theme === 'dark' ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-                </svg>
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-                </svg>
-              )}
-            </button>
           </div>
+
           <button className="admin-logout-btn" onClick={doLogout}>Keluar Sesi</button>
         </div>
       </div>

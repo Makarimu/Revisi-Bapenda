@@ -22,19 +22,29 @@ const PIN = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 68" width="
   <circle cx="28" cy="23" r="6" fill="#E53935"/>
 </svg>`;
 
+const getGovPointStyle = (name: string) => {
+  if (name.includes('Bupati'))    return { color: '#92400E', fillColor: '#F59E0B', label: 'Bupati' };
+  if (name.includes('Camat'))     return { color: '#1E3A8A', fillColor: '#3B82F6', label: 'Kecamatan' };
+  if (name.includes('Kelurahan')) return { color: '#5B21B6', fillColor: '#8B5CF6', label: 'Kelurahan' };
+  return                                 { color: '#065F46', fillColor: '#10B981', label: 'Desa' };
+};
+
+
 export default function BogorMap() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const tileLayer = useRef<L.TileLayer | null>(null);
   const geoLayer = useRef<L.GeoJSON | null>(null);
-  const markerGroup = useRef<L.FeatureGroup | null>(null);
+  const govMarkerGroup = useRef<L.FeatureGroup | null>(null);
   const cache = useRef<Record<string, any>>({});
 
   const [activeLayer, setActiveLayer] = useState<LayerType>('kabupaten');
   const [basemap, setBasemap] = useState<keyof typeof TILES>('default');
-  const [showDinas, setShowDinas] = useState(true);
+  const [showGovPoints, setShowGovPoints] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [selectedDinas, setSelectedDinas] = useState<any>(null);
+  const [selectedGovPoint, setSelectedGovPoint] = useState<any>(null);
+
+
 
   // ── EFFECT 1: Init map (runs once on mount) ─────────────────────────────
   useEffect(() => {
@@ -48,11 +58,13 @@ export default function BogorMap() {
     L.control.zoom({ position: 'bottomright' }).addTo(m);
 
     tileLayer.current = L.tileLayer(TILES.default, { subdomains: 'abcd', maxZoom: 20 }).addTo(m);
-    markerGroup.current = L.featureGroup().addTo(m);
+    govMarkerGroup.current = L.featureGroup().addTo(m);
     setMapInstance(m);
+
 
     return () => { m.remove(); setMapInstance(null); };
   }, []);
+
 
   // ── EFFECT 2: GeoJSON batas wilayah ────────────────────────────────────
   useEffect(() => {
@@ -91,7 +103,8 @@ export default function BogorMap() {
         },
       }).addTo(m);
 
-      if (markerGroup.current) markerGroup.current.bringToFront();
+      if (govMarkerGroup.current) govMarkerGroup.current.bringToFront();
+
       try { const b = geoLayer.current.getBounds(); if (b.isValid()) m.fitBounds(b, { padding: [20, 20] }); } catch (_) { }
       setLoading(false);
     };
@@ -113,38 +126,83 @@ export default function BogorMap() {
     tileLayer.current.bringToBack();
   }, [mapInstance, basemap]);
 
-  // ── EFFECT 4: Dinas markers ─────────────────────────────────────────────
+  // ── EFFECT 4: Gov points (CSV) ──────────────────────────────────────────
+
   useEffect(() => {
-    if (!mapInstance || !markerGroup.current) return;
+    if (!mapInstance || !govMarkerGroup.current) return;
     const m = mapInstance;
-    const g = markerGroup.current;
+    const g = govMarkerGroup.current;
     g.clearLayers();
-    if (!showDinas) return;
+    if (!showGovPoints) return;
 
-    fetch('/api/dinas')
-      .then(r => r.json())
-      .then(res => {
-        const pts: any[] = res.data || [];
-        const icon = L.divIcon({
-          className: '',
-          html: `<div style="filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));cursor:pointer;transition:transform .2s;"><img src="/image/titik.svg" style="width:36px;height:36px;" /></div>`,
-          iconSize: [36, 36],
-          iconAnchor: [18, 33],
-          popupAnchor: [0, -35],
-        });
-
-        pts.forEach(pt => {
-          if (!pt.latitude || !pt.longitude) return;
-          L.marker([pt.latitude, pt.longitude], { icon })
-            .bindTooltip(`<b style="font-size:12px;">${pt.nama}</b>`, { direction: 'top', offset: [0, -35], className: 'bmap-tip' })
-            .on('click', () => { setSelectedDinas(pt); m.flyTo([pt.latitude, pt.longitude], 15, { duration: 1.5 }); })
-            .addTo(g);
-        });
+    fetch('/app_md_mapgovpoint.csv')
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.text();
       })
-      .catch(e => console.error('Dinas load error:', e));
-  }, [mapInstance, showDinas]);
+      .then(text => {
+        const lines = text.split(/\r?\n/);
+        const cleanQuotes = (str: string) => str.replace(/^["\s]+|["\s]+$/g, '');
+        let count = 0;
+
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line) continue;
+
+          const parts = line.split(';');
+          if (parts.length < 4) continue;
+
+          const name = cleanQuotes(parts[0]);
+          const addr = cleanQuotes(parts[1]);
+          const lat = parseFloat(cleanQuotes(parts[2]));
+          const long = parseFloat(cleanQuotes(parts[3]));
+
+          if (isNaN(lat) || isNaN(long)) continue;
+
+          const pt = { name, addr, lat, long };
+          const style = getGovPointStyle(name);
+          const isBupati = name.includes('Bupati');
+
+          L.circleMarker([lat, long], {
+            radius: isBupati ? 8 : 6,
+            fillColor: style.fillColor,
+            color: style.color,
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.9,
+          })
+            .bindTooltip(
+              name,
+              {
+                permanent: false,
+                direction: 'top',
+                offset: [0, -8],
+                className: 'gov-label'
+              }
+            )
+            .on('mouseover', (e) => {
+              setSelectedGovPoint(pt);
+              (e.target as L.CircleMarker).setStyle({ radius: isBupati ? 11 : 9, weight: 3, fillOpacity: 1 });
+            })
+
+            .on('mouseout', (e) => {
+              (e.target as L.CircleMarker).setStyle({ radius: isBupati ? 8 : 6, weight: 2, fillOpacity: 0.9 });
+            })
+            .on('click', () => {
+              setSelectedGovPoint(pt);
+              m.flyTo([lat, long], 15, { duration: 1.5 });
+            })
+            .addTo(g);
+
+          count++;
+        }
+        console.log(`[BogorMap] GovPoints loaded: ${count} markers`);
+      })
+      .catch(e => console.error('GovPoints load error:', e));
+  }, [mapInstance, showGovPoints]);
 
   // ── JSX ─────────────────────────────────────────────────────────────────
+
   return (
     <div style={{ position: 'relative', width: '100%', height: '500px', borderRadius: '14px', overflow: 'hidden', border: '1px solid #E2E8F0' }}>
 
@@ -166,7 +224,7 @@ export default function BogorMap() {
         </div>
       )}
 
-      {/* Layer & instansi buttons */}
+      {/* Layer & gov points buttons */}
       <div style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 999, display: 'flex', alignItems: 'center', background: '#fff', padding: '4px', borderRadius: '10px', boxShadow: '0 4px 12px rgba(0,0,0,0.12)', gap: '2px' }}>
         {(Object.keys(LAYER_CONFIGS) as LayerType[]).map(k => (
           <button key={k} onClick={() => setActiveLayer(k)} style={{ border: 'none', background: activeLayer === k ? '#0028B3' : 'transparent', color: activeLayer === k ? '#fff' : '#475569', padding: '6px 13px', fontSize: '12px', fontWeight: 600, borderRadius: '7px', cursor: 'pointer', transition: 'all .18s' }}>
@@ -174,25 +232,44 @@ export default function BogorMap() {
           </button>
         ))}
         <div style={{ width: '1px', height: '18px', background: '#E2E8F0', margin: '0 2px' }} />
-        <button onClick={() => setShowDinas(v => !v)} style={{ border: 'none', background: showDinas ? '#e8741c' : 'transparent', color: showDinas ? '#fff' : '#475569', padding: '6px 13px', fontSize: '12px', fontWeight: 600, borderRadius: '7px', cursor: 'pointer', transition: 'all .18s', display: 'flex', alignItems: 'center', gap: '5px' }}>
+        <button onClick={() => setShowGovPoints(v => !v)} style={{ border: 'none', background: showGovPoints ? '#059669' : 'transparent', color: showGovPoints ? '#fff' : '#475569', padding: '6px 13px', fontSize: '12px', fontWeight: 600, borderRadius: '7px', cursor: 'pointer', transition: 'all .18s', display: 'flex', alignItems: 'center', gap: '5px' }}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '12px', height: '12px' }}>
-            <circle cx="12" cy="10" r="3" /><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z" />
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
           </svg>
-          Kantor Instansi
+          Titik Layanan Pemda
         </button>
       </div>
 
-      {/* Selected dinas card */}
-      {selectedDinas && (
-        <div style={{ position: 'absolute', bottom: '14px', left: '14px', maxWidth: '320px', background: '#fff', borderRadius: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.13)', border: '1px solid #E2E8F0', padding: '12px 14px', zIndex: 999, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ background: '#FEF3C7', color: '#D97706', fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', textTransform: 'uppercase' }}>{selectedDinas.singkatan || 'KANTOR'}</span>
-            <button onClick={() => setSelectedDinas(null)} style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: '18px', padding: '0 2px' }}>×</button>
+
+
+
+      {/* Selected GovPoint card */}
+      {selectedGovPoint && (() => {
+        const s = getGovPointStyle(selectedGovPoint.name);
+        return (
+          <div style={{ position: 'absolute', bottom: '14px', left: '14px', maxWidth: '340px', background: '#fff', borderRadius: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.13)', border: '1px solid #E2E8F0', padding: '14px 16px', zIndex: 999, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ 
+                background: selectedGovPoint.name.includes('Bupati') ? '#FEF3C7' : selectedGovPoint.name.includes('Camat') ? '#DBEAFE' : selectedGovPoint.name.includes('Kelurahan') ? '#F3E8FF' : '#D1FAE5', 
+                color: s.color, 
+                fontSize: '10px', 
+                fontWeight: 700, 
+                padding: '3px 10px', 
+                borderRadius: '4px', 
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}>
+                {s.label}
+              </span>
+              <button onClick={() => setSelectedGovPoint(null)} style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: '18px', padding: '0 2px', lineHeight: 1 }}>×</button>
+            </div>
+            <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#1e2a3a', lineHeight: 1.4 }}>{selectedGovPoint.name}</h4>
+            <span style={{ fontSize: '11.5px', color: '#64748B', lineHeight: 1.5 }}>{selectedGovPoint.addr}</span>
           </div>
-          <h4 style={{ margin: 0, fontSize: '13px', fontWeight: 700, color: '#1e2a3a', lineHeight: 1.4 }}>{selectedDinas.nama}</h4>
-          <span style={{ fontSize: '11px', color: '#64748B' }}>Kompleks Pemda Cibinong</span>
-        </div>
-      )}
+        );
+      })()}
+
+
 
       {/* Map container – must NOT have overflow:hidden on parent for Leaflet to size correctly */}
       <div ref={containerRef} style={{ width: '100%', height: '100%', zIndex: 1 }} />
@@ -208,8 +285,22 @@ export default function BogorMap() {
           pointer-events: none !important;
         }
         .bmap-tip::before { display:none !important; }
+        .gov-label {
+          background: #ffffff !important;
+          border: 1px solid #e2e8f0 !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+          border-radius: 8px !important;
+          font-size: 11px !important;
+          font-weight: 700 !important;
+          color: #1e293b !important;
+          padding: 6px 10px !important;
+          pointer-events: none !important;
+        }
+        .gov-label::before { display:none !important; }
+
         .leaflet-marker-icon, .leaflet-marker-shadow { background:transparent !important; border:none !important; }
       `}</style>
     </div>
   );
 }
+

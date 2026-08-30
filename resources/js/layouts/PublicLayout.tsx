@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTheme } from '../hooks/useTheme';
 
 const LOGO_URL = 'https://lh3.googleusercontent.com/d/1UJLWaokvtdtss1PGlPt4skw8lJwIi3Su';
 
 export default function PublicLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const { theme, toggle } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setShowBackToTop(window.scrollY > 320);
@@ -43,34 +41,8 @@ export default function PublicLayout({ children }) {
           </nav>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <button 
-              onClick={toggle} 
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--text-main)',
-                transition: 'background 0.2s',
-              }}
-              title={theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}
-            >
-              {theme === 'dark' ? (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-                </svg>
-              ) : (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-                </svg>
-              )}
-            </button>
-
             <button className="hamburger-btn" onClick={openSidebar} aria-label="Buka menu">
+
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <line x1="3" y1="12" x2="21" y2="12" />
@@ -93,42 +65,8 @@ export default function PublicLayout({ children }) {
           <Link to="/status" onClick={closeSidebar}>Cek Status</Link>
           <Link to="/permohonan" onClick={closeSidebar}>Ajukan Permohonan</Link>
           <Link to="/riwayat-kunjungan" onClick={closeSidebar}>Riwayat Kunjungan</Link>
-          <button 
-            onClick={() => { toggle(); closeSidebar(); }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              width: '100%',
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--text-main)',
-              fontSize: '14px',
-              fontWeight: 600,
-              padding: '12px 16px',
-              textAlign: 'left',
-              cursor: 'pointer',
-              borderTop: '1px solid var(--border)',
-              marginTop: '12px',
-            }}
-          >
-            {theme === 'dark' ? (
-              <>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-                </svg>
-                <span>Mode Terang</span>
-              </>
-            ) : (
-              <>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-                </svg>
-                <span>Mode Gelap</span>
-              </>
-            )}
-          </button>
         </nav>
+
       </div>
 
       {/* Page Content */}
