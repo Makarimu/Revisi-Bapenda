@@ -1,9 +1,8 @@
 import axios from 'axios';
-
-const baseURL = import.meta.env.VITE_API_URL || '/api';
+import { getApiUrl, getBasePath } from '../utils/url';
 
 const axiosInstance = axios.create({
-  baseURL,
+  baseURL: getApiUrl(),
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
@@ -33,9 +32,14 @@ axiosInstance.interceptors.response.use(
       localStorage.removeItem('admin_token');
       localStorage.removeItem('admin_nama');
 
-      if (!isRedirecting && window.location.pathname.startsWith('/admin') && window.location.pathname !== '/login') {
+      const basePath = getBasePath();
+      const currentPath = window.location.pathname;
+      const adminPath = `${basePath}/admin`;
+      const loginPath = `${basePath}/login`;
+
+      if (!isRedirecting && currentPath.startsWith(adminPath) && currentPath !== loginPath) {
         isRedirecting = true;
-        window.location.href = '/login';
+        window.location.href = loginPath;
       }
     }
     return Promise.reject(error);

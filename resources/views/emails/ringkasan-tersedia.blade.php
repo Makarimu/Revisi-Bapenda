@@ -7,8 +7,8 @@
 <body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1f2937;">
     <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
         <tr>
-            <td style="background-color: #0028B3; padding: 30px; text-align: center;">
-                <img src="https://iili.io/CbJhe7S.png" alt="Kabupaten Bogor" style="height: 48px; width: auto; max-width: 260px; margin-bottom: 12px; display: inline-block;">
+            <td style="background-color: #1883FF; padding: 30px; text-align: center;">
+                <img src="{{ $message->embed(public_path('image/icon.png')) }}" alt="Kabupaten Bogor" style="height: 54px; width: auto; max-width: 260px; margin-bottom: 12px; display: inline-block;">
                 <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">Ringkasan Hasil Kunjungan Kerja Telah Tersedia</h1>
             </td>
         </tr>
@@ -23,9 +23,9 @@
 
                 <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 24px; text-align: center;">
                     <p style="margin: 0 0 4px 0; font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase;">KODE PERMOHONAN</p>
-                    <p style="margin: 0 0 16px 0; font-size: 20px; font-weight: 800; color: #0028B3; letter-spacing: 1px;">{{ $permohonan->kode }}</p>
-                    <a href="{{ url(env('FRONTEND_URL', 'http://localhost:5173') . '/status?kode=' . $permohonan->kode) }}"
-                       style="display: inline-block; background-color: #0028B3; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 6px; font-weight: 700; font-size: 13.5px; box-shadow: 0 4px 12px rgba(0,40,179,0.2);">
+                    <p style="margin: 0 0 16px 0; font-size: 20px; font-weight: 800; color: #1883FF; letter-spacing: 1px;">{{ $permohonan->kode }}</p>
+                    <a href="{{ rtrim(env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}"
+                       style="display: inline-block; background-color: #1883FF; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 6px; font-weight: 700; font-size: 13.5px; box-shadow: 0 4px 12px rgba(24,131,255,0.25);">
                         Unduh PDF Ringkasan
                     </a>
                 </div>

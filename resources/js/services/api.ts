@@ -1,11 +1,8 @@
 import axios from 'axios';
-
-// Gunakan URL yang diberikan backend saat menjalankan php artisan serve
-// atau atur di .env (VITE_API_BASE_URL)
-const API_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
+import { getApiUrl, getBasePath } from '../utils/url';
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: getApiUrl(),
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
@@ -38,8 +35,13 @@ api.interceptors.response.use(
       if (!error.config.url.includes('/auth/login')) {
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_nama');
-        if (window.location.pathname.startsWith('/admin')) {
-          window.location.href = '/login';
+        const basePath = getBasePath();
+        const currentPath = window.location.pathname;
+        const adminPath = `${basePath}/admin`;
+        const loginPath = `${basePath}/login`;
+
+        if (currentPath.startsWith(adminPath) && currentPath !== loginPath) {
+          window.location.href = loginPath;
         }
       }
     }

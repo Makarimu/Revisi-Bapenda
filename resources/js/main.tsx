@@ -6,6 +6,7 @@ import './index.css';
 // Context & Common Components
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import { getBasePath } from './utils/url';
 
 // Public Pages (Eager Loaded for instant public access)
 import Landing from './pages/Landing';
@@ -83,10 +84,12 @@ const AppRoutes = () => {
   );
 };
 
+const routerBasename = getBasePath();
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <BrowserRouter>
+      <BrowserRouter basename={routerBasename || undefined}>
         <ScrollToTop />
         <AuthProvider>
           <AppRoutes />

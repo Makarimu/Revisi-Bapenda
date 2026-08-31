@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { assetUrl } from '../utils/url';
 
-const LOGO_URL = '/image/icon.png';
+const LOGO_URL = assetUrl('/image/icon.png');
 
 export default function AdminLayout({ children }: { children?: React.ReactNode }) {
   const location = useLocation();
   const { user, logoutContext } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   // Pada desktop (min-width 901px), sidebar permanen terbuka berdasarkan CSS
   useEffect(() => {
@@ -33,6 +36,17 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
     }
   }, [location.pathname]);
 
+  // Tutup modal jika user tekan tombol Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showLogoutModal && !loggingOut) {
+        setShowLogoutModal(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showLogoutModal, loggingOut]);
+
   const getPageTitle = () => {
     if (location.pathname.startsWith('/admin/permohonan')) return 'Data Permohonan';
     if (location.pathname.startsWith('/admin/tanggal-diblokir')) return 'Kalender & Blokir';
@@ -44,9 +58,16 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
   };
 
   const adminName = user?.name || user?.nama || localStorage.getItem('admin_nama') || 'Admin';
+  const adminRole = user?.dinas ? `Admin ${user.dinas.singkatan}` : 'Super Admin';
 
-  const doLogout = () => {
-    logoutContext();
+  const handleConfirmLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await logoutContext();
+    } finally {
+      setLoggingOut(false);
+      setShowLogoutModal(false);
+    }
   };
 
   return (
@@ -101,6 +122,16 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
             .admin-overlay { display: none !important; }
             .admin-sidebar { transform: translateX(0) !important; }
             .admin-main { margin-left: 270px !important; width: calc(100% - 270px) !important; padding: 32px 40px; transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.94); }
+            to { opacity: 1; transform: scale(1); }
         }
       `}</style>
 
@@ -187,7 +218,19 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
             </div>
           </div>
 
-          <button className="admin-logout-btn" onClick={doLogout}>Keluar Sesi</button>
+          <button
+            type="button"
+            className="admin-logout-btn"
+            onClick={() => setShowLogoutModal(true)}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Keluar Sesi
+          </button>
         </div>
       </div>
 
@@ -195,6 +238,240 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
       <main className="admin-main">
         {children || <Outlet />}
       </main>
+
+      {/* Modal Popup Konfirmasi Logout */}
+      {showLogoutModal && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.55)',
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: '20px',
+            animation: 'fadeIn 0.2s ease-out',
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !loggingOut) {
+              setShowLogoutModal(false);
+            }
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-logout-title"
+            style={{
+              background: '#FFFFFF',
+              borderRadius: '16px',
+              maxWidth: '420px',
+              width: '100%',
+              padding: '28px 24px',
+              boxShadow: '0 20px 40px -8px rgba(0, 17, 120, 0.22), 0 10px 18px -4px rgba(0, 0, 0, 0.08)',
+              border: '1px solid #E2E8F0',
+              textAlign: 'center',
+              position: 'relative',
+              animation: 'scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+          >
+            {/* Tombol Close silang */}
+            <button
+              type="button"
+              onClick={() => !loggingOut && setShowLogoutModal(false)}
+              disabled={loggingOut}
+              aria-label="Tutup"
+              style={{
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                background: 'transparent',
+                border: 'none',
+                color: '#94A3B8',
+                cursor: loggingOut ? 'not-allowed' : 'pointer',
+                padding: '6px',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.15s',
+              }}
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+
+            {/* Icon Warning/Logout */}
+            <div
+              style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '50%',
+                background: '#FEE2E2',
+                border: '1.5px solid #FECACA',
+                color: '#DC2626',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 18px',
+                boxShadow: '0 4px 12px rgba(220, 38, 38, 0.12)',
+              }}
+            >
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </div>
+
+            {/* Judul & Keterangan */}
+            <h3
+              id="modal-logout-title"
+              style={{
+                fontSize: '18px',
+                fontWeight: '800',
+                color: '#0F172A',
+                marginBottom: '8px',
+                letterSpacing: '-0.3px',
+              }}
+            >
+              Apakah kamu ingin logout?
+            </h3>
+            <p
+              style={{
+                fontSize: '13.5px',
+                color: '#64748B',
+                lineHeight: '1.6',
+                marginBottom: '18px',
+              }}
+            >
+              Sesi Anda akan diakhiri dan Anda perlu login kembali untuk mengakses panel administrasi.
+            </p>
+
+            {/* User Info Badge */}
+            <div
+              style={{
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                borderRadius: '10px',
+                padding: '12px 14px',
+                marginBottom: '22px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                textAlign: 'left',
+              }}
+            >
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '50%',
+                  background: '#C5DBFF',
+                  color: '#1883FF',
+                  fontSize: '14px',
+                  fontWeight: '800',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                {adminName ? adminName.charAt(0).toUpperCase() : 'A'}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div
+                  style={{
+                    fontSize: '13.5px',
+                    fontWeight: '700',
+                    color: '#0F172A',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {adminName}
+                </div>
+                <div style={{ fontSize: '12px', color: '#64748B' }}>
+                  {adminRole}
+                </div>
+              </div>
+            </div>
+
+            {/* Tombol Aksi */}
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                type="button"
+                onClick={() => setShowLogoutModal(false)}
+                disabled={loggingOut}
+                style={{
+                  flex: 1,
+                  background: '#FFFFFF',
+                  color: '#475569',
+                  border: '1px solid #CBD5E1',
+                  borderRadius: '9px',
+                  padding: '11px 16px',
+                  fontSize: '13.5px',
+                  fontWeight: '600',
+                  cursor: loggingOut ? 'not-allowed' : 'pointer',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.18s',
+                  minHeight: '44px',
+                }}
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmLogout}
+                disabled={loggingOut}
+                style={{
+                  flex: 1,
+                  background: loggingOut ? '#F87171' : '#DC2626',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '9px',
+                  padding: '11px 16px',
+                  fontSize: '13.5px',
+                  fontWeight: '700',
+                  cursor: loggingOut ? 'not-allowed' : 'pointer',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.18s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 12px rgba(220, 38, 38, 0.25)',
+                  minHeight: '44px',
+                }}
+              >
+                {loggingOut ? (
+                  <>
+                    <div
+                      style={{
+                        width: '16px',
+                        height: '16px',
+                        border: '2px solid rgba(255,255,255,0.4)',
+                        borderTopColor: '#fff',
+                        borderRadius: '50%',
+                        animation: 'spin 0.8s linear infinite',
+                      }}
+                    />
+                    Keluar...
+                  </>
+                ) : (
+                  'Ya, Logout'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

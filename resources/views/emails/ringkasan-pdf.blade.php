@@ -8,8 +8,8 @@
     <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
         <!-- Header -->
         <tr>
-            <td style="background-color: #0028B3; padding: 30px; text-align: center;">
-                <img src="https://iili.io/CbJhe7S.png" alt="Kabupaten Bogor" style="height: 48px; width: auto; max-width: 260px; margin-bottom: 12px; display: inline-block;">
+            <td style="background-color: #1883FF; padding: 30px; text-align: center;">
+                <img src="{{ $message->embed(public_path('image/icon.png')) }}" alt="Kabupaten Bogor" style="height: 54px; width: auto; max-width: 260px; margin-bottom: 12px; display: inline-block;">
                 <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">Ringkasan Hasil Kunjungan Kerja</h1>
             </td>
         </tr>
@@ -30,7 +30,7 @@
                             <td style="font-size: 12px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">Tanggal Kunjungan</td>
                         </tr>
                         <tr>
-                            <td style="font-size: 18px; font-weight: 700; color: #0028B3; letter-spacing: 1px; padding-top: 4px;">{{ $permohonan->kode }}</td>
+                            <td style="font-size: 18px; font-weight: 700; color: #1883FF; letter-spacing: 1px; padding-top: 4px;">{{ $permohonan->kode }}</td>
                             <td style="font-size: 14px; font-weight: 600; color: #1e293b; text-align: right; padding-top: 4px;">{{ \Carbon\Carbon::parse($permohonan->tanggal_kunjungan)->translatedFormat('d F Y') }}</td>
                         </tr>
                     </table>
@@ -38,7 +38,7 @@
 
                 <!-- Info Lampiran PDF -->
                 <div style="background-color: #eff6ff; border-left: 4px solid #1883FF; border-radius: 0 8px 8px 0; padding: 16px 20px; margin-bottom: 28px;">
-                    <p style="margin: 0 0 6px 0; font-size: 13.5px; font-weight: 700; color: #0028B3;">
+                    <p style="margin: 0 0 6px 0; font-size: 13.5px; font-weight: 700; color: #1883FF;">
                         📎 Dokumen PDF Terlampir
                     </p>
                     <p style="margin: 0; font-size: 13px; color: #1e40af; line-height: 1.6;">
@@ -52,8 +52,8 @@
 
                 <!-- Tombol CTA -->
                 <div style="text-align: center; margin-bottom: 10px;">
-                    <a href="{{ url(env('FRONTEND_URL', 'http://localhost:5173') . '/status?kode=' . $permohonan->kode) }}"
-                       style="display: inline-block; background-color: #0028B3; color: #ffffff; text-decoration: none; padding: 13px 32px; border-radius: 8px; font-weight: 700; font-size: 13.5px; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(0,40,179,0.2);">
+                    <a href="{{ rtrim(env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}"
+                       style="display: inline-block; background-color: #1883FF; color: #ffffff; text-decoration: none; padding: 13px 32px; border-radius: 8px; font-weight: 700; font-size: 13.5px; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(24,131,255,0.25);">
                         Lihat Status &amp; Detail Permohonan
                     </a>
                 </div>

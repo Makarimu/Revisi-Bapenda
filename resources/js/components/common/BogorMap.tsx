@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { assetUrl } from '../../utils/url';
 
 type LayerType = 'kabupaten' | 'kecamatan' | 'kelurahan';
 
 const LAYER_CONFIGS = {
-  kabupaten: { url: '/admin_kab.json', label: 'Kabupaten', style: { color: '#001178', weight: 3, fillColor: '#0028B3', fillOpacity: 0.12 } },
-  kecamatan: { url: '/admin_kec.json', label: 'Kecamatan', style: { color: '#ffffff', weight: 1.5, fillColor: '#0028B3', fillOpacity: 0.3 } },
-  kelurahan: { url: '/admin_kel.json', label: 'Kelurahan/Desa', style: { color: '#ffffff', weight: 1, fillColor: '#0028B3', fillOpacity: 0.4 } },
+  kabupaten: { url: assetUrl('/admin_kab.json'), label: 'Kabupaten', style: { color: '#001178', weight: 3, fillColor: '#0028B3', fillOpacity: 0.12 } },
+  kecamatan: { url: assetUrl('/admin_kec.json'), label: 'Kecamatan', style: { color: '#ffffff', weight: 1.5, fillColor: '#0028B3', fillOpacity: 0.3 } },
+  kelurahan: { url: assetUrl('/admin_kel.json'), label: 'Kelurahan/Desa', style: { color: '#ffffff', weight: 1, fillColor: '#0028B3', fillOpacity: 0.4 } },
 };
 
 const TILES = {

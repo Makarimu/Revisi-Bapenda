@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-const LOGO_URL = 'https://lh3.googleusercontent.com/d/1UJLWaokvtdtss1PGlPt4skw8lJwIi3Su';
+import { assetUrl } from '../utils/url';
 
 export default function PublicLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -31,7 +30,7 @@ export default function PublicLayout({ children }) {
       <header className="header" id="siteHeader">
         <div className="header-inner">
           <div className="header-logo">
-            <img src="/image/icon.png" alt="Tegar Beriman" className="header-logo-img" />
+            <img src={assetUrl('/image/icon.png')} alt="Tegar Beriman" className="header-logo-img" />
           </div>
           <nav className="header-nav">
             <Link to="/">Beranda</Link>

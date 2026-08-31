@@ -2,9 +2,10 @@ import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login as apiLogin } from '../../api/admin/auth';
 import { AuthContext } from '../../contexts/AuthContext';
+import { assetUrl } from '../../utils/url';
 
-const LOGO_URL = '/image/icon.png';
-const BG_URL = '/image/login_bg.jpg';
+const LOGO_URL = assetUrl('/image/icon.png');
+const BG_URL = assetUrl('/image/login_bg.jpg');
 
 export default function Login() {
   const navigate = useNavigate();
