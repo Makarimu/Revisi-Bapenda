@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, startTransition } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
+import api from '../../services/api';
 
 interface DinasData {
   id: number;
@@ -29,8 +30,6 @@ export default function Dinas() {
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
 
-  const token = localStorage.getItem('admin_token');
-
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToast({ msg, type });
   };
@@ -45,17 +44,11 @@ export default function Dinas() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/admin/dinas', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-        }
-      });
-      const json = await res.json();
-      if (json.success) {
-        setData(json.data);
+      const res = await api.get('/admin/dinas');
+      if (res.data.success) {
+        setData(res.data.data);
       } else {
-        showToast(json.message || 'Gagal memuat data.', 'error');
+        showToast(res.data.message || 'Gagal memuat data.', 'error');
       }
     } catch {
       showToast('Terjadi kesalahan jaringan.', 'error');
@@ -107,41 +100,32 @@ export default function Dinas() {
     setSubmitting(true);
 
     try {
-      const url = editId ? `/api/admin/dinas/${editId}` : '/api/admin/dinas';
-      const method = editId ? 'PUT' : 'POST';
+      const payload = {
+        nama: form.nama,
+        singkatan: form.singkatan,
+        nomor_telepon: form.nomor_telepon || null,
+        latitude: form.latitude ? parseFloat(form.latitude) : null,
+        longitude: form.longitude ? parseFloat(form.longitude) : null,
+      };
 
-      const res = await fetch(url, {
-        method,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          nama: form.nama,
-          singkatan: form.singkatan,
-          nomor_telepon: form.nomor_telepon || null,
-          latitude: form.latitude ? parseFloat(form.latitude) : null,
-          longitude: form.longitude ? parseFloat(form.longitude) : null,
-        }),
-      });
+      const res = editId
+        ? await api.put(`/admin/dinas/${editId}`, payload)
+        : await api.post('/admin/dinas', payload);
 
-      const json = await res.json();
-
-      if (res.ok && json.success) {
-        showToast(json.message || 'Data berhasil disimpan.', 'success');
+      if (res.data.success) {
+        showToast(res.data.message || 'Data berhasil disimpan.', 'success');
         setShowForm(false);
         setForm(EMPTY_FORM);
         fetchData();
       } else {
-        if (json.errors) {
-          setErrors(json.errors);
-        } else {
-          showToast(json.message || 'Gagal menyimpan data.', 'error');
-        }
+        showToast(res.data.message || 'Gagal menyimpan data.', 'error');
       }
-    } catch {
-      showToast('Terjadi kesalahan jaringan saat menyimpan.', 'error');
+    } catch (err: any) {
+      if (err.response?.data?.errors) {
+        setErrors(err.response.data.errors);
+      } else {
+        showToast(err.response?.data?.message || 'Terjadi kesalahan jaringan saat menyimpan.', 'error');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -153,22 +137,15 @@ export default function Dinas() {
     }
 
     try {
-      const res = await fetch(`/api/admin/dinas/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-        }
-      });
-      const json = await res.json();
-      if (json.success) {
+      const res = await api.delete(`/admin/dinas/${id}`);
+      if (res.data.success) {
         showToast('Dinas berhasil dihapus.', 'success');
         fetchData();
       } else {
-        showToast(json.message || 'Gagal menghapus data.', 'error');
+        showToast(res.data.message || 'Gagal menghapus data.', 'error');
       }
     } catch {
-      showToast('Gagal menghapus data karena kesalahan jaringan.', 'error');
+      showToast('Terjadi kesalahan jaringan.', 'error');
     }
   };
 

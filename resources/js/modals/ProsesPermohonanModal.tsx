@@ -278,10 +278,9 @@ function ModalEdit({ data, onClose, onSuccess }) {
   useEffect(() => {
     const fetchDinas = async () => {
       try {
-        const res = await fetch('/api/dinas');
-        const json = await res.json();
-        if (json.success) {
-          setDinasOptions(json.data);
+        const res = await api.get('/dinas');
+        if (res.data.success) {
+          setDinasOptions(res.data.data);
         }
       } catch (err) {
         console.error(err);

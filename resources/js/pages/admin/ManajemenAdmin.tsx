@@ -1,18 +1,26 @@
 import React, { useState, useEffect, useMemo, startTransition } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
-
-interface DinasOption {
-  id: number;
-  nama: string;
-  singkatan: string;
-}
+import api from '../../services/api';
 
 interface AdminUser {
   id: number;
   username: string;
   nama: string;
+  role: 'superadmin' | 'admin_dinas';
   dinas_id: number | null;
-  dinas: DinasOption | null;
+  dinas?: {
+    id: number;
+    nama: string;
+    singkatan: string;
+  } | null;
+  is_active: boolean;
+  created_at: string;
+}
+
+interface DinasOption {
+  id: number;
+  nama: string;
+  singkatan: string;
 }
 
 const EMPTY_FORM = {
@@ -30,11 +38,9 @@ export default function ManajemenAdmin() {
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
-
-  const token = localStorage.getItem('admin_token');
 
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToast({ msg, type });
@@ -50,17 +56,11 @@ export default function ManajemenAdmin() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/admin/users', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-        }
-      });
-      const json = await res.json();
-      if (json.success) {
-        setData(json.data);
+      const res = await api.get('/admin/users');
+      if (res.data.success) {
+        setData(res.data.data);
       } else {
-        showToast(json.message || 'Gagal memuat data admin.', 'error');
+        showToast(res.data.message || 'Gagal memuat data admin.', 'error');
       }
     } catch {
       showToast('Terjadi kesalahan jaringan saat memuat data admin.', 'error');
@@ -71,14 +71,9 @@ export default function ManajemenAdmin() {
 
   const fetchDinasOptions = async () => {
     try {
-      const res = await fetch('/api/dinas', {
-        headers: {
-          'Accept': 'application/json',
-        }
-      });
-      const json = await res.json();
-      if (json.success) {
-        setDinasOptions(json.data);
+      const res = await api.get('/dinas');
+      if (res.data.success) {
+        setDinasOptions(res.data.data);
       }
     } catch {
       console.error('Gagal mengambil pilihan dinas.');
@@ -129,40 +124,31 @@ export default function ManajemenAdmin() {
     setSubmitting(true);
 
     try {
-      const url = editId ? `/api/admin/users/${editId}` : '/api/admin/users';
-      const method = editId ? 'PUT' : 'POST';
+      const payload = {
+        username: form.username,
+        nama: form.nama,
+        password: form.password || null,
+        dinas_id: form.dinas_id ? parseInt(form.dinas_id) : null,
+      };
 
-      const res = await fetch(url, {
-        method,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          username: form.username,
-          nama: form.nama,
-          password: form.password || null,
-          dinas_id: form.dinas_id ? parseInt(form.dinas_id) : null,
-        }),
-      });
+      const res = editId
+        ? await api.put(`/admin/users/${editId}`, payload)
+        : await api.post('/admin/users', payload);
 
-      const json = await res.json();
-
-      if (res.ok && json.success) {
-        showToast(json.message || 'Akun admin berhasil disimpan.', 'success');
+      if (res.data.success) {
+        showToast(res.data.message || 'Akun admin berhasil disimpan.', 'success');
         setShowForm(false);
         setForm(EMPTY_FORM);
         fetchData();
       } else {
-        if (json.errors) {
-          setErrors(json.errors);
-        } else {
-          showToast(json.message || 'Gagal menyimpan akun admin.', 'error');
-        }
+        showToast(res.data.message || 'Gagal menyimpan akun admin.', 'error');
       }
-    } catch {
-      showToast('Terjadi kesalahan jaringan saat menyimpan.', 'error');
+    } catch (err: any) {
+      if (err.response?.data?.errors) {
+        setErrors(err.response.data.errors);
+      } else {
+        showToast(err.response?.data?.message || 'Terjadi kesalahan jaringan saat menyimpan.', 'error');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -174,19 +160,12 @@ export default function ManajemenAdmin() {
     }
 
     try {
-      const res = await fetch(`/api/admin/users/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-        }
-      });
-      const json = await res.json();
-      if (json.success) {
+      const res = await api.delete(`/admin/users/${id}`);
+      if (res.data.success) {
         showToast('Akun admin berhasil dihapus.', 'success');
         fetchData();
       } else {
-        showToast(json.message || 'Gagal menghapus akun admin.', 'error');
+        showToast(res.data.message || 'Gagal menghapus akun admin.', 'error');
       }
     } catch {
       showToast('Gagal menghapus data karena kesalahan jaringan.', 'error');
