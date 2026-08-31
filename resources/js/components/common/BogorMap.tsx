@@ -149,6 +149,7 @@ export default function BogorMap() {
 
     fetch(assetUrl('/app_md_mapgovpoint.csv'))
       .then(r => {
+
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.text();
       })
