@@ -5,10 +5,21 @@ import { assetUrl } from '../../utils/url';
 
 type LayerType = 'kabupaten' | 'kecamatan' | 'kelurahan';
 
-const LAYER_CONFIGS = {
-  kabupaten: { url: assetUrl('/admin_kab.json'), label: 'Kabupaten', style: { color: '#001178', weight: 3, fillColor: '#0028B3', fillOpacity: 0.12 } },
-  kecamatan: { url: assetUrl('/admin_kec.json'), label: 'Kecamatan', style: { color: '#ffffff', weight: 1.5, fillColor: '#0028B3', fillOpacity: 0.3 } },
-  kelurahan: { url: assetUrl('/admin_kel.json'), label: 'Kelurahan/Desa', style: { color: '#ffffff', weight: 1, fillColor: '#0028B3', fillOpacity: 0.4 } },
+const LAYER_OPTIONS: { key: LayerType; label: string }[] = [
+  { key: 'kabupaten', label: 'Kabupaten' },
+  { key: 'kecamatan', label: 'Kecamatan' },
+  { key: 'kelurahan', label: 'Kelurahan/Desa' },
+];
+
+const getLayerConfig = (type: LayerType) => {
+  switch (type) {
+    case 'kabupaten':
+      return { url: assetUrl('/admin_kab.json'), label: 'Kabupaten', style: { color: '#001178', weight: 3, fillColor: '#0028B3', fillOpacity: 0.12 } };
+    case 'kecamatan':
+      return { url: assetUrl('/admin_kec.json'), label: 'Kecamatan', style: { color: '#ffffff', weight: 1.5, fillColor: '#0028B3', fillOpacity: 0.3 } };
+    case 'kelurahan':
+      return { url: assetUrl('/admin_kel.json'), label: 'Kelurahan/Desa', style: { color: '#ffffff', weight: 1, fillColor: '#0028B3', fillOpacity: 0.4 } };
+  }
 };
 
 const TILES = {
@@ -71,7 +82,7 @@ export default function BogorMap() {
   useEffect(() => {
     if (!mapInstance) return;
     const m = mapInstance;
-    const cfg = LAYER_CONFIGS[activeLayer];
+    const cfg = getLayerConfig(activeLayer);
 
     const render = (data: any) => {
       if (geoLayer.current) { m.removeLayer(geoLayer.current); }
@@ -136,7 +147,7 @@ export default function BogorMap() {
     g.clearLayers();
     if (!showGovPoints) return;
 
-    fetch('/app_md_mapgovpoint.csv')
+    fetch(assetUrl('/app_md_mapgovpoint.csv'))
       .then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.text();
@@ -199,13 +210,26 @@ export default function BogorMap() {
         }
         console.log(`[BogorMap] GovPoints loaded: ${count} markers`);
       })
-      .catch(e => console.error('GovPoints load error:', e));
+      .catch(e => {
+        console.error('GovPoints CSV load error:', e);
+      });
   }, [mapInstance, showGovPoints]);
 
   // ── JSX ─────────────────────────────────────────────────────────────────
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '500px', borderRadius: '14px', overflow: 'hidden', border: '1px solid #E2E8F0' }}>
+    <div
+      ref={containerRef}
+      style={{
+        width: '100%',
+        height: '520px',
+        borderRadius: '14px',
+        position: 'relative',
+        zIndex: 1,
+        overflow: 'hidden',
+        boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.08)',
+      }}
+    >
 
       {/* Basemap buttons */}
       <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 999, display: 'flex', background: '#fff', padding: '4px', borderRadius: '10px', boxShadow: '0 4px 12px rgba(0,0,0,0.12)', gap: '2px' }}>
@@ -227,9 +251,23 @@ export default function BogorMap() {
 
       {/* Layer & gov points buttons */}
       <div style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 999, display: 'flex', alignItems: 'center', background: '#fff', padding: '4px', borderRadius: '10px', boxShadow: '0 4px 12px rgba(0,0,0,0.12)', gap: '2px' }}>
-        {(Object.keys(LAYER_CONFIGS) as LayerType[]).map(k => (
-          <button key={k} onClick={() => setActiveLayer(k)} style={{ border: 'none', background: activeLayer === k ? '#0028B3' : 'transparent', color: activeLayer === k ? '#fff' : '#475569', padding: '6px 13px', fontSize: '12px', fontWeight: 600, borderRadius: '7px', cursor: 'pointer', transition: 'all .18s' }}>
-            {LAYER_CONFIGS[k].label}
+        {LAYER_OPTIONS.map(opt => (
+          <button
+            key={opt.key}
+            onClick={() => setActiveLayer(opt.key)}
+            style={{
+              border: 'none',
+              background: activeLayer === opt.key ? '#0028B3' : 'transparent',
+              color: activeLayer === opt.key ? '#fff' : '#475569',
+              padding: '6px 13px',
+              fontSize: '12px',
+              fontWeight: 600,
+              borderRadius: '7px',
+              cursor: 'pointer',
+              transition: 'all .18s',
+            }}
+          >
+            {opt.label}
           </button>
         ))}
         <div style={{ width: '1px', height: '18px', background: '#E2E8F0', margin: '0 2px' }} />

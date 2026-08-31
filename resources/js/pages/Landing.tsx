@@ -3,20 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../layouts/PublicLayout';
 import { getApprovedReviews } from '../api/review';
 import BogorMap from '../components/common/BogorMap';
+import { assetUrl } from '../utils/url';
 
 export default function Landing() {
   const navigate = useNavigate();
-  const alurRef = useRef(null);
-  const ketentuanRef = useRef(null);
-  const [alurBtnLeft, setAlurBtnLeft] = useState(true); // disabled by default
+  const alurRef = useRef<HTMLDivElement>(null);
+  const ketentuanRef = useRef<HTMLDivElement>(null);
+  const petaRef = useRef<HTMLDivElement>(null);
+  const reviewRef = useRef<HTMLDivElement>(null);
+  const [alurBtnLeft, setAlurBtnLeft] = useState(true);
   const [alurBtnRight, setAlurBtnRight] = useState(false);
   const [reviews, setReviews] = useState<any[]>([]);
 
-  const scrollToKetentuan = () => {
-    ketentuanRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const scrollAlur = (dir) => {
+  const scrollAlur = (dir: number) => {
     if (!alurRef.current) return;
     const step = alurRef.current.clientWidth * 0.6;
     alurRef.current.scrollBy({ left: dir * step, behavior: 'smooth' });
@@ -58,45 +61,137 @@ export default function Landing() {
     };
   }, []);
 
+  const heroBgImage = assetUrl('/image/tegarberiman.jpeg');
+
   return (
     <PublicLayout>
-      {/* ===== HERO ===== */}
-      <section className="hero">
-        <div className="hero-inner">
-          <h1>Selamat Datang!</h1>
-          <p>
-            Halaman ini menyediakan layanan pengajuan permohonan kunjungan kerja secara online bagi pihak yang ingin
-            melakukan kunjungan kerja ke Kabupaten Bogor.
+      {/* ===== GRAND HERO SECTION ===== */}
+      <section
+        className="hero gov-grand-hero"
+        style={{
+          backgroundImage: `linear-gradient(135deg, rgba(0, 17, 120, 0.92) 0%, rgba(0, 40, 179, 0.88) 55%, rgba(24, 131, 255, 0.82) 100%), url(${heroBgImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+        }}
+      >
+        <div className="hero-inner gov-hero-inner">
+          <div className="gov-hero-badge">
+            <span className="gov-badge-dot" />
+            <span>PORTAL RESMI PELAYANAN KUNJUNGAN KERJA KABUPATEN BOGOR</span>
+          </div>
+
+          <h1 className="gov-hero-title">
+            Selamat Datang di Portal Kunjungan Kerja
+          </h1>
+
+          <p className="gov-hero-desc">
+            Layanan resmi pengajuan permohonan kunjungan kerja, koordinasi dinas, dan studi komparasi ke Badan Pengelolaan Pendapatan Daerah &amp; seluruh instansi Pemerintah Kabupaten Bogor secara cepat, transparan, dan terintegrasi.
           </p>
-          <div className="hero-actions">
-            <button className="btn btn-gold" onClick={() => navigate('/permohonan')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+
+          <div className="hero-actions gov-hero-actions">
+            <button className="btn btn-hero-primary" onClick={() => navigate('/permohonan')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                 <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
                 <path d="M9 13h6M9 17h6" />
               </svg>
               Ajukan Permohonan Sekarang
             </button>
-            <button className="btn btn-ghost" onClick={() => navigate('/status')}>
+            <button className="btn btn-hero-ghost" onClick={() => navigate('/status')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.3-4.3" />
               </svg>
               Cek Status Permohonan
             </button>
-            <button className="btn btn-ghost" onClick={scrollToKetentuan}>
-              Lihat Ketentuan Kunjungan Kerja
+            <button className="btn btn-hero-outline" onClick={() => scrollToSection(ketentuanRef)}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+              Ketentuan Kunjungan
             </button>
           </div>
         </div>
       </section>
 
-      <div className="container">
-        {/* ===== ALUR ===== */}
+      {/* ===== FLOATING QUICK ACCESS CARDS ===== */}
+      <div className="gov-quick-wrapper">
+        <div className="gov-quick-container">
+          <div className="gov-quick-grid">
+            
+            {/* Card 1: Peta Wilayah */}
+            <div className="gov-quick-card" onClick={() => scrollToSection(petaRef)} role="button" tabIndex={0}>
+              <div className="gov-quick-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                </svg>
+              </div>
+              <div className="gov-quick-title">Peta Wilayah</div>
+              <div className="gov-quick-desc">Sebaran kantor &amp; lokasi instansi di Kab. Bogor</div>
+            </div>
+
+            {/* Card 2: Ulasan Instansi */}
+            <div className="gov-quick-card" onClick={() => navigate('/riwayat-kunjungan')} role="button" tabIndex={0}>
+              <div className="gov-quick-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+              </div>
+              <div className="gov-quick-title">Ulasan Instansi</div>
+              <div className="gov-quick-desc">Pengalaman instansi yang telah berkunjung</div>
+            </div>
+
+            {/* Card 3: Explore Wisata */}
+            <a
+              href="https://ekabo.bogorkab.go.id/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gov-quick-card"
+              style={{ textDecoration: 'none' }}
+            >
+              <div className="gov-quick-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              </div>
+              <div className="gov-quick-title">Explore Wisata</div>
+              <div className="gov-quick-desc">Portal resmi akomodasi &amp; wisata EKABO</div>
+            </a>
+
+          </div>
+        </div>
+      </div>
+
+      {/* ===== NOTICE RIBBON ===== */}
+      <div className="gov-ribbon-wrapper">
+        <div className="gov-ribbon-inner">
+          <div className="gov-ribbon-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <div className="gov-ribbon-text">
+            <strong>Pemberitahuan Wajib:</strong> Sesuai Surat Edaran Bupati Bogor No. 727 Tahun 2025, kunjungan kerja lebih dari 1 (satu) hari <strong>diwajibkan untuk menginap</strong> di hotel/penginapan wilayah Kabupaten Bogor.
+          </div>
+          <button className="gov-ribbon-btn" onClick={() => scrollToSection(ketentuanRef)}>
+            Pelajari Ketentuan &rarr;
+          </button>
+        </div>
+      </div>
+
+      <div className="container" style={{ paddingTop: '32px' }}>
+        {/* ===== ALUR PERMOHONAN ===== */}
         <div className="section-head">
-          <div className="section-tag">Bagaimana Caranya</div>
+          <div className="section-tag">Tahapan Pelayanan</div>
           <h2>Alur Permohonan Kunjungan Kerja</h2>
-          <p>Ikuti 6 langkah sederhana di bawah ini untuk mengajukan permohonan kunjungan kerja Anda.</p>
+          <p>Ikuti 6 langkah mudah berikut untuk mengajukan permohonan kunjungan kerja Anda secara tertib dan transparan.</p>
         </div>
 
         <div className="alur-outer">
@@ -195,7 +290,7 @@ export default function Landing() {
                 </div>
                 <p>
                   6. Upload Bukti Menginap<br />
-                  <span style={{ fontWeight: 400, fontSize: '11px', color: 'var(--text-sub)' }}>(Jika Ada Rencana Menginap)</span>
+                  <span style={{ fontWeight: 400, fontSize: '11px', color: 'var(--text-sub)' }}>(Jika Menginap &gt; 1 Hari)</span>
                 </p>
               </div>
 
@@ -203,33 +298,47 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* ===== KETENTUAN ===== */}
-        <div className="section-head" id="ketentuan-section" ref={ketentuanRef} style={{ marginTop: '64px' }}>
-          <div className="section-tag">Dasar Hukum</div>
-          <h2>Ketentuan Kunjungan Kerja</h2>
-          <p>Mohon membaca dan memahami ketentuan berikut sebelum mengajukan permohonan kunjungan kerja.</p>
-        </div>
-        <div className="ketentuan-card">
-          <p className="ketentuan-dasar">
-            <strong>Dasar:</strong> Surat Edaran Bupati Bogor Nomor: 727 Tahun 2025 Tentang Ketentuan Pelaksanaan
-            Pelayanan Kegiatan Penerimaan Kunjungan Kerja Dan/Atau Sejenis di Kabupaten Bogor.
-          </p>
-          <ol className="ketentuan-list">
-            <li>1. Kegiatan Kunjungan Kerja dan/atau sejenis lainnya dilaksanakan pada hari Senin s.d. Jum'at (5 hari kerja).</li>
-            <li>2. Menyampaikan surat permohonan kunjungan kerja paling lambat 7 (tujuh) hari sebelum kegiatan dilaksanakan.</li>
-            <li>
-              3. Kegiatan kunjungan kerja yang dilaksanakan lebih dari 1 (satu) hari di wilayah Kabupaten Bogor{' '}
-              <strong>DIWAJIBKAN UNTUK MENGINAP</strong> di hotel/penginapan yang berada di wilayah Kabupaten Bogor
-              dan melampirkan bukti pemesanan akomodasi atau dokumen sejenis lainnya.
-            </li>
-            <li>
-              4. Dalam hal tamu tidak melaksanakan ketentuan maka Bupati/Kepala Perangkat Daerah terkait tidak dapat
-              menerima kegiatan kunjungan kerja dan/atau kegiatan sejenis lainnya.
-            </li>
-          </ol>
+        {/* ===== PETA INTERAKTIF SECTION ===== */}
+        <div id="peta-section" ref={petaRef} style={{ marginTop: '72px' }}>
+          <div className="section-head">
+            <div className="section-tag">Geografis &amp; Lokasi</div>
+            <h2>Peta Wilayah &amp; Sebaran Instansi</h2>
+            <p>Eksplorasi batas wilayah administrasi dan lokasi kantor perangkat daerah di Kabupaten Bogor.</p>
+          </div>
+
+          <div style={{ background: 'var(--surface)', borderRadius: '20px', padding: '24px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)' }}>
+            <BogorMap />
+          </div>
         </div>
 
-        {/* ===== INFO CARDS ===== */}
+        {/* ===== KETENTUAN KUNJUNGAN KERJA ===== */}
+        <div id="ketentuan-section" ref={ketentuanRef} style={{ marginTop: '72px' }}>
+          <div className="section-head">
+            <div className="section-tag">Dasar Regulasi</div>
+            <h2>Ketentuan Kunjungan Kerja</h2>
+            <p>Mohon membaca dan memahami ketentuan berikut sebelum mengajukan permohonan kunjungan kerja.</p>
+          </div>
+
+          <div className="ketentuan-card">
+            <p className="ketentuan-dasar">
+              <strong>Dasar:</strong> Surat Edaran Bupati Bogor Nomor: 727 Tahun 2025 Tentang Ketentuan Pelaksanaan Pelayanan Kegiatan Penerimaan Kunjungan Kerja Dan/Atau Sejenis di Kabupaten Bogor.
+            </p>
+            <ol className="ketentuan-list">
+              <li>1. Kegiatan Kunjungan Kerja dan/atau sejenis lainnya dilaksanakan pada hari Senin s.d. Jum'at (5 hari kerja).</li>
+              <li>2. Menyampaikan surat permohonan kunjungan kerja paling lambat 7 (tujuh) hari sebelum kegiatan dilaksanakan.</li>
+              <li>
+                3. Kegiatan kunjungan kerja yang dilaksanakan lebih dari 1 (satu) hari di wilayah Kabupaten Bogor{' '}
+                <strong>DIHIMBAU UNTUK MENGINAP</strong> di hotel/penginapan yang berada di wilayah Kabupaten Bogor
+                dan melampirkan bukti pemesanan akomodasi atau dokumen sejenis lainnya.
+              </li>
+              <li>
+                4. Dalam hal tamu tidak melaksanakan ketentuan maka Bupati/Kepala Perangkat Daerah terkait tidak dapat menerima kegiatan kunjungan kerja dan/atau kegiatan sejenis lainnya.
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        {/* ===== INFO CARDS (DOKUMEN & PERSYARATAN) ===== */}
         <div className="info-grid">
           <div className="info-card">
             <div className="info-card-head">
@@ -242,15 +351,16 @@ export default function Landing() {
               <h3>Dokumen yang Diperlukan</h3>
             </div>
             <ul>
-              <li>Surat Permohonan Kunjungan Kerja resmi dari instansi</li>
-              <li>Lampiran Daftar Pertanyaan terkait agenda kunjungan</li>
-              <li>Data lengkap pemohon (nama, jabatan, kontak, email)</li>
-              <li>Rincian agenda dan jumlah peserta kunjungan</li>
+              <li>Surat Permohonan Kunjungan Kerja resmi berkop instansi</li>
+              <li>Lampiran Daftar Pertanyaan atau agenda topik studi komparasi</li>
+              <li>Identitas narahubung/PIC (nama, jabatan, nomor WhatsApp aktif, email)</li>
+              <li>Rincian jumlah peserta dan estimasi waktu kunjungan</li>
             </ul>
           </div>
+
           <div className="info-card">
             <div className="info-card-head">
-              <div className="info-icon gold">
+              <div className="info-icon blue">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 6v6l4 2" />
@@ -259,24 +369,26 @@ export default function Landing() {
               <h3>Hal yang Perlu Diperhatikan</h3>
             </div>
             <ul>
-              <li>Pengajuan minimal 7 hari sebelum tanggal kunjungan</li>
-              <li>Proses review oleh admin memakan waktu 1–3 hari kerja</li>
-              <li>Simpan kode permohonan untuk memantau status &amp; revisi</li>
-              <li>Notifikasi setiap perubahan status dikirim melalui email</li>
+              <li>Pengajuan minimal 7 hari sebelum rencana tanggal kunjungan</li>
+              <li>Proses review dan disposisi oleh admin memakan waktu 1–3 hari kerja</li>
+              <li>Simpan Kode Permohonan unik untuk memantau status secara berkala</li>
+              <li>Pemberitahuan status resmi dikirimkan secara otomatis via email</li>
             </ul>
           </div>
         </div>
 
+        {/* ===== TESTIMONIAL REVIEW SECTION ===== */}
         {reviews.length > 0 && (
-          <div style={{ marginTop: '64px' }}>
+          <div id="review-section" ref={reviewRef} style={{ marginTop: '72px' }}>
             <div className="section-head">
-              <div className="section-tag">Testimonial</div>
+              <div className="section-tag">Ulasan &amp; Kepuasan</div>
               <h2>Apa Kata Instansi yang Pernah Berkunjung</h2>
-              <p>Ulasan dan pengalaman dari instansi yang telah melaksanakan kunjungan kerja di Kabupaten Bogor.</p>
+              <p>Transparansi dan dedikasi pelayanan terbaik dari Pemerintah Kabupaten Bogor untuk seluruh instansi sahabat.</p>
             </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px', marginTop: '28px' }}>
               {reviews.slice(0, 6).map((rev: any) => (
-                <div key={rev.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '24px', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transition: 'all 0.2s ease' }}>
+                <div key={rev.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '18px', padding: '24px', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transition: 'all 0.2s ease' }}>
                   <div>
                     <div style={{ color: '#F59E0B', fontSize: '18px', marginBottom: '12px' }}>
                       {'★'.repeat(rev.rating)}{'☆'.repeat(5 - rev.rating)}
@@ -286,19 +398,56 @@ export default function Landing() {
                     </p>
                   </div>
                   <div style={{ borderTop: '1px solid var(--border)', paddingTop: '14px' }}>
-                    <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-main)' }}>{rev.instansi || '-'}</div>
+                    <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--blue-900)' }}>{rev.instansi || '-'}</div>
                     <div style={{ fontSize: '12px', color: 'var(--text-sub)', marginTop: '3px' }}>PIC: {rev.nama_pic || '-'}</div>
                   </div>
                 </div>
               ))}
             </div>
+
+            <div style={{ textAlign: 'center', marginTop: '32px' }}>
+              <button
+                className="btn btn-ghost"
+                onClick={() => navigate('/riwayat-kunjungan')}
+                style={{ background: 'var(--blue-100)', color: 'var(--blue-900)', border: '1px solid var(--blue-200)', fontWeight: 700 }}
+              >
+                Lihat Semua Riwayat &amp; Ulasan &rarr;
+              </button>
+            </div>
           </div>
         )}
 
-        {/* ===== CTA BOX ===== */}
+        {/* ===== EKABO EXPLORE CARD ===== */}
+        <div
+          className="gov-ekabo-card"
+          style={{
+            backgroundImage: `linear-gradient(135deg, rgba(0, 17, 120, 0.88) 0%, rgba(24, 131, 255, 0.82) 100%), url(${assetUrl('/image/explore_bogor_banner.jpg')})`,
+          }}
+        >
+          <div className="gov-ekabo-inner">
+            <span className="gov-ekabo-tag">Wisata &amp; Akomodasi</span>
+            <h3>Jelajahi Keindahan &amp; Akomodasi Kabupaten Bogor</h3>
+            <p>Temukan referensi hotel, penginapan resmi, kuliner khas, dan destinasi wisata menarik selama Anda melaksanakan kunjungan kerja di Kabupaten Bogor.</p>
+            <a
+              href="https://ekabo.bogorkab.go.id/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-gold"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+              Kunjungi Portal EKABO
+            </a>
+          </div>
+        </div>
+
+        {/* ===== CALL TO ACTION BOX ===== */}
         <div className="cta-box">
-          <h3>Siap mengajukan kunjungan kerja?</h3>
-          <p>Proses pengajuan hanya membutuhkan beberapa menit.</p>
+          <h3>Siap Mengajukan Permohonan Kunjungan Kerja?</h3>
+          <p>Proses pengajuan mudah, cepat, dan dapat dipantau statusnya secara real-time kapan saja.</p>
           <button className="btn btn-gold" onClick={() => navigate('/permohonan')}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M14 3v4a1 1 0 0 0 1 1h4" />
@@ -309,45 +458,6 @@ export default function Landing() {
           </button>
         </div>
 
-        {/* ===== LAYANAN & PETA CARD ===== */}
-        <div style={{ marginTop: '32px', background: 'var(--surface)', borderRadius: '18px', padding: '28px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--blue-100)', color: 'var(--blue-800)', flexShrink: 0, border: '1px solid var(--border)', boxShadow: '0 2px 8px rgba(0,40,179,0.1)' }}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ width: '22px', height: '22px' }}>
-                <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-            </div>
-            <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-main)', margin: 0, letterSpacing: '-0.2px' }}>Peta Kabupaten Bogor</h3>
-              <p style={{ fontSize: '13px', color: 'var(--text-sub)', margin: '3px 0 0 0', lineHeight: '1.5' }}>Peta Sebaran dan Lokasi Kantor Instansi di Kabupaten Bogor.</p>
-            </div>
-          </div>
-
-          {/* Peta Interaktif Kabupaten Bogor */}
-          <BogorMap />
-
-
-        </div>
-
-        {/* ===== EKABO EXPLORE CARD ===== */}
-        <div className="cta-box" style={{ marginTop: '32px' }}>
-          <h3 style={{ textTransform: 'uppercase' }}>explore kabupaten bogor</h3>
-          <p style={{ textTransform: 'capitalize' }}>jelajahi dan temukan tempat wisata menarik</p>
-          <a 
-            href="https://ekabo.bogorkab.go.id/" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="btn btn-gold"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', borderRadius: '8px', fontWeight: '700' }}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '16px', height: '16px' }}>
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
-            Kunjungi Portal EKABO
-          </a>
-        </div>
       </div>
     </PublicLayout>
   );

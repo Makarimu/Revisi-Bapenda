@@ -9,9 +9,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <script>
       window.__APP_CONFIG__ = {
-        baseUrl: @json(url('/')),
-        basePath: @json(rtrim(request()->getBasePath() ?: (parse_url(url('/'), PHP_URL_PATH) ?: ''), '/')),
-        apiUrl: @json(url('/api')),
+        basePath: @json(rtrim(request()->getBasePath() ?: '', '/')),
+        apiUrl: @json(rtrim(request()->getBasePath() ?: '', '/') . '/api'),
         csrfToken: @json(csrf_token()),
       };
     </script>
