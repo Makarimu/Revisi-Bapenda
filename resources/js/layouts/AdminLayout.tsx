@@ -52,6 +52,7 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
     if (location.pathname.startsWith('/admin/tanggal-diblokir')) return 'Kalender & Blokir';
     if (location.pathname.startsWith('/admin/kontak')) return 'Kontak & Telepon';
     if (location.pathname.startsWith('/admin/review')) return 'Rating & Review';
+    if (location.pathname.startsWith('/admin/blacklist')) return 'Daftar Pencegahan (Blacklist)';
     if (location.pathname.startsWith('/admin/dinas')) return 'Master Data Dinas';
     if (location.pathname.startsWith('/admin/users')) return 'Manajemen Admin';
     return 'Dashboard Utama';
@@ -192,6 +193,10 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
           <Link to="/admin/review" className={`admin-nav-btn ${location.pathname.startsWith('/admin/review') ? 'active' : ''}`} onClick={() => setSidebarOpen(false)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
             Rating & Review
+          </Link>
+          <Link to="/admin/blacklist" className={`admin-nav-btn ${location.pathname.startsWith('/admin/blacklist') ? 'active' : ''}`} onClick={() => setSidebarOpen(false)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            Pencegahan Spam
           </Link>
           {user?.dinas_id === null && (
             <>

@@ -66,6 +66,15 @@ class SubmitPermohonanRequest extends FormRequest
         $validator->after(function ($validator) {
             $tanggal = $this->input('tanggal_kunjungan');
             $email = $this->input('email');
+            $instansi = $this->input('instansi');
+
+            // 0. Cek Blacklist (Email & Instansi)
+            $blacklisted = \App\Models\Blacklist::checkBlacklist($email, $instansi);
+            if ($blacklisted) {
+                $alasanMsg = $blacklisted->alasan ? " (Alasan: {$blacklisted->alasan})" : '';
+                $validator->errors()->add('email', "Pengajuan kunjungan diblokir oleh sistem karena data Anda masuk dalam daftar pencegahan{$alasanMsg}. Silakan hubungi administrator.");
+                return;
+            }
 
             if ($tanggal && $email) {
                 $cleanEmail = strtolower(trim($email));

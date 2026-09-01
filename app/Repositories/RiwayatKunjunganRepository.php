@@ -11,11 +11,15 @@ class RiwayatKunjunganRepository implements RiwayatKunjunganRepositoryInterface
 {
     public function getRiwayatKunjungan(array $filters): LengthAwarePaginator
     {
+        $permohonanTable = (new Permohonan)->getTable();
+
         // Query permohonan status Selesai yang memiliki review
         $query = Permohonan::query()
             ->where('status', 'Selesai')
-            ->whereHas('review')
-            ->with(['review']);
+            ->whereHas('review', function ($q) {
+                $q->where('status', 'approved');
+            })
+            ->with(['review', 'dinas']);
 
         // Filter pencarian nama instansi
         if (!empty($filters['search'])) {
@@ -28,7 +32,7 @@ class RiwayatKunjunganRepository implements RiwayatKunjunganRepositoryInterface
             $rating = (int) $filters['rating'];
             if ($rating >= 1 && $rating <= 5) {
                 $query->whereHas('review', function ($q) use ($rating) {
-                    $q->where('rating', $rating);
+                    $q->where('rating', $rating)->where('status', 'approved');
                 });
             }
         }
@@ -38,14 +42,14 @@ class RiwayatKunjunganRepository implements RiwayatKunjunganRepositoryInterface
         if ($sort === 'terlama') {
             $query->orderBy(
                 Review::select('created_at')
-                    ->whereColumn('permohonan_id', 'permohonan.id')
+                    ->whereColumn('permohonan_id', "{$permohonanTable}.id")
                     ->limit(1),
                 'asc'
             );
         } elseif ($sort === 'rating_tertinggi') {
             $query->orderBy(
                 Review::select('rating')
-                    ->whereColumn('permohonan_id', 'permohonan.id')
+                    ->whereColumn('permohonan_id', "{$permohonanTable}.id")
                     ->limit(1),
                 'desc'
             )->orderBy('created_at', 'desc');
@@ -53,7 +57,7 @@ class RiwayatKunjunganRepository implements RiwayatKunjunganRepositoryInterface
             // Default: terbaru
             $query->orderBy(
                 Review::select('created_at')
-                    ->whereColumn('permohonan_id', 'permohonan.id')
+                    ->whereColumn('permohonan_id', "{$permohonanTable}.id")
                     ->limit(1),
                 'desc'
             );
@@ -68,17 +72,20 @@ class RiwayatKunjunganRepository implements RiwayatKunjunganRepositoryInterface
     {
         $baseQuery = Permohonan::query()
             ->where('status', 'Selesai')
-            ->whereHas('review');
+            ->whereHas('review', function ($q) {
+                $q->where('status', 'approved');
+            });
 
         $totalSelesai = (clone $baseQuery)->count();
 
-        $avgRating = Review::whereHas('permohonan', function ($q) {
-            $q->where('status', 'Selesai');
-        })->avg('rating');
+        $avgRating = Review::where('status', 'approved')
+            ->whereHas('permohonan', function ($q) {
+                $q->where('status', 'Selesai');
+            })->avg('rating');
 
         return [
             'total_selesai'     => $totalSelesai,
-            'total_review'      => $totalSelesai, // Tiap permohonan selesai yang tampil pasti punya 1 review
+            'total_review'      => $totalSelesai,
             'rata_rata_rating' => $avgRating ? round((float) $avgRating, 1) : 0,
         ];
     }

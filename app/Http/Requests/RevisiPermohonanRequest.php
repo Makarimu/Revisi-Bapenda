@@ -57,6 +57,42 @@ class RevisiPermohonanRequest extends FormRequest
         ];
     }
 
+    /**
+     * Validasi tambahan: cek duplikat email+tanggal (kecualikan permohonan saat ini).
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $tanggal = $this->input('tanggal_kunjungan');
+            $email = $this->input('email');
+            $instansi = $this->input('instansi');
+            $kode = $this->route('kode');
+
+            // 0. Cek Blacklist
+            $blacklisted = \App\Models\Blacklist::checkBlacklist($email, $instansi);
+            if ($blacklisted) {
+                $alasanMsg = $blacklisted->alasan ? " (Alasan: {$blacklisted->alasan})" : '';
+                $validator->errors()->add('email', "Pengajuan revisi diblokir oleh sistem karena data Anda masuk dalam daftar pencegahan{$alasanMsg}. Silakan hubungi administrator.");
+                return;
+            }
+
+            if ($tanggal && $email && $kode) {
+                $cleanEmail = strtolower(trim($email));
+                $current = \App\Models\Permohonan::where('kode', strtoupper($kode))->first();
+                
+                $alreadyBooked = \App\Models\Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
+                    ->whereDate('tanggal_kunjungan', \Carbon\Carbon::parse($tanggal)->toDateString())
+                    ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
+                    ->when($current, fn($q) => $q->where('id', '!=', $current->id))
+                    ->exists();
+
+                if ($alreadyBooked) {
+                    $validator->errors()->add('tanggal_kunjungan', 'Email Anda sudah memiliki pengajuan kunjungan pada tanggal tersebut.');
+                }
+            }
+        });
+    }
+
     public function validated($key = null, $default = null): array
     {
         $data = parent::validated($key, $default);

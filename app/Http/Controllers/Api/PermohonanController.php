@@ -160,7 +160,12 @@ class PermohonanController extends Controller
         } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Revisi belum dapat diproses.'], 400);
+            Log::error('Revisi permohonan error: ' . $e->getMessage(), [
+                'kode' => $kode,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json(['success' => false, 'message' => $e->getMessage() ?: 'Revisi belum dapat diproses.'], 400);
         }
     }
 

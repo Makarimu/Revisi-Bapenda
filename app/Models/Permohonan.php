@@ -93,6 +93,13 @@ class Permohonan extends Model
         );
     }
 
+    protected function email(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => strtolower(trim($value)),
+        );
+    }
+
     protected function linkSurat1(): Attribute
     {
         return Attribute::make(

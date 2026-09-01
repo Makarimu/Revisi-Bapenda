@@ -23,8 +23,8 @@ const getLayerConfig = (type: LayerType) => {
 };
 
 const TILES = {
-  default: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-  streets: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+  default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  streets: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
   satellite: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
 };
 
@@ -69,7 +69,7 @@ export default function BogorMap() {
     });
     L.control.zoom({ position: 'bottomright' }).addTo(m);
 
-    tileLayer.current = L.tileLayer(TILES.default, { subdomains: 'abcd', maxZoom: 20 }).addTo(m);
+    tileLayer.current = L.tileLayer(TILES.default, { subdomains: 'abc', maxZoom: 20, maxNativeZoom: 19 }).addTo(m);
     govMarkerGroup.current = L.featureGroup().addTo(m);
     setMapInstance(m);
 
@@ -134,7 +134,7 @@ export default function BogorMap() {
   useEffect(() => {
     if (!mapInstance || !tileLayer.current) return;
     mapInstance.removeLayer(tileLayer.current);
-    tileLayer.current = L.tileLayer(TILES[basemap], { subdomains: 'abcd', maxZoom: 20 }).addTo(mapInstance);
+    tileLayer.current = L.tileLayer(TILES[basemap], { subdomains: 'abc', maxZoom: 20, maxNativeZoom: 19 }).addTo(mapInstance);
     tileLayer.current.bringToBack();
   }, [mapInstance, basemap]);
 

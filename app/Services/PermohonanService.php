@@ -43,19 +43,7 @@ class PermohonanService
 
     public function submit(array $data): Permohonan
     {
-        // Validasi logika hari & double booking
-        if (isset($data['email']) && isset($data['tanggal_kunjungan'])) {
-            $cleanEmail = strtolower(trim($data['email']));
-            $alreadyBooked = Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
-                ->whereDate('tanggal_kunjungan', $data['tanggal_kunjungan'])
-                ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
-                ->exists();
-
-            if ($alreadyBooked) {
-                throw new Exception("Email Anda sudah memiliki pengajuan kunjungan pada tanggal tersebut.");
-            }
-        }
-
+        // Pra-validasi ringan (sebelum upload file)
         if (!$this->kalenderService->isTanggalValid($data['tanggal_kunjungan'], $data['email'] ?? null)) {
             throw new Exception("Tanggal tidak valid, sudah penuh, atau kurang dari H-7.");
         }
@@ -103,6 +91,20 @@ class PermohonanService
         for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
             try {
                 $permohonan = DB::transaction(function () use ($data) {
+                    // Race-condition safe: cek duplikat DI DALAM transaction dengan pessimistic lock
+                    if (isset($data['email']) && isset($data['tanggal_kunjungan'])) {
+                        $cleanEmail = strtolower(trim($data['email']));
+                        $alreadyBooked = Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
+                            ->whereDate('tanggal_kunjungan', $data['tanggal_kunjungan'])
+                            ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
+                            ->lockForUpdate()
+                            ->exists();
+
+                        if ($alreadyBooked) {
+                            throw new Exception("Email Anda sudah memiliki pengajuan kunjungan pada tanggal tersebut.");
+                        }
+                    }
+
                     $data['kode'] = $this->generateKode();
 
                     $permohonan = Permohonan::create($data);
@@ -182,7 +184,20 @@ class PermohonanService
 
         // Cek tanggal jika berubah
         if ($data['tanggal_kunjungan'] !== $permohonan->tanggal_kunjungan->toDateString()) {
-            if (!$this->kalenderService->isTanggalValid($data['tanggal_kunjungan'])) {
+            // Cek duplikat: email sama + tanggal baru sudah ada booking aktif lain
+            $emailForCheck = $data['email'] ?? $permohonan->email;
+            $cleanEmail = strtolower(trim($emailForCheck));
+            $duplicateExists = Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
+                ->whereDate('tanggal_kunjungan', $data['tanggal_kunjungan'])
+                ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
+                ->where('id', '!=', $permohonan->id)
+                ->exists();
+
+            if ($duplicateExists) {
+                throw new Exception("Email Anda sudah memiliki pengajuan kunjungan pada tanggal tersebut.");
+            }
+
+            if (!$this->kalenderService->isTanggalValid($data['tanggal_kunjungan'], $emailForCheck)) {
                 throw new Exception("Tanggal kunjungan yang baru tidak valid.");
             }
         }
@@ -197,16 +212,27 @@ class PermohonanService
             }
         }
 
+        // Simpan referensi file baru jika ada, dan keluarkan dari array data agar tidak menimpa file lama dengan null
+        $newSuratPermohonan = $data['surat_permohonan'] ?? null;
+        $newDaftarPertanyaan = $data['daftar_pertanyaan'] ?? null;
+        unset(
+            $data['surat_permohonan'], $data['daftar_pertanyaan'],
+            $data['surat_permohonan_nama'], $data['surat_permohonan_mime'],
+            $data['daftar_pertanyaan_nama'], $data['daftar_pertanyaan_mime']
+        );
+
         $permohonan->fill($data);
         $permohonan->status = 'Revisi';
         $permohonan->tgl_revisi = Carbon::now();
         $permohonan->keterangan_admin = "Revisi dari penolakan: " . $keteranganLama;
         $permohonan->bisa_direvisi = null;
 
-        if (isset($data['surat_permohonan'])) {
-            $this->fileService->deleteFile($permohonan->getRawOriginal('surat_permohonan'));
+        if ($newSuratPermohonan) {
+            if ($permohonan->getRawOriginal('surat_permohonan')) {
+                $this->fileService->deleteFile($permohonan->getRawOriginal('surat_permohonan'));
+            }
             $permohonan->surat_permohonan = $this->fileService->uploadBase64(
-                $data['surat_permohonan'],
+                $newSuratPermohonan,
                 $data['surat_permohonan_nama'] ?? null,
                 $data['surat_permohonan_mime'] ?? null,
                 'permohonan',
@@ -214,10 +240,12 @@ class PermohonanService
             );
         }
 
-        if (isset($data['daftar_pertanyaan'])) {
-            $this->fileService->deleteFile($permohonan->getRawOriginal('daftar_pertanyaan'));
+        if ($newDaftarPertanyaan) {
+            if ($permohonan->getRawOriginal('daftar_pertanyaan')) {
+                $this->fileService->deleteFile($permohonan->getRawOriginal('daftar_pertanyaan'));
+            }
             $permohonan->daftar_pertanyaan = $this->fileService->uploadBase64(
-                $data['daftar_pertanyaan'],
+                $newDaftarPertanyaan,
                 $data['daftar_pertanyaan_nama'] ?? null,
                 $data['daftar_pertanyaan_mime'] ?? null,
                 'permohonan',

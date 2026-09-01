@@ -92,4 +92,11 @@ Route::middleware(['auth:sanctum', 'throttle:admin-api'])->group(function () {
     Route::post('/admin/users', [AdminUserController::class, 'store']);
     Route::put('/admin/users/{id}', [AdminUserController::class, 'update']);
     Route::delete('/admin/users/{id}', [AdminUserController::class, 'destroy']);
+
+    // Admin Blacklist CRUD
+    Route::get('/admin/blacklist', [\App\Http\Controllers\Api\Admin\BlacklistController::class, 'index']);
+    Route::post('/admin/blacklist', [\App\Http\Controllers\Api\Admin\BlacklistController::class, 'store']);
+    Route::put('/admin/blacklist/{id}', [\App\Http\Controllers\Api\Admin\BlacklistController::class, 'update']);
+    Route::patch('/admin/blacklist/{id}/toggle-status', [\App\Http\Controllers\Api\Admin\BlacklistController::class, 'toggleStatus']);
+    Route::delete('/admin/blacklist/{id}', [\App\Http\Controllers\Api\Admin\BlacklistController::class, 'destroy']);
 });
