@@ -321,7 +321,7 @@ const DisclaimerModal = memo(function DisclaimerModal({ open, onClose }: any) {
           <ol className="disclaimer-list">
             <li>Kunjungan kerja dilaksanakan pada hari Senin s.d. Jum'at.</li>
             <li>Surat permohonan disampaikan paling lambat 7 hari sebelum kegiatan.</li>
-            <li>Kunjungan lebih dari 1 hari <strong>WAJIB MENGINAP di hotel wilayah Kabupaten Bogor.</strong></li>
+            <li>Kunjungan lebih dari 1 hari <strong>DIHIMBAU MENGINAP di hotel wilayah Kabupaten Bogor.</strong></li>
             <li>Pelanggaran ketentuan mengakibatkan permohonan tidak dapat diterima.</li>
           </ol>
           <label className="disclaimer-check">
