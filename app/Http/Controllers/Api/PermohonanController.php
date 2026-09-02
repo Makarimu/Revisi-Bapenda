@@ -80,7 +80,7 @@ class PermohonanController extends Controller
                 'exception' => get_class($e),
                 'trace'     => $e->getTraceAsString(),
             ]);
-            return response()->json(['success' => false, 'message' => 'Permohonan belum dapat diproses.'], 400);
+            return response()->json(['success' => false, 'message' => $e->getMessage() ?: 'Permohonan belum dapat diproses.'], 400);
         }
     }
 

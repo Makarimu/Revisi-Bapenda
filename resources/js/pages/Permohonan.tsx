@@ -778,7 +778,9 @@ export default function Permohonan() {
         alert('Mohon periksa kembali form anda. ' + err.response.data.message);
         setStep(2);
       } else {
-        alert('Terjadi kesalahan sistem. Silakan coba lagi nanti.');
+        const errorMsg = err.response?.data?.message || err.message || 'Terjadi kesalahan sistem. Silakan coba lagi nanti.';
+        setShowRecaptcha(false);
+        alert(errorMsg);
       }
     } finally {
       setSubmitting(false);
