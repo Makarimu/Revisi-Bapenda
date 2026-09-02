@@ -13,6 +13,7 @@ use App\Repositories\Contracts\PermohonanRepositoryInterface;
 use App\Http\Resources\PermohonanResource;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class PermohonanController extends Controller
 {
@@ -197,5 +198,43 @@ class PermohonanController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Bukti penginapan belum dapat diunggah.'], 400);
         }
+    }
+
+    /**
+     * Stream uploaded permohonan document inline (PDF/Image)
+     * GET /api/permohonan/{kode}/file/{type}
+     */
+    public function viewFile(string $kode, string $type)
+    {
+        $permohonan = $this->permohonanRepo->findByKode(strtoupper($kode));
+
+        if (!$permohonan) {
+            return response()->json(['success' => false, 'message' => 'Permohonan tidak ditemukan.'], 404);
+        }
+
+        $field = match ($type) {
+            'surat-permohonan', 'surat_permohonan' => 'surat_permohonan',
+            'daftar-pertanyaan', 'daftar_pertanyaan' => 'daftar_pertanyaan',
+            'bukti-menginap', 'bukti_menginap' => 'bukti_menginap',
+            default => null,
+        };
+
+        if (!$field) {
+            return response()->json(['success' => false, 'message' => 'Tipe dokumen tidak valid.'], 404);
+        }
+
+        $path = $permohonan->getRawOriginal($field);
+
+        if (!$path || !Storage::disk('public')->exists($path)) {
+            return response()->json(['success' => false, 'message' => 'File dokumen belum diunggah atau tidak ditemukan.'], 404);
+        }
+
+        $fullPath = Storage::disk('public')->path($path);
+        $mime = mime_content_type($fullPath) ?: 'application/pdf';
+
+        return response()->file($fullPath, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="' . basename($fullPath) . '"',
+        ]);
     }
 }

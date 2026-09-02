@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { assetUrl } from '../utils/url';
 
 export default function PublicLayout({ children }: { children?: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setShowBackToTop(window.scrollY > 320);
@@ -24,6 +25,31 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
   };
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const handleKetentuanClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (sidebarOpen) closeSidebar();
+
+    if (location.pathname === '/' || location.pathname === '') {
+      const el = document.getElementById('ketentuan-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      navigate('/#ketentuan-section', { replace: true });
+    } else {
+      navigate('/#ketentuan-section');
+    }
+  };
+
+  const handleBerandaClick = (e: React.MouseEvent) => {
+    if (sidebarOpen) closeSidebar();
+
+    if (location.pathname === '/' || location.pathname === '') {
+      e.preventDefault();
+      navigate('/', { replace: true });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -71,27 +97,13 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
       {/* Header Utama */}
       <header className="header" id="siteHeader">
         <div className="header-inner">
-          <Link to="/" className="header-logo" style={{ textDecoration: 'none' }}>
+          <Link to="/" onClick={handleBerandaClick} className="header-logo" style={{ textDecoration: 'none' }}>
             <img src={assetUrl('/image/icon.png')} alt="Kabupaten Bogor" className="header-logo-img" />
           </Link>
 
           <nav className="header-nav">
-            <Link to="/" className={location.pathname === '/' && !location.hash ? 'active' : ''}>Beranda</Link>
-            <a
-              href="/#ketentuan-section"
-              onClick={(e) => {
-                if (location.pathname === '/') {
-                  e.preventDefault();
-                  const el = document.getElementById('ketentuan-section');
-                  if (el) {
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                }
-              }}
-              className={location.hash === '#ketentuan-section' ? 'active' : ''}
-            >
-              Ketentuan Kunjungan
-            </a>
+            <Link to="/" onClick={handleBerandaClick} className={location.pathname === '/' ? 'active' : ''}>Beranda</Link>
+            <Link to="/status" className={location.pathname.startsWith('/status') ? 'active' : ''}>Cek Status Permohonan</Link>
             <Link to="/riwayat-kunjungan" className={location.pathname.startsWith('/riwayat-kunjungan') ? 'active' : ''}>Riwayat Kunjungan</Link>
           </nav>
 
@@ -126,22 +138,10 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
           <button className="sidebar-close" onClick={closeSidebar} aria-label="Tutup menu">✕</button>
         </div>
         <nav>
-          <Link to="/" onClick={closeSidebar} className={location.pathname === '/' ? 'active' : ''}>Beranda</Link>
-          <Link to="/permohonan" onClick={closeSidebar} className={location.pathname.startsWith('/permohonan') ? 'active' : ''}>Ajukan Permohonan Sekarang</Link>
+          <Link to="/" onClick={handleBerandaClick} className={location.pathname === '/' ? 'active' : ''}>Beranda</Link>
           <Link to="/status" onClick={closeSidebar} className={location.pathname.startsWith('/status') ? 'active' : ''}>Cek Status Permohonan</Link>
-          <a
-            href="/#ketentuan-section"
-            onClick={(e) => {
-              closeSidebar();
-              if (location.pathname === '/') {
-                e.preventDefault();
-                document.getElementById('ketentuan-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }
-            }}
-          >
-            Ketentuan Kunjungan
-          </a>
           <Link to="/riwayat-kunjungan" onClick={closeSidebar} className={location.pathname.startsWith('/riwayat-kunjungan') ? 'active' : ''}>Riwayat Kunjungan</Link>
+          <Link to="/permohonan" onClick={closeSidebar} className={location.pathname.startsWith('/permohonan') ? 'active' : ''}>Ajukan Permohonan Sekarang</Link>
         </nav>
       </div>
 
@@ -174,7 +174,7 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
                 <ul className="gov-footer-links">
                   <li><Link to="/permohonan">Ajukan Permohonan Sekarang</Link></li>
                   <li><Link to="/status">Cek Status Permohonan</Link></li>
-                  <li><a href="/#ketentuan-section">Ketentuan Kunjungan</a></li>
+                  <li><a href="#ketentuan-section" onClick={handleKetentuanClick}>Ketentuan Kunjungan</a></li>
                   <li><Link to="/riwayat-kunjungan">Riwayat Kunjungan</Link></li>
                   <li><Link to="/login">Login Admin</Link></li>
                 </ul>

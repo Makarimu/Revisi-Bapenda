@@ -1031,10 +1031,10 @@ export default function Permohonan() {
 
                       <div style={{ marginTop: '28px', display: 'flex', gap: '12px' }}>
                         <button className="btn-outline" onClick={handleGoToStep1} style={{ width: 'auto', paddingLeft: '22px', paddingRight: '22px' }}>
-                          ← Kembali
+                          Kembali
                         </button>
                         <button className="btn-primary" onClick={goToKonfirmasi} style={{ flex: 1 }}>
-                          Lanjut ke Konfirmasi →
+                          Lanjut ke Konfirmasi
                         </button>
                       </div>
                     </div>
@@ -1082,7 +1082,7 @@ export default function Permohonan() {
 
                       <div style={{ marginTop: '28px', display: 'flex', gap: '12px' }}>
                         <button className="btn-outline" onClick={handleGoToStep2} style={{ width: 'auto', paddingLeft: '22px', paddingRight: '22px' }}>
-                          ← Kembali
+                          Kembali
                         </button>
                         <button
                           className="btn-primary"

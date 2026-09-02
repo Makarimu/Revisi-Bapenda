@@ -103,21 +103,39 @@ class Permohonan extends Model
     protected function linkSurat1(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->surat_permohonan ? url(Storage::url($this->surat_permohonan)) : null,
+            get: function () {
+                if (!$this->surat_permohonan) return null;
+                if (str_starts_with($this->surat_permohonan, 'http://') || str_starts_with($this->surat_permohonan, 'https://')) {
+                    return $this->surat_permohonan;
+                }
+                return url("/api/permohonan/{$this->kode}/file/surat-permohonan");
+            },
         );
     }
 
     protected function linkSurat2(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->daftar_pertanyaan ? url(Storage::url($this->daftar_pertanyaan)) : null,
+            get: function () {
+                if (!$this->daftar_pertanyaan) return null;
+                if (str_starts_with($this->daftar_pertanyaan, 'http://') || str_starts_with($this->daftar_pertanyaan, 'https://')) {
+                    return $this->daftar_pertanyaan;
+                }
+                return url("/api/permohonan/{$this->kode}/file/daftar-pertanyaan");
+            },
         );
     }
 
     protected function linkBuktiMenginap(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->bukti_menginap ? url(Storage::url($this->bukti_menginap)) : null,
+            get: function () {
+                if (!$this->bukti_menginap) return null;
+                if (str_starts_with($this->bukti_menginap, 'http://') || str_starts_with($this->bukti_menginap, 'https://')) {
+                    return $this->bukti_menginap;
+                }
+                return url("/api/permohonan/{$this->kode}/file/bukti-menginap");
+            },
         );
     }
 
