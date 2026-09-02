@@ -86,7 +86,7 @@
                 <!-- CTA Tracking Button -->
                 <div style="margin: 30px 0 10px 0; text-align: center;">
                     <a href="{{ rtrim(env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}" style="display: inline-block; background-color: #0028B3; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 14px; letter-spacing: 0.3px; box-shadow: 0 4px 14px rgba(0,40,179,0.25);">
-                        🔍 Pantau Status & Progres Permohonan
+                        🔍 Cek Status Permohonan
                     </a>
                 </div>
             </td>

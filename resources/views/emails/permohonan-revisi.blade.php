@@ -19,7 +19,7 @@
                     Revisi untuk permohonan kunjungan kerja Anda dengan kode <strong style="color: #1883FF;">{{ $permohonan->kode }}</strong> telah kami terima dan akan direview kembali oleh admin.
                 </p>
                 <div style="margin: 30px 0; text-align: center;">
-                    <a href="{{ rtrim(env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}" style="display: inline-block; background-color: #1883FF; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(24,131,255,0.25);">Pantau Status Permohonan</a>
+                    <a href="{{ rtrim(env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}" style="display: inline-block; background-color: #1883FF; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(24,131,255,0.25);">Cek Status Permohonan</a>
                 </div>
             </td>
         </tr>

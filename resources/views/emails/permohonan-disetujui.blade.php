@@ -42,7 +42,7 @@
                 </div>
                 
                 <div style="text-align: center;">
-                    <a href="{{ rtrim(env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}" style="display: inline-block; background-color: #1883FF; color: #ffffff; text-decoration: none; padding: 13px 28px; border-radius: 6px; font-weight: 700; font-size: 13px; box-shadow: 0 4px 12px rgba(24,131,255,0.25);">Pantau Status Permohonan</a>
+                    <a href="{{ rtrim(env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}" style="display: inline-block; background-color: #1883FF; color: #ffffff; text-decoration: none; padding: 13px 28px; border-radius: 6px; font-weight: 700; font-size: 13px; box-shadow: 0 4px 12px rgba(24,131,255,0.25);">Cek Status Permohonan</a>
                 </div>
             </td>
         </tr>

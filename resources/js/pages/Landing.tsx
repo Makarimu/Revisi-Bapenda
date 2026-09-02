@@ -52,6 +52,12 @@ export default function Landing() {
         if (isMounted) console.error('Error fetching approved reviews:', err);
       });
 
+    if (window.location.hash === '#ketentuan-section') {
+      setTimeout(() => {
+        ketentuanRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 200);
+    }
+
     return () => {
       isMounted = false;
       if (el) {
@@ -105,16 +111,6 @@ export default function Landing() {
               </svg>
               Cek Status Permohonan
             </button>
-            <button className="btn btn-hero-outline" onClick={() => scrollToSection(ketentuanRef)}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-                <polyline points="10 9 9 9 8 9" />
-              </svg>
-              Ketentuan Kunjungan
-            </button>
           </div>
         </div>
       </section>
@@ -142,7 +138,7 @@ export default function Landing() {
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                 </svg>
               </div>
-              <div className="gov-quick-title">Ulasan Instansi</div>
+              <div className="gov-quick-title">Riwayat Kunjungan</div>
               <div className="gov-quick-desc">Pengalaman instansi yang telah berkunjung</div>
             </div>
 
@@ -411,7 +407,7 @@ export default function Landing() {
                 onClick={() => navigate('/riwayat-kunjungan')}
                 style={{ background: 'var(--blue-100)', color: 'var(--blue-900)', border: '1px solid var(--blue-200)', fontWeight: 700 }}
               >
-                Lihat Semua Riwayat &amp; Ulasan &rarr;
+                Lihat Riwayat Kunjungan &rarr;
               </button>
             </div>
           </div>
@@ -454,7 +450,7 @@ export default function Landing() {
               <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
               <path d="M9 13h6M9 17h6" />
             </svg>
-            Mulai Ajukan Permohonan
+            Ajukan Permohonan Sekarang
           </button>
         </div>
 

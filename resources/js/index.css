@@ -111,32 +111,40 @@ body {
 }
 
 .header-inner {
-  max-width: 1120px;
+  max-width: 1180px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 24px;
-  flex-wrap: wrap;
-  gap: 12px;
+  padding: 12px 24px;
+  position: relative;
 }
 
 .header-logo {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
+  z-index: 2;
 }
 
 .header-logo-img {
-  height: 54px;
+  height: 48px;
   width: auto;
   flex-shrink: 0;
 }
 
 .header-nav {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 8px;
+  z-index: 1;
 }
 
 .header-nav a {
@@ -144,19 +152,24 @@ body {
   text-decoration: none;
   font-weight: 600;
   font-size: 13.5px;
-  padding: 9px 16px;
+  padding: 8px 16px;
   border-radius: var(--radius-sm);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   white-space: nowrap;
   cursor: pointer;
 }
 
-.header-nav a:hover,
+.header-nav a:hover {
+  background: var(--blue-100);
+  color: var(--blue-800);
+}
+
 .header-nav a.active {
   background: var(--blue-100);
   color: var(--blue-800);
-  transform: translateY(-1px);
+  font-weight: 700;
 }
 
 .hamburger-btn {
@@ -1860,6 +1873,7 @@ svg {
 
 .gov-topbar-inner {
   max-width: 1180px;
+  width: 100%;
   margin: 0 auto;
   padding: 8px 24px;
   display: flex;
@@ -1907,6 +1921,9 @@ svg {
   transition: all 0.18s;
   padding: 4px 8px;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .gov-topbar-link:hover {
@@ -1942,6 +1959,8 @@ svg {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
+  z-index: 2;
 }
 
 .btn-header-cta {
@@ -1950,13 +1969,14 @@ svg {
   gap: 7px;
   background: var(--blue-800);
   color: var(--white);
-  padding: 8px 16px;
+  padding: 9px 18px;
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
   text-decoration: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 8px rgba(0, 40, 179, 0.18);
+  white-space: nowrap;
 }
 
 .btn-header-cta:hover {

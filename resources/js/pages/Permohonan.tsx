@@ -843,7 +843,7 @@ export default function Permohonan() {
                 </div>
                 <div className="modal-actions" style={{ gap: '12px' }}>
                   <button className="btn-primary" onClick={handleGoToStatus}>
-                    Pantau Status Permohonan
+                    Cek Status Permohonan
                   </button>
                   <button className="btn-outline" onClick={handleResetForm}>
                     Ajukan Permohonan Lain

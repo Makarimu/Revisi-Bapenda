@@ -48,19 +48,22 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
           </div>
           <div className="gov-topbar-right">
             <a href="https://bogorkab.go.id" target="_blank" rel="noopener noreferrer" className="gov-topbar-link">
-              Portal Kab. Bogor
-            </a>
-            <a href="https://ekabo.bogorkab.go.id" target="_blank" rel="noopener noreferrer" className="gov-topbar-link">
-              Portal EKABO
-            </a>
-            <Link to="/login" className="gov-topbar-link login-pill">
-              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                <polyline points="10 17 15 12 10 7" />
-                <line x1="15" y1="12" x2="3" y2="12" />
+              <span>Portal Kab. Bogor</span>
+              <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}>
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
               </svg>
-              <span>Login Admin</span>
-            </Link>
+            </a>
+            <div className="gov-topbar-divider" />
+            <a href="https://ekabo.bogorkab.go.id" target="_blank" rel="noopener noreferrer" className="gov-topbar-link">
+              <span>Portal EKABO</span>
+              <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}>
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
@@ -73,12 +76,25 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
           </Link>
 
           <nav className="header-nav">
-            <Link to="/" className={location.pathname === '/' ? 'active' : ''}>Beranda</Link>
-            <Link to="/permohonan" className={location.pathname.startsWith('/permohonan') ? 'active' : ''}>Ajukan Permohonan</Link>
-            <Link to="/status" className={location.pathname.startsWith('/status') ? 'active' : ''}>Cek Status</Link>
+            <Link to="/" className={location.pathname === '/' && !location.hash ? 'active' : ''}>Beranda</Link>
+            <a
+              href="/#ketentuan-section"
+              onClick={(e) => {
+                if (location.pathname === '/') {
+                  e.preventDefault();
+                  const el = document.getElementById('ketentuan-section');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }
+              }}
+              className={location.hash === '#ketentuan-section' ? 'active' : ''}
+            >
+              Ketentuan Kunjungan
+            </a>
             <Link to="/riwayat-kunjungan" className={location.pathname.startsWith('/riwayat-kunjungan') ? 'active' : ''}>Riwayat Kunjungan</Link>
           </nav>
-          
+
           <div className="header-actions">
             <Link to="/permohonan" className="btn-header-cta">
               <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -86,7 +102,7 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
                 <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
                 <path d="M9 13h6M9 17h6" />
               </svg>
-              <span>Ajukan Kunjungan</span>
+              <span>Ajukan Permohonan Sekarang</span>
             </Link>
 
             <button className="hamburger-btn" onClick={openSidebar} aria-label="Buka menu navigasi">
@@ -111,13 +127,21 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
         </div>
         <nav>
           <Link to="/" onClick={closeSidebar} className={location.pathname === '/' ? 'active' : ''}>Beranda</Link>
-          <Link to="/permohonan" onClick={closeSidebar} className={location.pathname.startsWith('/permohonan') ? 'active' : ''}>Ajukan Permohonan</Link>
+          <Link to="/permohonan" onClick={closeSidebar} className={location.pathname.startsWith('/permohonan') ? 'active' : ''}>Ajukan Permohonan Sekarang</Link>
           <Link to="/status" onClick={closeSidebar} className={location.pathname.startsWith('/status') ? 'active' : ''}>Cek Status Permohonan</Link>
+          <a
+            href="/#ketentuan-section"
+            onClick={(e) => {
+              closeSidebar();
+              if (location.pathname === '/') {
+                e.preventDefault();
+                document.getElementById('ketentuan-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }}
+          >
+            Ketentuan Kunjungan
+          </a>
           <Link to="/riwayat-kunjungan" onClick={closeSidebar} className={location.pathname.startsWith('/riwayat-kunjungan') ? 'active' : ''}>Riwayat Kunjungan</Link>
-          <div style={{ margin: '12px 0', borderTop: '1px solid var(--border)' }} />
-          <Link to="/login" onClick={closeSidebar} style={{ color: 'var(--blue-500)', fontWeight: 700 }}>
-            🔐 Portal Login Admin
-          </Link>
         </nav>
       </div>
 
@@ -131,11 +155,10 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
         <div className="gov-footer-main">
           <div className="gov-footer-container">
             <div className="gov-footer-grid">
-              
+
               {/* Kolom 1: Profil & Identitas */}
               <div className="gov-footer-col">
                 <div className="gov-footer-brand">
-                  <img src={assetUrl('/image/icon.png')} alt="Kabupaten Bogor" style={{ height: '48px', width: 'auto', background: '#fff', padding: '6px 12px', borderRadius: '8px', marginBottom: '16px', display: 'inline-block' }} />
                   <h4 style={{ color: '#FFFFFF', fontSize: '16px', fontWeight: 800, marginBottom: '8px' }}>
                     Sistem Kunjungan Kerja
                   </h4>
@@ -149,11 +172,11 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
               <div className="gov-footer-col">
                 <h5 className="gov-footer-title">Layanan Utama</h5>
                 <ul className="gov-footer-links">
-                  <li><Link to="/permohonan">Ajukan Permohonan Baru</Link></li>
-                  <li><Link to="/status">Cek Status &amp; Revisi</Link></li>
-                  <li><Link to="/riwayat-kunjungan">Riwayat &amp; Ulasan Kunjungan</Link></li>
-                  <li><a href="#ketentuan-section">Ketentuan &amp; Dasar Hukum</a></li>
-                  <li><Link to="/login">Portal Khusus Admin</Link></li>
+                  <li><Link to="/permohonan">Ajukan Permohonan Sekarang</Link></li>
+                  <li><Link to="/status">Cek Status Permohonan</Link></li>
+                  <li><a href="/#ketentuan-section">Ketentuan Kunjungan</a></li>
+                  <li><Link to="/riwayat-kunjungan">Riwayat Kunjungan</Link></li>
+                  <li><Link to="/login">Login Admin</Link></li>
                 </ul>
               </div>
 

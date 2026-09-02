@@ -23,7 +23,7 @@
                     <p style="margin: 0; font-size: 14px; color: #991b1b; line-height: 1.6;">{{ Str::limit($permohonan->keterangan_admin, 220) }}</p>
                 </div>
                 <div style="margin: 30px 0; text-align: center;">
-                    <a href="{{ rtrim(env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}" style="display: inline-block; background-color: #DC2626; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(220,38,38,0.2);">Lihat Selengkapnya</a>
+                    <a href="{{ rtrim(env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}" style="display: inline-block; background-color: #DC2626; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(220,38,38,0.2);">Cek Status Permohonan</a>
                 </div>
             </td>
         </tr>

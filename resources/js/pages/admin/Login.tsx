@@ -66,7 +66,7 @@ export default function Login() {
         <div className="login-card">
           <div className="login-logo">
             <img src={LOGO_URL} alt="Bappenda Juara" style={{height:'48px',width:'auto',margin:'0 auto',display:'block'}} referrerPolicy="no-referrer"/>
-            <h2>Admin Login</h2>
+            <h2>Login Admin</h2>
             <p>Sistem Kunjungan Kerja</p>
           </div>
 
