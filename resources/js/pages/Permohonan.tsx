@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../layouts/PublicLayout';
 import api from '../services/api';
 import { loadRecaptchaScript, resetRecaptchaPromise } from '../services/recaptcha';
+import { getRecaptchaSiteKey } from '../utils/url';
 
 
 // ---- Static Constants (keluar dari komponen agar tidak dibuat ulang setiap render) ----
@@ -395,7 +396,7 @@ const RecaptchaModal = memo(function RecaptchaModal({ open, onVerified, onClose,
   const widgetIdRef = useRef<number | null>(null);
   const renderingRef = useRef(false);
   const onVerifiedRef = useRef(onVerified);
-  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  const siteKey = getRecaptchaSiteKey();
   const [captchaError, setCaptchaError] = useState('');
   const [retrying, setRetrying] = useState(false);
 

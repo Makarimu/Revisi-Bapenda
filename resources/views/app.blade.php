@@ -13,6 +13,7 @@
         basePath: @json(rtrim(request()->getBasePath() ?: (parse_url(url('/'), PHP_URL_PATH) ?: ''), '/')),
         apiUrl: @json(url('/api')),
         csrfToken: @json(csrf_token()),
+        recaptchaSiteKey: @json(config('services.recaptcha.site_key') ?: env('VITE_RECAPTCHA_SITE_KEY')),
       };
     </script>
     @viteReactRefresh

@@ -5,9 +5,17 @@ declare global {
       basePath?: string;
       apiUrl?: string;
       csrfToken?: string;
+      recaptchaSiteKey?: string;
     };
   }
 }
+
+export const getRecaptchaSiteKey = (): string => {
+  if (typeof window !== 'undefined' && window.__APP_CONFIG__?.recaptchaSiteKey) {
+    return window.__APP_CONFIG__.recaptchaSiteKey;
+  }
+  return import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
+};
 
 export const getBaseUrl = (): string => {
   if (typeof window !== 'undefined' && window.__APP_CONFIG__?.baseUrl) {
