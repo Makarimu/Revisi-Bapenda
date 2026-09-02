@@ -407,7 +407,7 @@ export default function Landing() {
                 onClick={() => navigate('/riwayat-kunjungan')}
                 style={{ background: 'var(--blue-100)', color: 'var(--blue-900)', border: '1px solid var(--blue-200)', fontWeight: 700 }}
               >
-                Lihat Riwayat Kunjungan &rarr;
+                Lihat Riwayat Kunjungan
               </button>
             </div>
           </div>
@@ -440,19 +440,7 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* ===== CALL TO ACTION BOX ===== */}
-        <div className="cta-box">
-          <h3>Siap Mengajukan Permohonan Kunjungan Kerja?</h3>
-          <p>Proses pengajuan mudah, cepat, dan dapat dipantau statusnya secara real-time kapan saja.</p>
-          <button className="btn btn-gold" onClick={() => navigate('/permohonan')}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-              <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
-              <path d="M9 13h6M9 17h6" />
-            </svg>
-            Ajukan Permohonan Sekarang
-          </button>
-        </div>
+
 
       </div>
     </PublicLayout>
