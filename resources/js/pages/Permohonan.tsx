@@ -157,9 +157,6 @@ const Calendar = memo(function Calendar({ busyDates, selectedDate, onSelect, min
             <span>Tidak Tersedia</span>
           </div>
         </div>
-        <p style={{ fontSize: '11px', color: 'var(--text-sub)', marginTop: '12px', lineHeight: '1.6' }}>
-          Maks. <strong>2 kunjungan/hari</strong>. Pengajuan minimal <strong>7 hari</strong> sebelum tanggal kunjungan.
-        </p>
       </div>
     </div>
   );

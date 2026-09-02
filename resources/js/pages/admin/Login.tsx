@@ -32,7 +32,7 @@ export default function Login() {
       if (!token) throw new Error('Token tidak ditemukan dalam respons');
       
       loginContext(userData, token);
-      window.location.href = '/admin/dashboard';
+      navigate('/admin/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || 'Username atau password salah.');
     } finally {

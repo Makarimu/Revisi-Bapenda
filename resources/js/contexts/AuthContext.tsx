@@ -59,8 +59,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.removeItem('admin_token');
       localStorage.removeItem('admin_nama');
       setUser(null);
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
+      const basePath = getBasePath();
+      const loginPath = basePath ? `${basePath}/login` : '/login';
+      if (window.location.pathname !== loginPath) {
+        window.location.href = loginPath;
       }
     }
   }, []);

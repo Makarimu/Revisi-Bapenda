@@ -14,16 +14,16 @@ import Permohonan from './pages/Permohonan';
 import Status from './pages/Status';
 import RiwayatKunjungan from './pages/RiwayatKunjungan';
 
-// Admin Pages (Lazy Loaded for Code Splitting & Sub-100ms Initial Load)
-const Login = lazy(() => import('./pages/admin/Login'));
-const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
-const PermohonanAdmin = lazy(() => import('./pages/admin/Permohonan'));
-const TanggalDiblokir = lazy(() => import('./pages/admin/TanggalDiblokir'));
-const KontakTelepon = lazy(() => import('./pages/admin/KontakTelepon'));
-const ReviewAdmin = lazy(() => import('./pages/admin/Review'));
-const DinasAdmin = lazy(() => import('./pages/admin/Dinas'));
-const ManajemenAdmin = lazy(() => import('./pages/admin/ManajemenAdmin'));
-const Blacklist = lazy(() => import('./pages/admin/Blacklist'));
+// Admin Pages (Eager Loaded to ensure reliable routing and asset loading across subfolders/production environments)
+import Login from './pages/admin/Login';
+import Dashboard from './pages/admin/Dashboard';
+import PermohonanAdmin from './pages/admin/Permohonan';
+import TanggalDiblokir from './pages/admin/TanggalDiblokir';
+import KontakTelepon from './pages/admin/KontakTelepon';
+import ReviewAdmin from './pages/admin/Review';
+import DinasAdmin from './pages/admin/Dinas';
+import ManajemenAdmin from './pages/admin/ManajemenAdmin';
+import Blacklist from './pages/admin/Blacklist';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
