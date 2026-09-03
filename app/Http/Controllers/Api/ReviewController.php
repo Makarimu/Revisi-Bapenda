@@ -9,6 +9,7 @@ use App\Repositories\Contracts\PermohonanRepositoryInterface;
 use App\Repositories\Contracts\ReviewRepositoryInterface;
 use App\Services\ReviewService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class ReviewController extends Controller
@@ -49,9 +50,10 @@ class ReviewController extends Controller
         }
     }
 
-    public function getApproved(): JsonResponse
+    public function getApproved(Request $request): JsonResponse
     {
-        $reviews = $this->reviewRepo->getApproved(6);
+        $limit = (int) $request->query('limit', 20);
+        $reviews = $this->reviewRepo->getApproved($limit);
 
         return response()->json([
             'success' => true,

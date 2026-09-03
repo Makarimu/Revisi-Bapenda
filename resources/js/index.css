@@ -1795,9 +1795,28 @@ body {
 }
 
 /* ===== RESPONSIVE FIXES ===== */
-* {
+.hero,
+.header,
+.layout-grid,
+.card,
+.modal {
   max-width: 100%;
-  box-sizing: border-box;
+}
+
+/* Ensure Leaflet and its tooltips are never constrained by parent width */
+.leaflet-container *,
+.leaflet-container *::before,
+.leaflet-container *::after {
+  max-width: none;
+}
+
+.leaflet-tooltip,
+.bmap-tip,
+.gov-label {
+  max-width: none !important;
+  width: max-content !important;
+  white-space: nowrap !important;
+  display: inline-block !important;
 }
 
 img,
@@ -2471,5 +2490,115 @@ svg {
   }
   .gov-footer-main {
     padding: 40px 20px 32px;
+  }
+}
+
+/* ===== REVIEW SLIDER (3 Cards per View, Horizontal Swipe) ===== */
+.review-slider-wrapper {
+  position: relative;
+  margin-top: 28px;
+}
+
+.review-slider-track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 8px 4px 16px;
+}
+
+.review-slider-track::-webkit-scrollbar {
+  display: none;
+}
+
+.review-slider-card {
+  flex: 0 0 calc((100% - 48px) / 3);
+  max-width: calc((100% - 48px) / 3);
+  scroll-snap-align: start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-slider-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 17, 120, 0.08);
+}
+
+.review-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: var(--blue-800);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 17, 120, 0.12);
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.review-nav-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.review-nav-btn:hover:not(:disabled) {
+  background: var(--blue-800);
+  color: #FFFFFF;
+  border-color: var(--blue-800);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 6px 20px rgba(0, 40, 179, 0.25);
+}
+
+.review-nav-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.review-nav-btn.left {
+  left: -22px;
+}
+
+.review-nav-btn.right {
+  right: -22px;
+}
+
+@media (max-width: 960px) {
+  .review-slider-card {
+    flex: 0 0 calc((100% - 20px) / 2);
+    max-width: calc((100% - 20px) / 2);
+  }
+  .review-slider-track {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .review-slider-card {
+    flex: 0 0 86%;
+    max-width: 86%;
+  }
+  .review-slider-track {
+    gap: 14px;
+  }
+  .review-nav-btn {
+    display: none;
   }
 }

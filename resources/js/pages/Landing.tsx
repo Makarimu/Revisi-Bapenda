@@ -12,8 +12,11 @@ export default function Landing() {
   const ketentuanRef = useRef<HTMLDivElement>(null);
   const petaRef = useRef<HTMLDivElement>(null);
   const reviewRef = useRef<HTMLDivElement>(null);
+  const reviewSliderRef = useRef<HTMLDivElement>(null);
   const [alurBtnLeft, setAlurBtnLeft] = useState(true);
   const [alurBtnRight, setAlurBtnRight] = useState(false);
+  const [reviewBtnLeft, setReviewBtnLeft] = useState(true);
+  const [reviewBtnRight, setReviewBtnRight] = useState(false);
   const [reviews, setReviews] = useState<any[]>([]);
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
@@ -24,6 +27,21 @@ export default function Landing() {
     if (!alurRef.current) return;
     const step = alurRef.current.clientWidth * 0.6;
     alurRef.current.scrollBy({ left: dir * step, behavior: 'smooth' });
+  };
+
+  const scrollReview = (dir: number) => {
+    if (!reviewSliderRef.current) return;
+    const el = reviewSliderRef.current;
+    const step = el.clientWidth * 0.75;
+    el.scrollBy({ left: dir * step, behavior: 'smooth' });
+  };
+
+  const updateReviewBtnState = () => {
+    if (!reviewSliderRef.current) return;
+    const el = reviewSliderRef.current;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setReviewBtnLeft(el.scrollLeft <= 6);
+    setReviewBtnRight(el.scrollLeft >= maxScroll - 6);
   };
 
   const updateAlurBtnState = () => {
@@ -61,6 +79,19 @@ export default function Landing() {
       window.removeEventListener('resize', updateAlurBtnState);
     };
   }, []);
+
+  useEffect(() => {
+    const el = reviewSliderRef.current;
+    if (el) {
+      el.addEventListener('scroll', updateReviewBtnState, { passive: true });
+      window.addEventListener('resize', updateReviewBtnState);
+      updateReviewBtnState();
+    }
+    return () => {
+      if (el) el.removeEventListener('scroll', updateReviewBtnState);
+      window.removeEventListener('resize', updateReviewBtnState);
+    };
+  }, [reviews]);
 
   useEffect(() => {
     if (location.hash === '#ketentuan-section' || window.location.hash === '#ketentuan-section') {
@@ -182,7 +213,7 @@ export default function Landing() {
             </svg>
           </div>
           <div className="gov-ribbon-text">
-            <strong>Pemberitahuan Wajib:</strong> Sesuai Surat Edaran Bupati Bogor No. 727 Tahun 2025, kunjungan kerja lebih dari 1 (satu) hari <strong>diwajibkan untuk menginap</strong> di hotel/penginapan wilayah Kabupaten Bogor.
+            <strong>Pemberitahuan Wajib:</strong> Sesuai Surat Edaran Bupati Bogor No. 727 Tahun 2025, kunjungan kerja lebih dari 1 (satu) hari <strong>dihimbau untuk menginap</strong><br />di hotel/penginapan wilayah Kabupaten Bogor.
           </div>
           <button className="gov-ribbon-btn" onClick={() => scrollToSection(ketentuanRef)}>
             Pelajari Ketentuan &rarr;
@@ -306,7 +337,7 @@ export default function Landing() {
         <div id="peta-section" ref={petaRef} style={{ marginTop: '72px' }}>
           <div className="section-head">
             <div className="section-tag">Geografis &amp; Lokasi</div>
-            <h2>Peta Wilayah &amp; Sebaran Instansi</h2>
+            <h2>Peta Sebaran</h2>
             <p>Eksplorasi batas wilayah administrasi dan lokasi kantor perangkat daerah di Kabupaten Bogor.</p>
           </div>
 
@@ -390,33 +421,48 @@ export default function Landing() {
               <p>Transparansi dan dedikasi pelayanan terbaik dari Pemerintah Kabupaten Bogor untuk seluruh instansi sahabat.</p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px', marginTop: '28px' }}>
-              {reviews.slice(0, 6).map((rev: any) => (
-                <div key={rev.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '18px', padding: '24px', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transition: 'all 0.2s ease' }}>
-                  <div>
-                    <div style={{ color: '#F59E0B', fontSize: '18px', marginBottom: '12px' }}>
-                      {'★'.repeat(rev.rating)}{'☆'.repeat(5 - rev.rating)}
-                    </div>
-                    <p style={{ fontSize: '13.5px', color: 'var(--text-main)', lineHeight: '1.7', fontStyle: 'italic', marginBottom: '18px' }}>
-                      "{rev.review}"
-                    </p>
-                  </div>
-                  <div style={{ borderTop: '1px solid var(--border)', paddingTop: '14px' }}>
-                    <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--blue-900)' }}>{rev.instansi || '-'}</div>
-                    <div style={{ fontSize: '12px', color: 'var(--text-sub)', marginTop: '3px' }}>PIC: {rev.nama_pic || '-'}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ textAlign: 'center', marginTop: '32px' }}>
+            <div className="review-slider-wrapper">
               <button
-                className="btn btn-ghost"
-                onClick={() => navigate('/riwayat-kunjungan')}
-                style={{ background: 'var(--blue-100)', color: 'var(--blue-900)', border: '1px solid var(--blue-200)', fontWeight: 700 }}
+                type="button"
+                className="review-nav-btn left"
+                onClick={() => scrollReview(-1)}
+                aria-label="Geser ulasan ke kiri"
+                disabled={reviewBtnLeft}
               >
-                Lihat Riwayat Kunjungan
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
               </button>
+              <button
+                type="button"
+                className="review-nav-btn right"
+                onClick={() => scrollReview(1)}
+                aria-label="Geser ulasan ke kanan"
+                disabled={reviewBtnRight}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+
+              <div className="review-slider-track" ref={reviewSliderRef}>
+                {reviews.map((rev: any) => (
+                  <div key={rev.id} className="review-slider-card">
+                    <div>
+                      <div style={{ color: '#F59E0B', fontSize: '18px', marginBottom: '12px' }}>
+                        {'★'.repeat(rev.rating)}{'☆'.repeat(5 - rev.rating)}
+                      </div>
+                      <p style={{ fontSize: '13.5px', color: 'var(--text-main)', lineHeight: '1.7', fontStyle: 'italic', marginBottom: '18px' }}>
+                        "{rev.review}"
+                      </p>
+                    </div>
+                    <div style={{ borderTop: '1px solid var(--border)', paddingTop: '14px' }}>
+                      <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--blue-900)' }}>{rev.instansi || '-'}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-sub)', marginTop: '3px' }}>PIC: {rev.nama_pic || '-'}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}

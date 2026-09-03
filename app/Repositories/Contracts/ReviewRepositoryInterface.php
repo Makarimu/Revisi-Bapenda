@@ -18,5 +18,5 @@ interface ReviewRepositoryInterface
 
     public function update(Review $review, array $data): bool;
 
-    public function getApproved(int $limit = 6): Collection;
+    public function getApproved(int $limit = 20): Collection;
 }

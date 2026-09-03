@@ -16,9 +16,9 @@ const getLayerConfig = (type: LayerType) => {
     case 'kabupaten':
       return { url: assetUrl('/admin_kab.json'), label: 'Kabupaten', style: { color: '#001178', weight: 3, fillColor: '#0028B3', fillOpacity: 0.12 } };
     case 'kecamatan':
-      return { url: assetUrl('/admin_kec.json'), label: 'Kecamatan', style: { color: '#ffffff', weight: 1.5, fillColor: '#0028B3', fillOpacity: 0.3 } };
+      return { url: assetUrl('/admin_kec.json'), label: 'Kecamatan', style: { color: '#001178', weight: 1.5, fillColor: '#0028B3', fillOpacity: 0.12 } };
     case 'kelurahan':
-      return { url: assetUrl('/admin_kel.json'), label: 'Kelurahan/Desa', style: { color: '#ffffff', weight: 1, fillColor: '#0028B3', fillOpacity: 0.4 } };
+      return { url: assetUrl('/admin_kel.json'), label: 'Kelurahan/Desa', style: { color: '#001178', weight: 1, fillColor: '#0028B3', fillOpacity: 0.12 } };
   }
 };
 
@@ -66,6 +66,7 @@ export default function BogorMap() {
       center: [-6.4831, 106.8288],
       zoom: 10,
       zoomControl: false,
+      scrollWheelZoom: false,
     });
     L.control.zoom({ position: 'bottomright' }).addTo(m);
 
@@ -220,7 +221,6 @@ export default function BogorMap() {
 
   return (
     <div
-      ref={containerRef}
       style={{
         width: '100%',
         height: '520px',
@@ -276,7 +276,7 @@ export default function BogorMap() {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '12px', height: '12px' }}>
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
           </svg>
-          Titik Layanan Pemda
+          Titik Pelayanan
         </button>
       </div>
 
@@ -315,30 +315,45 @@ export default function BogorMap() {
       <div ref={containerRef} style={{ width: '100%', height: '100%', zIndex: 1 }} />
 
       <style>{`
+        .leaflet-tooltip.bmap-tip,
         .bmap-tip {
-          background: rgba(255,255,255,0.95) !important;
-          border: 1px solid #e2e8f0 !important;
-          border-radius: 6px !important;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-          padding: 4px 8px !important;
+          background: rgba(255, 255, 255, 0.98) !important;
+          border: 1px solid #cbd5e1 !important;
+          border-radius: 8px !important;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+          padding: 6px 12px !important;
           font-family: inherit !important;
           pointer-events: none !important;
+          white-space: nowrap !important;
+          max-width: none !important;
+          width: max-content !important;
+          display: inline-block !important;
+          box-sizing: border-box !important;
+          line-height: normal !important;
         }
-        .bmap-tip::before { display:none !important; }
+        .bmap-tip::before, .bmap-tip:before { display: none !important; }
+
+        .leaflet-tooltip.gov-label,
         .gov-label {
           background: #ffffff !important;
-          border: 1px solid #e2e8f0 !important;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+          border: 1px solid #cbd5e1 !important;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
           border-radius: 8px !important;
-          font-size: 11px !important;
+          font-size: 12px !important;
           font-weight: 700 !important;
           color: #1e293b !important;
-          padding: 6px 10px !important;
+          padding: 6px 12px !important;
           pointer-events: none !important;
+          white-space: nowrap !important;
+          max-width: none !important;
+          width: max-content !important;
+          display: inline-block !important;
+          box-sizing: border-box !important;
+          line-height: normal !important;
         }
-        .gov-label::before { display:none !important; }
+        .gov-label::before, .gov-label:before { display: none !important; }
 
-        .leaflet-marker-icon, .leaflet-marker-shadow { background:transparent !important; border:none !important; }
+        .leaflet-marker-icon, .leaflet-marker-shadow { background: transparent !important; border: none !important; }
       `}</style>
     </div>
   );

@@ -64,7 +64,7 @@ class ReviewRepository implements ReviewRepositoryInterface
         return $review->update($data);
     }
 
-    public function getApproved(int $limit = 6): Collection
+    public function getApproved(int $limit = 20): Collection
     {
         return Review::approved()
             ->with(['permohonan:id,instansi,nama_pic'])
