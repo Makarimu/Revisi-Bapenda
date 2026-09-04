@@ -2399,7 +2399,7 @@ svg {
 
 .gov-footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1.5fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
   gap: 40px;
 }
 
@@ -2422,6 +2422,50 @@ svg {
   height: 2px;
   background: var(--blue-500);
   border-radius: 2px;
+}
+
+.gov-footer-logos {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.gov-footer-logo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  width: 132px;
+  height: 44px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  padding: 4px 10px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.gov-footer-logo-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+}
+
+.gov-footer-logo-badge img.gov-logo-diskominfo {
+  height: 22px;
+  max-width: 110px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.gov-footer-logo-badge img.gov-logo-bappenda {
+  height: 33px;
+  max-width: 112px;
+  width: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .gov-footer-links {
@@ -2493,10 +2537,85 @@ svg {
   }
 }
 
+/* ===== REVIEW SECTION HEADER WITH ACTION BUTTON ===== */
+.section-head-with-action {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.section-head-content {
+  max-width: 680px;
+}
+
+.section-head-content .section-tag {
+  display: inline-flex;
+  margin-bottom: 10px;
+}
+
+.section-head-content h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--blue-900);
+  margin-bottom: 8px;
+  letter-spacing: -0.4px;
+  line-height: 1.3;
+}
+
+.section-head-content p {
+  font-size: 14px;
+  color: var(--text-sub);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.section-head-action {
+  flex-shrink: 0;
+  padding-bottom: 4px;
+}
+
+.btn-review-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  background: transparent;
+  color: var(--blue-800);
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn-review-more svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.btn-review-more:hover {
+  background: transparent;
+  color: var(--blue-600);
+  border: none;
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-review-more:hover svg {
+  transform: translateX(4px);
+}
+
 /* ===== REVIEW SLIDER (3 Cards per View, Horizontal Swipe) ===== */
 .review-slider-wrapper {
   position: relative;
-  margin-top: 28px;
+  margin-top: 20px;
 }
 
 .review-slider-track {
@@ -2591,6 +2710,16 @@ svg {
 }
 
 @media (max-width: 640px) {
+  .section-head-with-action {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .btn-review-more {
+    font-size: 13.5px;
+    padding: 0;
+  }
   .review-slider-card {
     flex: 0 0 86%;
     max-width: 86%;

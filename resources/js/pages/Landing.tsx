@@ -415,10 +415,25 @@ export default function Landing() {
         {/* ===== TESTIMONIAL REVIEW SECTION ===== */}
         {reviews.length > 0 && (
           <div id="review-section" ref={reviewRef} style={{ marginTop: '72px' }}>
-            <div className="section-head">
-              <div className="section-tag">Ulasan &amp; Kepuasan</div>
-              <h2>Apa Kata Instansi yang Pernah Berkunjung</h2>
-              <p>Transparansi dan dedikasi pelayanan terbaik dari Pemerintah Kabupaten Bogor untuk seluruh instansi sahabat.</p>
+            <div className="section-head-with-action">
+              <div className="section-head-content">
+                <div className="section-tag">Ulasan &amp; Kepuasan</div>
+                <h2>Apa Kata Instansi yang Pernah Berkunjung</h2>
+                <p>Transparansi dan dedikasi pelayanan terbaik dari Pemerintah Kabupaten Bogor untuk seluruh instansi sahabat.</p>
+              </div>
+              <div className="section-head-action">
+                <button
+                  type="button"
+                  className="btn-review-more"
+                  onClick={() => navigate('/riwayat-kunjungan')}
+                >
+                  <span>Lihat Selengkapnya</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <div className="review-slider-wrapper">

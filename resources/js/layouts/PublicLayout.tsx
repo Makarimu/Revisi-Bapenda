@@ -165,6 +165,34 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
                   <p style={{ color: '#94A3B8', fontSize: '13px', lineHeight: '1.7', margin: 0 }}>
                     Portal pelayanan terpadu penerimaan permohonan kunjungan kerja, studi komparasi, dan koordinasi kedinasan di lingkungan Pemerintah Kabupaten Bogor.
                   </p>
+                  <div className="gov-footer-logos">
+                    <a
+                      href="https://diskominfo.bogorkab.go.id"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="gov-footer-logo-badge"
+                      title="Diskominfo Kabupaten Bogor"
+                    >
+                      <img
+                        src={assetUrl('/image/diskominfo.png')}
+                        alt="Diskominfo Kabupaten Bogor"
+                        className="gov-logo-diskominfo"
+                      />
+                    </a>
+                    <a
+                      href="https://bappenda.bogorkab.go.id"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="gov-footer-logo-badge"
+                      title="Bappenda Kabupaten Bogor"
+                    >
+                      <img
+                        src={assetUrl('/image/bappenda.png')}
+                        alt="Bappenda Kabupaten Bogor"
+                        className="gov-logo-bappenda"
+                      />
+                    </a>
+                  </div>
                 </div>
               </div>
 
@@ -180,7 +208,18 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
                 </ul>
               </div>
 
-              {/* Kolom 3: Kontak & Alamat */}
+              {/* Kolom 3: Portal Terkait */}
+              <div className="gov-footer-col">
+                <h5 className="gov-footer-title">Tautan Eksternal</h5>
+                <ul className="gov-footer-links">
+                  <li><a href="https://bogorkab.go.id" target="_blank" rel="noopener noreferrer">Pemerintah Kab. Bogor</a></li>
+                  <li><a href="https://bappenda.bogorkab.go.id" target="_blank" rel="noopener noreferrer">Bappenda Kab. Bogor</a></li>
+                  <li><a href="https://diskominfo.bogorkab.go.id" target="_blank" rel="noopener noreferrer">Diskominfo Kab. Bogor</a></li>
+                  <li><a href="https://ekabo.bogorkab.go.id" target="_blank" rel="noopener noreferrer">Portal Wisata EKABO</a></li>
+                </ul>
+              </div>
+
+              {/* Kolom 4: Kontak & Alamat */}
               <div className="gov-footer-col">
                 <h5 className="gov-footer-title">Kontak &amp; Alamat</h5>
                 <ul className="gov-footer-contact">
@@ -205,17 +244,6 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
                 </ul>
               </div>
 
-              {/* Kolom 4: Portal Terkait */}
-              <div className="gov-footer-col">
-                <h5 className="gov-footer-title">Tautan Eksternal</h5>
-                <ul className="gov-footer-links">
-                  <li><a href="https://bogorkab.go.id" target="_blank" rel="noopener noreferrer">Pemerintah Kab. Bogor</a></li>
-                  <li><a href="https://bappenda.bogorkab.go.id" target="_blank" rel="noopener noreferrer">Bappenda Kab. Bogor</a></li>
-                  <li><a href="https://diskominfo.bogorkab.go.id" target="_blank" rel="noopener noreferrer">Diskominfo Kab. Bogor</a></li>
-                  <li><a href="https://ekabo.bogorkab.go.id" target="_blank" rel="noopener noreferrer">Portal Wisata EKABO</a></li>
-                </ul>
-              </div>
-
             </div>
           </div>
         </div>
@@ -227,7 +255,7 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
               &copy; 2026 Pemerintah Kabupaten Bogor. Seluruh hak cipta dilindungi undang-undang.
             </div>
             <div style={{ fontSize: '12px', color: '#64748B' }}>
-              Powered by <a href="https://bappenda.bogorkab.go.id" target="_blank" rel="noopener noreferrer" style={{ color: '#75C3FF', textDecoration: 'none' }}>Bappenda</a> &amp; <a href="https://diskominfo.bogorkab.go.id" target="_blank" rel="noopener noreferrer" style={{ color: '#75C3FF', textDecoration: 'none' }}>Diskominfo</a>
+              Powered by <a href="https://diskominfo.bogorkab.go.id" target="_blank" rel="noopener noreferrer" style={{ color: '#75C3FF', textDecoration: 'none' }}>Diskominfo</a> &amp; <a href="https://bappenda.bogorkab.go.id" target="_blank" rel="noopener noreferrer" style={{ color: '#75C3FF', textDecoration: 'none' }}>Bappenda</a>
             </div>
           </div>
         </div>
