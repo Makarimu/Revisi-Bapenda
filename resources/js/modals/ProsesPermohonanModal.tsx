@@ -12,11 +12,12 @@ function formatTanggal(s) {
 
 function StatusBadge({ status }) {
   const cfg = {
-    Pending: { bg: '#FEF3C7', color: '#B45309', border: '#F59E0B' },
-    Disetujui: { bg: '#DCFCE7', color: '#15803D', border: '#86EFAC' },
-    Selesai: { bg: '#C5DBFF', color: '#001178', border: '#0028B3' },
-    Ditolak: { bg: '#FEE2E2', color: '#B91C1C', border: '#FCA5A5' },
-    Revisi: { bg: '#F3E8FF', color: '#6D28D9', border: '#D8B4FE' },
+    Pending: { bg: '#F1F5F9', color: '#475569', border: '#CBD5E1', label: 'Menunggu' },
+    Menunggu: { bg: '#F1F5F9', color: '#475569', border: '#CBD5E1', label: 'Menunggu' },
+    Disetujui: { bg: '#DCFCE7', color: '#15803D', border: '#86EFAC', label: 'Disetujui' },
+    Selesai: { bg: '#D1FAE5', color: '#065F46', border: '#059669', label: 'Selesai' },
+    Ditolak: { bg: '#FEE2E2', color: '#B91C1C', border: '#FCA5A5', label: 'Ditolak' },
+    Revisi: { bg: '#FEF9C3', color: '#854D0E', border: '#FACC15', label: 'Revisi' },
   };
   const s = cfg[status] || cfg.Pending;
   return (
@@ -24,7 +25,7 @@ function StatusBadge({ status }) {
       display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: '12px',
       fontSize: '11px', fontWeight: '700', background: s.bg, color: s.color, border: `1px solid ${s.border}`
     }}>
-      {status}
+      {s.label || status}
     </span>
   );
 }

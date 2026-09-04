@@ -97,7 +97,8 @@ export default function KelolaKalender() {
     if (isSelected) return { ...base, background:'#0028B3', color:'white', cursor:'pointer', boxShadow:'0 2px 8px rgba(0,40,179,0.3)' };
     if (cls === 'blocked') return { ...base, background:'#FEE2E2', color:'#B91C1C', border:'1px solid #FCA5A5', cursor:'pointer' };
     if (cls === 'available') return { ...base, background:'#C5DBFF', color:'#001178', cursor:'pointer' };
-    return { ...base, background:'transparent', color:'#CBD5E1' };
+    if (cls === 'weekend') return { ...base, background:'#F1F5F9', color:'#94A3B8', border:'1px solid #E2E8F0', cursor:'not-allowed' };
+    return { ...base, background:'#FAFAFA', color:'#CBD5E1', border:'1px dashed #E2E8F0' };
   };
 
   return (
@@ -185,7 +186,7 @@ export default function KelolaKalender() {
               {[
                 {color:'#C5DBFF',border:'1px solid #1883FF',label:'Tersedia'},
                 {color:'#FEE2E2',border:'1px solid #FCA5A5',label:'Diblokir'},
-                {color:'transparent',border:'none',label:'Weekend/Lalu',textColor:'#94A3B8'},
+                {color:'#F1F5F9',border:'1px solid #E2E8F0',label:'Weekend (Libur)',textColor:'#64748B'},
               ].map(l=>(
                 <div key={l.label} style={{display:'flex',alignItems:'center',gap:'7px'}}>
                   <div style={{width:'14px',height:'14px',borderRadius:'4px',background:l.color,border:l.border||'1px solid #E2E8F0',flexShrink:0}}/>

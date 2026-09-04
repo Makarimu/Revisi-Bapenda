@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, startTransition } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
+import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/api';
 
 interface DinasData {
@@ -20,6 +21,9 @@ const EMPTY_FORM = {
 };
 
 export default function Dinas() {
+  const { user } = useAuth();
+  const isSuperAdmin = user?.dinas_id === null;
+
   const [data, setData] = useState<DinasData[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -174,10 +178,16 @@ export default function Dinas() {
           <h2 style={{fontSize:'22px',fontWeight:'800',color:'#001178',letterSpacing:'-0.3px'}}>Master Data Dinas</h2>
           <p style={{fontSize:'13.5px',color:'#64748B',marginTop:'3px'}}>Kelola data instansi dinas Kabupaten Bogor (nomor telepon, koordinat lokasi, singkatan)</p>
         </div>
-        <button onClick={handleOpenAdd}
-          style={{display:'flex',alignItems:'center',gap:'8px',padding:'10px 18px',minHeight:'42px',border:'none',borderRadius:'8px',background:'#0028B3',color:'white',cursor:'pointer',fontSize:'13px',fontWeight:'700',fontFamily:'inherit',boxShadow:'0 2px 8px rgba(0,40,179,0.2)'}}>
-          + Tambah Dinas
-        </button>
+        {isSuperAdmin ? (
+          <button onClick={handleOpenAdd}
+            style={{display:'flex',alignItems:'center',gap:'8px',padding:'10px 18px',minHeight:'42px',border:'none',borderRadius:'8px',background:'#0028B3',color:'white',cursor:'pointer',fontSize:'13px',fontWeight:'700',fontFamily:'inherit',boxShadow:'0 2px 8px rgba(0,40,179,0.2)'}}>
+            + Tambah Dinas
+          </button>
+        ) : (
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '20px', background: '#F1F5F9', color: '#475569', fontSize: '12.5px', fontWeight: '700', border: '1px solid #CBD5E1' }}>
+            🔒 Mode Lihat Saja (Read-Only)
+          </span>
+        )}
       </div>
 
       {/* Search Filter */}
@@ -194,8 +204,8 @@ export default function Dinas() {
         />
       </div>
 
-      {/* Form Tambah/Edit */}
-      {showForm && (
+      {/* Form Tambah/Edit (Super Admin Only) */}
+      {isSuperAdmin && showForm && (
         <div style={{background:'white',borderRadius:'16px',boxShadow:'0 4px 20px rgba(0,0,0,0.08)',border:'1.5px solid #0028B3',overflow:'hidden',marginBottom:'20px'}}>
           <div style={{padding:'16px 20px',background:'#0028B3',color:'white',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
             <div style={{fontSize:'15px',fontWeight:'700'}}>{editId ? 'Edit Dinas' : 'Tambah Dinas Baru'}</div>
@@ -266,7 +276,10 @@ export default function Dinas() {
             <table style={{width:'100%',borderCollapse:'collapse'}}>
               <thead>
                 <tr>
-                  {['Nama Instansi','Singkatan','Nomor Telepon','Latitude','Longitude','Aksi'].map(h=>(
+                  {(isSuperAdmin
+                    ? ['Nama Instansi','Singkatan','Nomor Telepon','Latitude','Longitude','Aksi']
+                    : ['Nama Instansi','Singkatan','Nomor Telepon','Latitude','Longitude']
+                  ).map(h=>(
                     <th key={h} style={{background:'#F8FAFC',padding:'12px 16px',fontSize:'11px',fontWeight:'700',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.6px',textAlign:'left',whiteSpace:'nowrap',borderBottom:'1px solid #E2E8F0'}}>{h}</th>
                   ))}
                 </tr>
@@ -274,7 +287,7 @@ export default function Dinas() {
               <tbody>
                 {filteredData.length === 0 ? (
                   <tr>
-                    <td colSpan={6} style={{padding:'32px',textAlign:'center',color:'#64748B',fontSize:'13.5px'}}>Tidak ada data dinas ditemukan.</td>
+                    <td colSpan={isSuperAdmin ? 6 : 5} style={{padding:'32px',textAlign:'center',color:'#64748B',fontSize:'13.5px'}}>Tidak ada data dinas ditemukan.</td>
                   </tr>
                 ) : (
                   filteredData.map(item => (
@@ -284,18 +297,20 @@ export default function Dinas() {
                       <td style={{padding:'14px 16px',fontSize:'13px',color:'#0028B3',fontWeight:'600'}}>{item.nomor_telepon || '-'}</td>
                       <td style={{padding:'14px 16px',fontSize:'13px',color:'#475569'}}>{item.latitude !== null ? item.latitude : '-'}</td>
                       <td style={{padding:'14px 16px',fontSize:'13px',color:'#475569'}}>{item.longitude !== null ? item.longitude : '-'}</td>
-                      <td style={{padding:'14px 16px',whiteSpace:'nowrap'}}>
-                        <div style={{display:'flex',gap:'8px'}}>
-                          <button onClick={()=>handleOpenEdit(item)}
-                            style={{background:'#EFF6FF',border:'none',borderRadius:'6px',color:'#0028B3',padding:'6px 12px',fontSize:'12.5px',fontWeight:'700',cursor:'pointer'}}>
-                            Edit
-                          </button>
-                          <button onClick={()=>handleDelete(item.id)}
-                            style={{background:'#FEF2F2',border:'none',borderRadius:'6px',color:'#B91C1C',padding:'6px 12px',fontSize:'12.5px',fontWeight:'700',cursor:'pointer'}}>
-                            Hapus
-                          </button>
-                        </div>
-                      </td>
+                      {isSuperAdmin && (
+                        <td style={{padding:'14px 16px',whiteSpace:'nowrap'}}>
+                          <div style={{display:'flex',gap:'8px'}}>
+                            <button onClick={()=>handleOpenEdit(item)}
+                              style={{background:'#EFF6FF',border:'none',borderRadius:'6px',color:'#0028B3',padding:'6px 12px',fontSize:'12.5px',fontWeight:'700',cursor:'pointer'}}>
+                              Edit
+                            </button>
+                            <button onClick={()=>handleDelete(item.id)}
+                              style={{background:'#FEF2F2',border:'none',borderRadius:'6px',color:'#B91C1C',padding:'6px 12px',fontSize:'12.5px',fontWeight:'700',cursor:'pointer'}}>
+                              Hapus
+                            </button>
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   ))
                 )}

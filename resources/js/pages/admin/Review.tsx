@@ -14,13 +14,15 @@ function formatDisplayDate(s: any) {
   }
 }
 
+const STATUS_CONFIG: Record<string, { label: string; tabColor: string; bg: string; color: string; border: string }> = {
+  Semua: { label: 'Semua', tabColor: '#0028B3', bg: '#C5DBFF', color: '#0028B3', border: '#75C3FF' },
+  pending: { label: 'Menunggu', tabColor: '#CA8A04', bg: '#FEF9C3', color: '#854D0E', border: '#FACC15' },
+  approved: { label: 'Diterima', tabColor: '#16A34A', bg: '#DCFCE7', color: '#15803D', border: '#86EFAC' },
+  rejected: { label: 'Ditolak', tabColor: '#DC2626', bg: '#FEE2E2', color: '#B91C1C', border: '#FCA5A5' },
+};
+
 function StatusReviewBadge({ status }: { status: string }) {
-  const cfg: Record<string, { bg: string; color: string; border: string; label: string }> = {
-    pending: { bg: '#FEF3C7', color: '#B45309', border: '#F59E0B', label: 'Pending' },
-    approved: { bg: '#DCFCE7', color: '#15803D', border: '#86EFAC', label: 'Approved' },
-    rejected: { bg: '#FEE2E2', color: '#B91C1C', border: '#FCA5A5', label: 'Rejected' },
-  };
-  const s = cfg[status] || cfg.pending;
+  const s = STATUS_CONFIG[status] || STATUS_CONFIG.pending;
   return (
     <span
       style={{
@@ -108,7 +110,8 @@ export default function KelolaReview() {
     setActionLoadingId(id);
     try {
       const res = await prosesReview(id, aksi);
-      showToast(res.message || `Review berhasil di-${aksi}`, 'success');
+      const actionText = aksi === 'approve' ? 'diterima' : 'ditolak';
+      showToast(res.message || `Review berhasil ${actionText}`, 'success');
       fetchData({ status: tab, search, page });
     } catch (err: any) {
       showToast(err.response?.data?.message || 'Gagal memproses review', 'error');
@@ -151,29 +154,32 @@ export default function KelolaReview() {
 
       {/* Filter Tabs */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '18px', flexWrap: 'wrap' }}>
-        {STATUS_TABS.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            style={{
-              padding: '8px 18px',
-              borderRadius: '20px',
-              fontSize: '12.5px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              border: '1.5px solid',
-              transition: 'all 0.2s',
-              fontFamily: 'inherit',
-              background: tab === t ? '#0028B3' : 'white',
-              color: tab === t ? 'white' : '#64748B',
-              borderColor: tab === t ? '#0028B3' : '#E5E7EB',
-              textTransform: 'capitalize',
-              boxShadow: tab === t ? '0 2px 8px rgba(0,40,179,0.2)' : 'none',
-            }}
-          >
-            {t}
-          </button>
-        ))}
+        {STATUS_TABS.map((t) => {
+          const cfg = STATUS_CONFIG[t] || STATUS_CONFIG.Semua;
+          const isActive = tab === t;
+          return (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              style={{
+                padding: '8px 18px',
+                borderRadius: '20px',
+                fontSize: '12.5px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                border: '1.5px solid',
+                transition: 'all 0.2s',
+                fontFamily: 'inherit',
+                background: isActive ? cfg.tabColor : 'white',
+                color: isActive ? 'white' : '#64748B',
+                borderColor: isActive ? cfg.tabColor : '#E5E7EB',
+                boxShadow: isActive ? `0 2px 8px ${cfg.tabColor}40` : 'none',
+              }}
+            >
+              {cfg.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Search Bar */}
@@ -262,13 +268,14 @@ export default function KelolaReview() {
                               fontSize: '12px',
                               fontWeight: '700',
                               cursor: actionLoadingId === d.id ? 'not-allowed' : 'pointer',
-                              background: '#0028B3',
+                              background: '#16A34A',
                               color: 'white',
                               fontFamily: 'inherit',
-                              boxShadow: '0 2px 6px rgba(0,40,179,0.2)',
+                              boxShadow: '0 2px 6px rgba(22,163,74,0.25)',
+                              transition: 'opacity 0.2s',
                             }}
                           >
-                            Approve
+                            {actionLoadingId === d.id ? '...' : 'Terima'}
                           </button>
                         )}
                         {d.status !== 'rejected' && (
@@ -282,12 +289,14 @@ export default function KelolaReview() {
                               fontSize: '12px',
                               fontWeight: '700',
                               cursor: actionLoadingId === d.id ? 'not-allowed' : 'pointer',
-                              background: '#B91C1C',
+                              background: '#DC2626',
                               color: 'white',
                               fontFamily: 'inherit',
+                              boxShadow: '0 2px 6px rgba(220,38,38,0.25)',
+                              transition: 'opacity 0.2s',
                             }}
                           >
-                            Reject
+                            {actionLoadingId === d.id ? '...' : 'Tolak'}
                           </button>
                         )}
                       </div>

@@ -12,22 +12,24 @@ function formatDisplayDate(s: any) {
   catch { return s; }
 }
 
-const STATUS_TABS = ['Semua','Pending','Revisi','Disetujui','Ditolak'];
-const STATUS_COLORS: any = { Revisi:'#6D28D9', Ditolak:'#B91C1C', Disetujui:'#0028B3', Pending:'#B45309', Semua:'#0028B3' };
+const STATUS_TABS = ['Semua','Pending','Revisi','Disetujui','Selesai','Ditolak'];
+const STATUS_COLORS: any = { Revisi:'#CA8A04', Ditolak:'#B91C1C', Disetujui:'#16A34A', Pending:'#475569', Menunggu:'#475569', Selesai:'#065F46', Semua:'#0028B3' };
 const TABLE_HEADERS = ['Kode Permohonan','Instansi/Pemohon','Tgl Kunjungan','Peserta','Status','Aksi'];
 
 const STATUS_BADGE_CFG: any = {
-  Pending: { bg:'#FEF3C7', color:'#B45309', border:'#F59E0B' },
-  Disetujui: { bg:'#DCFCE7', color:'#15803D', border:'#86EFAC' },
-  Ditolak: { bg:'#FEE2E2', color:'#B91C1C', border:'#FCA5A5' },
-  Revisi: { bg:'#F3E8FF', color:'#6D28D9', border:'#D8B4FE' },
+  Pending: { bg: '#F1F5F9', color: '#475569', border: '#CBD5E1', label: 'Menunggu' },
+  Menunggu: { bg: '#F1F5F9', color: '#475569', border: '#CBD5E1', label: 'Menunggu' },
+  Disetujui: { bg: '#DCFCE7', color: '#15803D', border: '#86EFAC', label: 'Disetujui' },
+  Ditolak: { bg: '#FEE2E2', color: '#B91C1C', border: '#FCA5A5', label: 'Ditolak' },
+  Revisi: { bg: '#FEF9C3', color: '#854D0E', border: '#FACC15', label: 'Revisi' },
+  Selesai: { bg: '#D1FAE5', color: '#065F46', border: '#059669', label: 'Selesai' },
 };
 
 const StatusBadge = memo(function StatusBadge({ status }: any) {
   const s: any = STATUS_BADGE_CFG[status] || STATUS_BADGE_CFG.Pending;
   return (
     <span style={{display:'inline-flex',alignItems:'center',padding:'3px 9px',borderRadius:'12px',fontSize:'11px',fontWeight:'700',background:s.bg,color:s.color,border:`1px solid ${s.border}`,whiteSpace:'nowrap'}}>
-      {status}
+      {s.label || status}
     </span>
   );
 });
@@ -185,7 +187,7 @@ export default function KelolaPermohonan() {
               borderColor: tab===t ? (STATUS_COLORS[t]||'#0028B3') : '#E5E7EB',
               boxShadow: tab===t ? '0 2px 8px rgba(0,40,179,0.2)' : 'none',
             }}>
-            {t === 'Pending' ? 'Menunggu Review' : t}
+            {t === 'Pending' ? 'Menunggu' : t}
           </button>
         ))}
       </div>

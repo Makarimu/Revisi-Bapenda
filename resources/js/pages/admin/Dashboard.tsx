@@ -12,23 +12,27 @@ const MONTHS_ID = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep'
 
 // Static style objects (keluar dari komponen agar tidak dibuat ulang setiap render)
 const STATUS_BADGE_CFG: Record<string, any> = {
-  Pending: { bg: '#FEF3C7', color: '#B45309', border: '#F59E0B' },
-  Disetujui: { bg: '#DCFCE7', color: '#15803D', border: '#86EFAC' },
-  Ditolak: { bg: '#FEE2E2', color: '#B91C1C', border: '#FCA5A5' },
-  Revisi: { bg: '#F3E8FF', color: '#6D28D9', border: '#D8B4FE' },
+  Pending: { bg: '#F1F5F9', color: '#475569', border: '#CBD5E1', label: 'Menunggu' },
+  Menunggu: { bg: '#F1F5F9', color: '#475569', border: '#CBD5E1', label: 'Menunggu' },
+  Disetujui: { bg: '#DCFCE7', color: '#15803D', border: '#86EFAC', label: 'Disetujui' },
+  Ditolak: { bg: '#FEE2E2', color: '#B91C1C', border: '#FCA5A5', label: 'Ditolak' },
+  Revisi: { bg: '#FEF9C3', color: '#854D0E', border: '#FACC15', label: 'Revisi' },
+  Selesai: { bg: '#D1FAE5', color: '#065F46', border: '#059669', label: 'Selesai' },
 };
 const STAT_CARD_STYLES: Record<string, any> = {
   total: { bg: '#C5DBFF', color: '#0028B3', valColor: '#001178' },
-  pending: { bg: '#FEF3C7', color: '#B45309', valColor: '#B45309' },
-  revisi: { bg: '#F3E8FF', color: '#6D28D9', valColor: '#6D28D9' },
+  pending: { bg: '#F1F5F9', color: '#475569', valColor: '#475569' },
+  revisi: { bg: '#FEF9C3', color: '#854D0E', valColor: '#854D0E' },
   disetujui: { bg: '#DCFCE7', color: '#15803D', valColor: '#15803D' },
+  selesai: { bg: '#D1FAE5', color: '#065F46', valColor: '#065F46' },
   ditolak: { bg: '#FEE2E2', color: '#B91C1C', valColor: '#B91C1C' },
 };
 const DONUT_SEGMENT_DEFS = [
-  { key: 'Pending', label: 'Pending', color: '#F59E0B' },
-  { key: 'Disetujui', label: 'Disetujui', color: '#0028B3' },
-  { key: 'Ditolak', label: 'Ditolak', color: '#B91C1C' },
-  { key: 'Revisi', label: 'Revisi', color: '#6D28D9' },
+  { key: 'Pending', label: 'Menunggu', color: '#64748B' },
+  { key: 'Disetujui', label: 'Disetujui', color: '#16A34A' },
+  { key: 'Selesai', label: 'Selesai', color: '#065F46' },
+  { key: 'Revisi', label: 'Revisi', color: '#CA8A04' },
+  { key: 'Ditolak', label: 'Ditolak', color: '#DC2626' },
 ];
 
 function formatTanggal(s: any) {
@@ -43,7 +47,7 @@ const StatusBadge = memo(function StatusBadge({ status }: any) {
   const s = STATUS_BADGE_CFG[status] || STATUS_BADGE_CFG.Pending;
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 9px', borderRadius: '12px', fontSize: '11px', fontWeight: '700', background: s.bg, color: s.color, border: `1px solid ${s.border}`, whiteSpace: 'nowrap' }}>
-      {status}
+      {s.label || status}
     </span>
   );
 });
@@ -51,16 +55,16 @@ const StatusBadge = memo(function StatusBadge({ status }: any) {
 const StatCard = memo(function StatCard({ title, value, icon, type, loading }: any) {
   const s = STAT_CARD_STYLES[type] || STAT_CARD_STYLES.total;
   return (
-    <div style={{ background: 'white', borderRadius: '16px', padding: '20px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(228, 231, 237, 0.8)', display: 'flex', alignItems: 'center', gap: '16px', transition: 'transform 0.2s, box-shadow 0.2s' }}>
-      <div style={{ width: '48px', height: '48px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: s.bg, color: s.color, border: '1px solid rgba(117,195,255,0.4)', boxShadow: '0 2px 8px rgba(0,17,120,0.06)' }}>
+    <div style={{ background: 'white', borderRadius: '16px', padding: '18px 16px', boxShadow: 'var(--shadow-sm)', border: '1px solid rgba(228, 231, 237, 0.8)', display: 'flex', alignItems: 'center', gap: '14px', transition: 'transform 0.2s, box-shadow 0.2s' }}>
+      <div style={{ width: '46px', height: '46px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: s.bg, color: s.color, border: `1px solid ${s.color}25`, boxShadow: '0 2px 8px rgba(0,17,120,0.06)' }}>
         {icon}
       </div>
-      <div>
-        <div style={{ fontSize: '11.5px', color: '#64748B', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{title}</div>
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <div style={{ fontSize: '11px', color: '#64748B', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</div>
         {loading ? (
-          <div style={{ height: '28px', background: '#F0F0F0', borderRadius: '6px', width: '50px', marginTop: '6px', animation: 'pulse 1.5s infinite' }} />
+          <div style={{ height: '26px', background: '#F0F0F0', borderRadius: '6px', width: '45px', marginTop: '6px', animation: 'pulse 1.5s infinite' }} />
         ) : (
-          <div style={{ fontSize: '28px', fontWeight: '800', marginTop: '4px', color: s.valColor, letterSpacing: '-0.5px' }}>{value}</div>
+          <div style={{ fontSize: '26px', fontWeight: '800', marginTop: '3px', color: s.valColor, letterSpacing: '-0.5px' }}>{value}</div>
         )}
       </div>
     </div>
@@ -69,25 +73,50 @@ const StatCard = memo(function StatCard({ title, value, icon, type, loading }: a
 
 // Grafik Bar Chart — React.memo agar tidak re-render jika data sama
 const BarChart = memo(function BarChart({ data }: any) {
-  const max = useMemo(() => Math.max(...(data?.map((d: any) => d.total) ?? [0]), 1), [data]);
+  const chartData = useMemo(() => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return MONTHS_ID.map(m => ({ bulan: m, total: 0 }));
+    }
+    return MONTHS_ID.map((m, i) => {
+      const item = data[i] ?? data.find((d: any) => d?.bulan === m);
+      if (typeof item === 'number') {
+        return { bulan: m, total: item };
+      }
+      return {
+        bulan: item?.bulan || m,
+        total: Number(item?.total) || 0,
+      };
+    });
+  }, [data]);
 
-  if (!data || data.length === 0) return (
-    <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94A3B8', fontSize: '13.5px' }}>
-      Belum ada data grafik
-    </div>
-  );
+  const max = useMemo(() => Math.max(...chartData.map(d => d.total), 1), [chartData]);
+
   return (
-    <div style={{ overflowX: 'auto' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '10px', padding: '20px 4px 10px', minWidth: '400px' }}>
-        {data.map((d: any, i: number) => {
-          const h = Math.max(6, Math.round((d.total / max) * 160));
+    <div style={{ overflowX: 'auto', width: '100%' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', padding: '16px 4px 8px', minWidth: '420px', height: '180px' }}>
+        {chartData.map((d: any, i: number) => {
+          const barHeight = d.total > 0 ? Math.max(12, Math.round((d.total / max) * 115)) : 4;
           return (
-            <div key={d.bulan ?? i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', flex: 1, minWidth: '32px' }}>
-              <span style={{ fontSize: '11.5px', fontWeight: '700', color: '#0028B3' }}>{d.total || ''}</span>
-              <div style={{ width: '100%', height: '140px', display: 'flex', alignItems: 'flex-end' }}>
-                <div style={{ width: '100%', height: `${h}px`, background: 'linear-gradient(180deg,#0028B3,#1883FF)', borderRadius: '6px 6px 0 0', transition: 'height 0.4s ease' }} />
+            <div key={d.bulan ?? i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', gap: '6px', flex: 1, minWidth: '28px', height: '100%' }}>
+              <span style={{ fontSize: '11px', fontWeight: '700', color: d.total > 0 ? '#0028B3' : 'transparent', height: '16px', display: 'flex', alignItems: 'center' }}>
+                {d.total > 0 ? d.total : ''}
+              </span>
+              <div style={{ width: '100%', maxWidth: '28px', height: '115px', background: '#F1F5F9', borderRadius: '6px', display: 'flex', alignItems: 'flex-end', overflow: 'hidden', padding: '0 2px' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    height: `${barHeight}px`,
+                    background: d.total > 0 ? 'linear-gradient(180deg, #1883FF 0%, #0028B3 100%)' : '#E2E8F0',
+                    borderRadius: '4px 4px 0 0',
+                    transition: 'height 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    boxShadow: d.total > 0 ? '0 2px 6px rgba(0, 40, 179, 0.25)' : 'none',
+                  }}
+                  title={`${d.bulan}: ${d.total} permohonan`}
+                />
               </div>
-              <span style={{ fontSize: '11px', color: '#64748B', fontWeight: '600' }}>{d.bulan || MONTHS_ID[i] || ''}</span>
+              <span style={{ fontSize: '11px', color: d.total > 0 ? '#0F172A' : '#64748B', fontWeight: d.total > 0 ? '700' : '500' }}>
+                {d.bulan}
+              </span>
             </div>
           );
         })}
@@ -155,7 +184,7 @@ const DonutChart = memo(function DonutChart({ stats }: any) {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ Total: 0, Pending: 0, Revisi: 0, Disetujui: 0, Ditolak: 0 });
+  const [stats, setStats] = useState({ Total: 0, Pending: 0, Revisi: 0, Disetujui: 0, Selesai: 0, Ditolak: 0 });
   const [hariIni, setHariIni] = useState<any[]>([]);
   const [grafik, setGrafik] = useState<any[]>([]);
   const [aktivitas, setAktivitas] = useState<any[]>([]);
@@ -179,6 +208,7 @@ export default function Dashboard() {
         Pending: st.Pending || st.menunggu_review || st.pending || 0,
         Revisi: st.Revisi || st.revisi || 0,
         Disetujui: st.Disetujui || st.disetujui || 0,
+        Selesai: st.Selesai || st.selesai || 0,
         Ditolak: st.Ditolak || st.ditolak || 0,
       });
       setHariIni(resHariIni.data || resHariIni || []);
@@ -218,12 +248,18 @@ export default function Dashboard() {
         }
         .dash-stat-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-          gap: 16px;
+          grid-template-columns: repeat(6, 1fr);
+          gap: 14px;
           margin-bottom: 24px;
         }
-        @media (max-width: 480px) {
-          .dash-stat-grid { grid-template-columns: 1fr 1fr; }
+        @media (max-width: 1200px) {
+          .dash-stat-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 680px) {
+          .dash-stat-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 380px) {
+          .dash-stat-grid { grid-template-columns: 1fr; }
         }
       `}</style>
 
@@ -240,7 +276,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* 5 Stat Cards */}
+      {/* 6 Stat Cards */}
       <div className="dash-stat-grid">
         <StatCard loading={loading} title="Total Permohonan" value={stats.Total} type="total" icon={
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -249,7 +285,7 @@ export default function Dashboard() {
             <line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" />
           </svg>
         } />
-        <StatCard loading={loading} title="Menunggu Review" value={stats.Pending} type="pending" icon={
+        <StatCard loading={loading} title="Menunggu" value={stats.Pending} type="pending" icon={
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
           </svg>
@@ -262,6 +298,12 @@ export default function Dashboard() {
         <StatCard loading={loading} title="Disetujui" value={stats.Disetujui} type="disetujui" icon={
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+        } />
+        <StatCard loading={loading} title="Selesai" value={stats.Selesai} type="selesai" icon={
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+            <path d="m9 12 2 2 4-4" />
           </svg>
         } />
         <StatCard loading={loading} title="Ditolak" value={stats.Ditolak} type="ditolak" icon={
@@ -303,9 +345,9 @@ export default function Dashboard() {
                 {hariIni.length === 0 && <tr><td colSpan={6} style={{ textAlign: 'center', padding: '36px 16px', color: '#64748B', fontSize: '13.5px' }}>Tidak ada kunjungan yang dijadwalkan hari ini.</td></tr>}
                 {hariIni.map((d: any, i: number) => (
                   <tr key={i} style={{ borderTop: '1px solid #F1F5F9' }}>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', fontWeight: '700', color: '#0028B3', fontFamily: 'monospace' }}>{d.kode_permohonan}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '13.5px', color: '#0F172A' }}>{d.instansi}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748B' }}>{d.nama_pic}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '13px', fontWeight: '700', color: '#0028B3', fontFamily: 'monospace' }}>{d.kode || d.kode_permohonan || '-'}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '13.5px', color: '#0F172A', fontWeight: '600' }}>{d.instansi}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#475569' }}>{d.nama_pic || d.nama_ketua_rombongan || '-'}</td>
                     <td style={{ padding: '12px 16px', fontSize: '13px', textAlign: 'center', fontWeight: '600' }}>{d.jumlah_peserta}</td>
                     <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748B' }}>{d.jam_penerimaan || '-'}</td>
                     <td style={{ padding: '12px 16px' }}><StatusBadge status={d.status} /></td>
@@ -376,7 +418,7 @@ export default function Dashboard() {
             {aktivitas.map((a: any, i: number) => (
               <div key={i} style={{ padding: '14px 20px', borderTop: i > 0 ? '1px solid #F1F5F9' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
                 <div>
-                  <div style={{ fontFamily: 'monospace', fontSize: '13px', fontWeight: '700', color: '#0028B3' }}>{a.kode_permohonan}</div>
+                  <div style={{ fontFamily: 'monospace', fontSize: '13px', fontWeight: '700', color: '#0028B3' }}>{a.kode || a.kode_permohonan || '-'}</div>
                   <div style={{ fontSize: '13px', color: '#334155', marginTop: '2px' }}>{a.instansi}</div>
                   <div style={{ fontSize: '11.5px', color: '#94A3B8', marginTop: '2px' }}>{formatTanggal(a.created_at || a.tgl_pengajuan_awal)}</div>
                 </div>

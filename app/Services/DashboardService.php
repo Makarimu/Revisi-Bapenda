@@ -31,13 +31,14 @@ class DashboardService
             'disetujui' => $counts['Disetujui'] ?? 0,
             'ditolak' => $counts['Ditolak'] ?? 0,
             'revisi' => $counts['Revisi'] ?? 0,
+            'selesai' => $counts['Selesai'] ?? 0,
         ];
     }
 
     public function getPermohonanHariIni()
     {
         $query = Permohonan::where('tanggal_kunjungan', Carbon::today()->toDateString())
-            ->whereIn('status', ['Disetujui', 'Pending', 'Revisi'])
+            ->whereIn('status', ['Disetujui', 'Pending', 'Revisi', 'Selesai'])
             ->orderBy('jam_penerimaan', 'asc');
         $this->applyDinasFilter($query);
         return $query->get();
@@ -47,17 +48,27 @@ class DashboardService
     {
         $year = Carbon::now()->year;
         
-        $query = Permohonan::whereYear('tanggal_kunjungan', $year);
+        $query = Permohonan::where(function($q) use ($year) {
+            $q->whereYear('tanggal_kunjungan', $year)
+              ->orWhere(function($sub) use ($year) {
+                  $sub->whereNull('tanggal_kunjungan')->whereYear('created_at', $year);
+              });
+        });
         $this->applyDinasFilter($query);
         $data = $query->get();
         
         $grouped = $data->groupBy(function ($item) {
-            return Carbon::parse($item->tanggal_kunjungan)->format('n'); // 1-12
+            $date = $item->tanggal_kunjungan ? Carbon::parse($item->tanggal_kunjungan) : Carbon::parse($item->created_at);
+            return (int) $date->format('n'); // 1-12
         });
 
+        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         $result = [];
         for ($i = 1; $i <= 12; $i++) {
-            $result[] = isset($grouped[$i]) ? $grouped[$i]->count() : 0;
+            $result[] = [
+                'bulan' => $months[$i - 1],
+                'total' => isset($grouped[$i]) ? $grouped[$i]->count() : 0,
+            ];
         }
 
         return $result;

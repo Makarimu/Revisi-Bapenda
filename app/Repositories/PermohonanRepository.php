@@ -145,7 +145,7 @@ class PermohonanRepository implements PermohonanRepositoryInterface
 
     public function getExportData(array $filters): \Illuminate\Support\Collection
     {
-        $query = Permohonan::query()->orderBy('created_at', 'asc');
+        $query = Permohonan::query()->orderBy('created_at', 'desc');
         $this->applyDinasFilter($query);
 
         // Filter status (array of statuses)

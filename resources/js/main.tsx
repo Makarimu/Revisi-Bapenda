@@ -76,7 +76,7 @@ const AppRoutes = () => {
         <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/admin/permohonan" element={<ProtectedRoute><PermohonanAdmin /></ProtectedRoute>} />
         <Route path="/admin/tanggal-diblokir" element={<ProtectedRoute><TanggalDiblokir /></ProtectedRoute>} />
-        <Route path="/admin/kontak" element={<ProtectedRoute><KontakTelepon /></ProtectedRoute>} />
+        <Route path="/admin/kontak" element={<Navigate to="/admin/dinas" replace />} />
         <Route path="/admin/review" element={<ProtectedRoute><ReviewAdmin /></ProtectedRoute>} />
         <Route path="/admin/dinas" element={<ProtectedRoute><DinasAdmin /></ProtectedRoute>} />
         <Route path="/admin/users" element={<ProtectedRoute><ManajemenAdmin /></ProtectedRoute>} />

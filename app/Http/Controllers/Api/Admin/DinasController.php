@@ -31,6 +31,13 @@ class DinasController extends Controller
     // Store new Dinas
     public function store(Request $request)
     {
+        if ($request->user() && $request->user()->dinas_id !== null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya Super Admin yang memiliki izin untuk menambah master data dinas.'
+            ], 403);
+        }
+
         $validated = $request->validate([
             'nama' => 'required|string|max:200',
             'singkatan' => 'required|string|max:50',
@@ -51,6 +58,13 @@ class DinasController extends Controller
     // Update Dinas
     public function update(Request $request, $id)
     {
+        if ($request->user() && $request->user()->dinas_id !== null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya Super Admin yang memiliki izin untuk mengubah master data dinas.'
+            ], 403);
+        }
+
         $dinas = Dinas::findOrFail($id);
 
         $validated = $request->validate([
@@ -71,8 +85,15 @@ class DinasController extends Controller
     }
 
     // Destroy Dinas
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if ($request->user() && $request->user()->dinas_id !== null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya Super Admin yang memiliki izin untuk menghapus master data dinas.'
+            ], 403);
+        }
+
         $dinas = Dinas::findOrFail($id);
         $dinas->delete();
 

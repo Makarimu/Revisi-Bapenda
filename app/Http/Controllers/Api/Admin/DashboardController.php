@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\DashboardService;
+use App\Http\Resources\PermohonanResource;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -20,8 +21,9 @@ class DashboardController extends Controller
                 'Total'    => $stats['total'],
                 'Pending'  => $stats['pending'],
                 'Disetujui'=> $stats['disetujui'],
-                'Ditolak'  => $stats['ditolak'],
+                'Selesai'  => $stats['selesai'] ?? 0,
                 'Revisi'   => $stats['revisi'],
+                'Ditolak'  => $stats['ditolak'],
             ]
         ]);
     }
@@ -30,7 +32,7 @@ class DashboardController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => $this->dashboardService->getPermohonanHariIni()
+            'data' => PermohonanResource::collection($this->dashboardService->getPermohonanHariIni())
         ]);
     }
 
@@ -46,7 +48,7 @@ class DashboardController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => $this->dashboardService->getAktivitasTerbaru()
+            'data' => PermohonanResource::collection($this->dashboardService->getAktivitasTerbaru())
         ]);
     }
 }

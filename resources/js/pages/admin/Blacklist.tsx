@@ -55,7 +55,7 @@ export default function Blacklist() {
         }
       }
     } catch (err: any) {
-      showToast(err.response?.data?.message || 'Gagal memuat daftar pencegahan.', 'error');
+      showToast(err.response?.data?.message || 'Gagal memuat daftar blokir.', 'error');
     } finally {
       setLoading(false);
     }
@@ -107,14 +107,14 @@ export default function Blacklist() {
       if (editingItem) {
         const res = await api.put(`/admin/blacklist/${editingItem.id}`, formData);
         if (res.data?.success) {
-          showToast(res.data.message || 'Data pencegahan berhasil diperbarui.');
+          showToast(res.data.message || 'Data blokir berhasil diperbarui.');
           setShowModal(false);
           fetchBlacklist();
         }
       } else {
         const res = await api.post('/admin/blacklist', formData);
         if (res.data?.success) {
-          showToast(res.data.message || 'Data pencegahan berhasil ditambahkan.');
+          showToast(res.data.message || 'Data blokir berhasil ditambahkan.');
           setShowModal(false);
           fetchBlacklist();
         }
@@ -130,7 +130,7 @@ export default function Blacklist() {
     try {
       const res = await api.patch(`/admin/blacklist/${item.id}/toggle-status`);
       if (res.data?.success) {
-        showToast(`Status pencegahan untuk "${item.nilai}" berhasil diubah.`);
+        showToast(`Status blokir untuk "${item.nilai}" berhasil diubah.`);
         setItems(prev =>
           prev.map(i => (i.id === item.id ? { ...i, status: i.status === 'aktif' ? 'nonaktif' : 'aktif' } : i))
         );
@@ -148,7 +148,7 @@ export default function Blacklist() {
     try {
       const res = await api.delete(`/admin/blacklist/${id}`);
       if (res.data?.success) {
-        showToast('Data pencegahan berhasil dihapus.');
+        showToast('Data blokir berhasil dihapus.');
         setDeleteConfirmId(null);
         fetchBlacklist();
       }
@@ -194,31 +194,31 @@ export default function Blacklist() {
           style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', minHeight: '42px', border: 'none', borderRadius: '8px', background: '#0028B3', color: 'white', cursor: 'pointer', fontSize: '13px', fontWeight: '700', boxShadow: '0 2px 8px rgba(0,40,179,0.25)' }}
         >
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-          Tambah Pencegahan
+          + Tambah Blokir
         </button>
       </div>
 
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
         <div className="bl-card" style={{ borderLeft: '4px solid #0028B3' }}>
-          <div style={{ fontSize: '12px', fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Data</div>
+          <div style={{ fontSize: '12px', fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Blokir</div>
           <div style={{ fontSize: '26px', fontWeight: '800', color: '#001178', marginTop: '4px' }}>{stats.total}</div>
-          <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '2px' }}>Pencegahan terdaftar</div>
+          <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '2px' }}>Data terblokir</div>
         </div>
         <div className="bl-card" style={{ borderLeft: '4px solid #4338CA' }}>
           <div style={{ fontSize: '12px', fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email Terblokir</div>
           <div style={{ fontSize: '26px', fontWeight: '800', color: '#4338CA', marginTop: '4px' }}>{stats.email}</div>
-          <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '2px' }}>Alamat email dicegah</div>
+          <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '2px' }}>Alamat email diblokir</div>
         </div>
         <div className="bl-card" style={{ borderLeft: '4px solid #86198F' }}>
           <div style={{ fontSize: '12px', fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Instansi Terblokir</div>
           <div style={{ fontSize: '26px', fontWeight: '800', color: '#86198F', marginTop: '4px' }}>{stats.instansi}</div>
-          <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '2px' }}>Nama instansi dicegah</div>
+          <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '2px' }}>Nama instansi diblokir</div>
         </div>
         <div className="bl-card" style={{ borderLeft: '4px solid #16A34A' }}>
           <div style={{ fontSize: '12px', fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status Aktif</div>
           <div style={{ fontSize: '26px', fontWeight: '800', color: '#16A34A', marginTop: '4px' }}>{stats.aktif}</div>
-          <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '2px' }}>Sedang diberlakukan</div>
+          <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '2px' }}>Sedang diblokir</div>
         </div>
       </div>
 
@@ -228,7 +228,7 @@ export default function Blacklist() {
           <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
         </svg>
         <p style={{ fontSize: '13px', color: '#001178', lineHeight: '1.5', margin: 0 }}>
-          Email atau instansi yang berstatus <strong>Aktif</strong> akan otomatis ditolak oleh sistem ketika mencoba mengisi formulir permohonan kunjungan kerja maupun pengajuan revisi.
+          Email atau instansi yang berstatus <strong>Aktif</strong> akan otomatis diblokir oleh sistem ketika mencoba mengisi formulir permohonan kunjungan kerja maupun pengajuan revisi.
         </p>
       </div>
 
@@ -240,7 +240,7 @@ export default function Blacklist() {
           </svg>
           <input
             type="text"
-            placeholder="Cari email, instansi, atau alasan..."
+            placeholder="Cari email, instansi, atau alasan blokir..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             style={{ width: '100%', padding: '10px 14px 10px 36px', borderRadius: '8px', border: '1px solid #E2E8F0', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
@@ -278,8 +278,8 @@ export default function Blacklist() {
               <tr style={{ background: '#F8FAFC', borderBottom: '1px solid #E2E8F0', color: '#64748B', fontWeight: '700', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 <th style={{ padding: '14px 18px', width: '50px' }}>No</th>
                 <th style={{ padding: '14px 18px', width: '120px' }}>Tipe</th>
-                <th style={{ padding: '14px 18px' }}>Email / Instansi Dicegah</th>
-                <th style={{ padding: '14px 18px' }}>Alasan Pencegahan</th>
+                <th style={{ padding: '14px 18px' }}>Email / Instansi yang Diblokir</th>
+                <th style={{ padding: '14px 18px' }}>Alasan Blokir</th>
                 <th style={{ padding: '14px 18px', width: '110px' }}>Status</th>
                 <th style={{ padding: '14px 18px', width: '150px' }}>Oleh / Tanggal</th>
                 <th style={{ padding: '14px 18px', width: '110px', textAlign: 'center' }}>Aksi</th>
@@ -290,16 +290,16 @@ export default function Blacklist() {
                 <tr>
                   <td colSpan={7} style={{ padding: '40px', textAlign: 'center', color: '#94A3B8' }}>
                     <div style={{ width: '28px', height: '28px', border: '3px solid #C5DBFF', borderTopColor: '#0028B3', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 10px' }} />
-                    Memuat data pencegahan...
+                    Memuat data blokir...
                   </td>
                 </tr>
               ) : items.length === 0 ? (
                 <tr>
                   <td colSpan={7} style={{ padding: '40px', textAlign: 'center', color: '#64748B' }}>
                     <div style={{ fontSize: '32px', marginBottom: '8px' }}>🛡️</div>
-                    <div style={{ fontWeight: '700', fontSize: '15px', color: '#1E293B' }}>Belum ada data pencegahan</div>
+                    <div style={{ fontWeight: '700', fontSize: '15px', color: '#1E293B' }}>Belum ada data blokir</div>
                     <div style={{ fontSize: '13px', color: '#94A3B8', marginTop: '4px' }}>
-                      {search ? 'Tidak ada data yang cocok dengan pencarian Anda.' : 'Tambahkan email atau instansi ke daftar pencegahan untuk memblokir spam.'}
+                      {search ? 'Tidak ada data yang cocok dengan pencarian Anda.' : 'Tambahkan email atau instansi ke daftar blokir untuk memblokir spam.'}
                     </div>
                   </td>
                 </tr>
@@ -379,7 +379,7 @@ export default function Blacklist() {
           <div style={{ background: 'white', borderRadius: '16px', maxWidth: '480px', width: '100%', padding: '28px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', border: '1px solid #E2E8F0' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
               <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#001178', margin: 0 }}>
-                {editingItem ? 'Edit Data Pencegahan' : 'Tambah Data Pencegahan'}
+                {editingItem ? 'Edit Data Blokir' : 'Tambah Data Blokir'}
               </h3>
               <button
                 onClick={() => setShowModal(false)}
@@ -393,7 +393,7 @@ export default function Blacklist() {
               {/* Pilihan Tipe */}
               <div style={{ marginBottom: '16px' }}>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>
-                  Tipe Pencegahan <span style={{ color: '#DC2626' }}>*</span>
+                  Tipe Blokir <span style={{ color: '#DC2626' }}>*</span>
                 </label>
                 <div style={{ display: 'flex', gap: '12px' }}>
                   <label style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '8px', border: `1.5px solid ${formData.tipe === 'email' ? '#0028B3' : '#E2E8F0'}`, background: formData.tipe === 'email' ? '#EEF2FF' : 'white', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>
@@ -437,7 +437,7 @@ export default function Blacklist() {
               {/* Input Alasan */}
               <div style={{ marginBottom: '16px' }}>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>
-                  Alasan Pencegahan / Catatan
+                  Alasan Blokir / Catatan
                 </label>
                 <textarea
                   rows={3}
@@ -451,7 +451,7 @@ export default function Blacklist() {
               {/* Status Aktif Switch */}
               <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', background: '#F8FAFC', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
                 <div>
-                  <div style={{ fontSize: '13px', fontWeight: '700', color: '#1E293B' }}>Status Pencegahan</div>
+                  <div style={{ fontSize: '13px', fontWeight: '700', color: '#1E293B' }}>Status Blokir</div>
                   <div style={{ fontSize: '12px', color: '#64748B' }}>Aktifkan untuk langsung memblokir pengajuan</div>
                 </div>
                 <button
@@ -477,7 +477,7 @@ export default function Blacklist() {
                   disabled={submitting}
                   style={{ padding: '10px 22px', borderRadius: '8px', border: 'none', background: '#0028B3', color: 'white', fontSize: '13px', fontWeight: '700', cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1 }}
                 >
-                  {submitting ? 'Menyimpan...' : editingItem ? 'Simpan Perubahan' : 'Tambahkan'}
+                  {submitting ? 'Menyimpan...' : editingItem ? 'Simpan Perubahan' : 'Tambah Blokir'}
                 </button>
               </div>
             </form>
@@ -490,9 +490,9 @@ export default function Blacklist() {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,17,120,0.45)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '16px' }}>
           <div style={{ background: 'white', borderRadius: '16px', maxWidth: '400px', width: '100%', padding: '24px', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
             <div style={{ fontSize: '40px', marginBottom: '12px' }}>🗑️</div>
-            <h3 style={{ fontSize: '17px', fontWeight: '800', color: '#0F172A', margin: '0 0 8px 0' }}>Hapus Data Pencegahan?</h3>
+            <h3 style={{ fontSize: '17px', fontWeight: '800', color: '#0F172A', margin: '0 0 8px 0' }}>Hapus Data Blokir?</h3>
             <p style={{ fontSize: '13px', color: '#64748B', lineHeight: '1.5', margin: '0 0 20px 0' }}>
-              Data ini akan dihapus dari daftar blacklist. Email atau instansi terkait akan kembali dapat mengajukan permohonan kunjungan.
+              Data ini akan dihapus dari daftar blokir. Email atau instansi terkait akan kembali dapat mengajukan permohonan kunjungan.
             </p>
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
               <button
