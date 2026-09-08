@@ -85,6 +85,16 @@ export default function ManajemenAdmin() {
     fetchDinasOptions();
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showForm && !submitting) {
+        setShowForm(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showForm, submitting]);
+
   const filteredData = useMemo(() => {
     const query = search.toLowerCase();
     return data.filter(admin => 
@@ -217,58 +227,126 @@ export default function ManajemenAdmin() {
         />
       </div>
 
-      {/* Form Tambah/Edit */}
+      {/* Modal Popup Tambah/Edit Admin */}
       {showForm && (
-        <div style={{background:'white',borderRadius:'16px',boxShadow:'0 4px 20px rgba(0,0,0,0.08)',border:'1.5px solid #0028B3',overflow:'hidden',marginBottom:'20px'}}>
-          <div style={{padding:'16px 20px',background:'#0028B3',color:'white',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-            <div style={{fontSize:'15px',fontWeight:'700'}}>{editId ? 'Edit Akun Admin' : 'Buat Akun Admin Baru'}</div>
-            <button onClick={()=>setShowForm(false)} style={{background:'rgba(255,255,255,0.15)',border:'none',color:'white',width:'30px',height:'30px',borderRadius:'8px',cursor:'pointer',fontSize:'16px',display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.55)',
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: '20px',
+            animation: 'fadeIn 0.2s ease-out',
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !submitting) {
+              setShowForm(false);
+            }
+          }}
+        >
+          <div
+            style={{
+              background: 'white',
+              borderRadius: '16px',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+              width: '100%',
+              maxWidth: '560px',
+              overflow: 'hidden',
+              animation: 'scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+          >
+            <div style={{ padding: '16px 20px', background: '#0028B3', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ fontSize: '16px', fontWeight: '700' }}>
+                {editId ? 'Edit Akun Admin' : 'Buat Akun Admin Baru'}
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: 'white', width: '32px', height: '32px', borderRadius: '8px', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                ✕
+              </button>
+            </div>
+            <form onSubmit={handleSubmit} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '12.5px', fontWeight: '700', color: '#475569' }}>Nama Lengkap *</label>
+                <input
+                  type="text"
+                  value={form.nama}
+                  onChange={handleFormChange('nama')}
+                  placeholder="Nama lengkap admin..."
+                  required
+                  style={{ padding: '10px 14px', borderRadius: '8px', border: errors.nama ? '1px solid #B91C1C' : '1px solid #CBD5E1', fontSize: '13.5px', fontFamily: 'inherit', outline: 'none' }}
+                />
+                {errors.nama && <span style={{ fontSize: '12px', color: '#B91C1C' }}>{errors.nama[0]}</span>}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '12.5px', fontWeight: '700', color: '#475569' }}>Username *</label>
+                <input
+                  type="text"
+                  value={form.username}
+                  onChange={handleFormChange('username')}
+                  placeholder="Username untuk login..."
+                  required
+                  style={{ padding: '10px 14px', borderRadius: '8px', border: errors.username ? '1px solid #B91C1C' : '1px solid #CBD5E1', fontSize: '13.5px', fontFamily: 'inherit', outline: 'none' }}
+                />
+                {errors.username && <span style={{ fontSize: '12px', color: '#B91C1C' }}>{errors.username[0]}</span>}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '12.5px', fontWeight: '700', color: '#475569' }}>
+                  Password {editId ? <span style={{ fontWeight: 'normal', color: '#94A3B8' }}>(Biarkan kosong jika tidak diubah)</span> : '*'}
+                </label>
+                <input
+                  type="password"
+                  value={form.password}
+                  onChange={handleFormChange('password')}
+                  placeholder="Min. 6 karakter..."
+                  required={!editId}
+                  style={{ padding: '10px 14px', borderRadius: '8px', border: errors.password ? '1px solid #B91C1C' : '1px solid #CBD5E1', fontSize: '13.5px', fontFamily: 'inherit', outline: 'none' }}
+                />
+                {errors.password && <span style={{ fontSize: '12px', color: '#B91C1C' }}>{errors.password[0]}</span>}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '12.5px', fontWeight: '700', color: '#475569' }}>Hak Akses Instansi (Dinas)</label>
+                <select
+                  value={form.dinas_id}
+                  onChange={handleFormChange('dinas_id')}
+                  style={{ padding: '10px 14px', borderRadius: '8px', border: errors.dinas_id ? '1px solid #B91C1C' : '1px solid #CBD5E1', fontSize: '13.5px', fontFamily: 'inherit', outline: 'none', background: 'white' }}
+                >
+                  <option value="">Super Admin (Akses Semua Instansi)</option>
+                  {dinasOptions.map(d => (
+                    <option key={d.id} value={d.id}>{d.nama} ({d.singkatan})</option>
+                  ))}
+                </select>
+                {errors.dinas_id && <span style={{ fontSize: '12px', color: '#B91C1C' }}>{errors.dinas_id[0]}</span>}
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '8px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  style={{ background: 'white', border: '1px solid #CBD5E1', borderRadius: '8px', padding: '10px 18px', minHeight: '42px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  style={{ background: submitting ? '#94A3B8' : '#0028B3', color: 'white', border: 'none', borderRadius: '8px', padding: '10px 24px', minHeight: '42px', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 2px 8px rgba(0,40,179,0.2)' }}
+                >
+                  {submitting ? 'Menyimpan...' : (editId ? 'Simpan Perubahan' : 'Buat Akun')}
+                </button>
+              </div>
+            </form>
           </div>
-          <form onSubmit={handleSubmit} className="user-form-grid" style={{padding:'20px'}}>
-            <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
-              <label style={{fontSize:'12.5px',fontWeight:'700',color:'#475569'}}>Nama Lengkap</label>
-              <input type="text" value={form.nama} onChange={handleFormChange('nama')} placeholder="Nama lengkap admin..." required
-                style={{padding:'10px 14px',borderRadius:'8px',border:'1px solid #CBD5E1',fontSize:'13.5px',fontFamily:'inherit',outline:'none'}} />
-              {errors.nama && <span style={{fontSize:'12px',color:'#B91C1C'}}>{errors.nama[0]}</span>}
-            </div>
-
-            <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
-              <label style={{fontSize:'12.5px',fontWeight:'700',color:'#475569'}}>Username</label>
-              <input type="text" value={form.username} onChange={handleFormChange('username')} placeholder="Username untuk login..." required
-                style={{padding:'10px 14px',borderRadius:'8px',border:'1px solid #CBD5E1',fontSize:'13.5px',fontFamily:'inherit',outline:'none'}} />
-              {errors.username && <span style={{fontSize:'12px',color:'#B91C1C'}}>{errors.username[0]}</span>}
-            </div>
-
-            <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
-              <label style={{fontSize:'12.5px',fontWeight:'700',color:'#475569'}}>Password {editId && <span style={{fontWeight:'normal',color:'#94A3B8'}}>(Biarkan kosong jika tidak diubah)</span>}</label>
-              <input type="password" value={form.password} onChange={handleFormChange('password')} placeholder="Min. 6 karakter..." required={!editId}
-                style={{padding:'10px 14px',borderRadius:'8px',border:'1px solid #CBD5E1',fontSize:'13.5px',fontFamily:'inherit',outline:'none'}} />
-              {errors.password && <span style={{fontSize:'12px',color:'#B91C1C'}}>{errors.password[0]}</span>}
-            </div>
-
-            <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
-              <label style={{fontSize:'12.5px',fontWeight:'700',color:'#475569'}}>Hak Akses Instansi (Dinas)</label>
-              <select value={form.dinas_id} onChange={handleFormChange('dinas_id')}
-                style={{padding:'10px 14px',borderRadius:'8px',border:'1px solid #CBD5E1',fontSize:'13.5px',fontFamily:'inherit',outline:'none',background:'white'}}>
-                <option value="">Super Admin (Akses Semua Instansi)</option>
-                {dinasOptions.map(d => (
-                  <option key={d.id} value={d.id}>{d.nama} ({d.singkatan})</option>
-                ))}
-              </select>
-              {errors.dinas_id && <span style={{fontSize:'12px',color:'#B91C1C'}}>{errors.dinas_id[0]}</span>}
-            </div>
-
-            <div style={{gridColumn:'1/-1',display:'flex',gap:'10px',justifyContent:'flex-end',marginTop:'4px'}}>
-              <button type="button" onClick={()=>setShowForm(false)}
-                style={{background:'white',border:'1px solid #CBD5E1',borderRadius:'8px',padding:'10px 18px',minHeight:'42px',fontSize:'13px',fontWeight:'600',cursor:'pointer',fontFamily:'inherit'}}>
-                Batal
-              </button>
-              <button type="submit" disabled={submitting}
-                style={{background:submitting?'#94A3B8':'#0028B3',color:'white',border:'none',borderRadius:'8px',padding:'10px 24px',minHeight:'42px',fontSize:'13px',fontWeight:'700',cursor:'pointer',fontFamily:'inherit',boxShadow:'0 2px 8px rgba(0,40,179,0.2)'}}>
-                {submitting?'Menyimpan...':(editId?'Simpan Perubahan':'Buat Akun')}
-              </button>
-            </div>
-          </form>
         </div>
       )}
 

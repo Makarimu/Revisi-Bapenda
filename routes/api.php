@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\Admin\PermohonanAdminController;
 use App\Http\Controllers\Api\Admin\ReviewAdminController;
 use App\Http\Controllers\Api\Admin\RingkasanController;
 use App\Http\Controllers\Api\Admin\TanggalDiblokirController;
+use App\Http\Controllers\Api\Admin\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,9 @@ Route::post('/auth/login', [AuthController::class, 'login'])->middleware('thrott
 Route::middleware('throttle:public-api')->group(function () {
     // Master Data Dinas
     Route::get('/dinas', [DinasController::class, 'listPublic']);
+
+    // Public Settings / Pengaturan Topbar
+    Route::get('/settings/public', [SettingController::class, 'getPublicSettings']);
 
     // Permohonan Kunjungan Kerja
     Route::prefix('permohonan')->group(function () {
@@ -132,5 +136,9 @@ Route::middleware(['auth:sanctum', 'throttle:admin-api'])->group(function () {
         Route::put('/blacklist/{id}', [BlacklistController::class, 'update']);
         Route::patch('/blacklist/{id}/toggle-status', [BlacklistController::class, 'toggleStatus']);
         Route::delete('/blacklist/{id}', [BlacklistController::class, 'destroy']);
+
+        // Pengaturan Sistem / Header Publik
+        Route::get('/settings', [SettingController::class, 'getAdminSettings']);
+        Route::put('/settings', [SettingController::class, 'updateSettings']);
     });
 });

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import { getMe, logout as apiLogout } from '../api/admin/auth';
+import { getBasePath } from '../utils/url';
 
 export const AuthContext = createContext<any>(null);
 

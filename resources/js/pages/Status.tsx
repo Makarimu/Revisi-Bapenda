@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, memo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import PublicLayout from '../layouts/PublicLayout';
 import api from '../services/api';
+import SearchableDinasSelect from '../components/SearchableDinasSelect';
 
 const MONTHS_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
@@ -554,24 +555,17 @@ function RevisiDialog({ open, data, onClose, onSubmit }: any) {
           <div className="form-grid full" style={{ marginTop: '14px' }}>
             <div className="form-group">
               <label>Dinas/Instansi yang Dituju *</label>
-              <select
+              <SearchableDinasSelect
+                dinasList={dinasList}
                 value={form.dinasId || ''}
-                onChange={e => {
-                  const selectedId = e.target.value;
-                  const selectedDinas = dinasList.find(d => d.id.toString() === selectedId);
+                onChange={(selectedId, selectedDinas) => {
                   setForm((f: any) => ({
                     ...f,
                     dinasId: selectedId,
                     dinasTujuan: selectedDinas ? selectedDinas.nama : ''
                   }));
                 }}
-                style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '13.5px', fontFamily: 'inherit', outline: 'none', background: 'white' }}
-              >
-                <option value="">-- Pilih Dinas Tujuan --</option>
-                {dinasList.map((d: any) => (
-                  <option key={d.id} value={d.id}>{d.nama} ({d.singkatan})</option>
-                ))}
-              </select>
+              />
               {form.dinasId && (
                 <div style={{ marginTop: '6px', fontSize: '12px', color: '#0028B3', fontWeight: '600' }}>
                   No. Telp Dinas: {dinasList.find(d => d.id.toString() === form.dinasId)?.nomor_telepon || '-'}
@@ -779,20 +773,26 @@ export default function Status() {
         .btn-revisi-kirim { flex:1; background:#0028B3; color:white; border:none; border-radius:8px; padding:11px; font-size:13.5px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; }
         .btn-revisi-kirim:hover { background:#001178; }
         .btn-revisi-kirim:disabled { background:#aaa; cursor:not-allowed; }
-        .stepper { display:flex; align-items:flex-start; margin-bottom:32px; }
+        .stepper-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 8px; margin-bottom: 24px; scrollbar-width: none; }
+        .stepper-wrap::-webkit-scrollbar { display: none; }
+        .stepper { display:flex; align-items:flex-start; min-width: 540px; }
         .stepper-item { display:flex; flex-direction:column; align-items:center; text-align:center; flex:1; min-width:0; }
-        .stepper-line { flex:0 0 40px; height:2px; background:#E4E7ED; margin-top:17px; }
+        .stepper-line { flex:0 0 36px; height:2px; background:#E4E7ED; margin-top:17px; }
         .stepper-line.done { background:#1883FF; }
-        .stepper-title { font-size:13px; font-weight:700; margin-top:10px; color:#0F172A; }
-        .stepper-date { font-size:11.5px; color:#64748B; margin-top:3px; }
+        .stepper-title { font-size:12.5px; font-weight:700; margin-top:10px; color:#0F172A; }
+        .stepper-date { font-size:11px; color:#64748B; margin-top:3px; }
+        .status-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 16px; margin-bottom: 24px; }
+        @media (max-width: 600px) {
+          .status-detail-grid { grid-template-columns: 1fr; gap: 14px; }
+        }
         @media (max-width:560px) {
           .stepper-title { font-size:11px; } .stepper-date { font-size:9.5px; }
-          .stepper-line { flex-basis:18px; margin-top:14px; }
+          .stepper-line { flex-basis:16px; margin-top:14px; }
         }
       `}</style>
 
       <div style={{ background: '#F6F7FA', minHeight: 'calc(100vh - 80px)' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px 64px' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '32px 14px 64px' }}>
 
           {/* Search Card */}
           <div className="card">
@@ -804,19 +804,19 @@ export default function Status() {
             </div>
             <div className="card-body" style={{ padding: '24px' }}>
               <p style={{ fontSize: '13.5px', color: '#64748B', marginBottom: '16px', lineHeight: '1.6' }}>Masukkan kode permohonan yang Anda terima melalui email.</p>
-              <div style={{ display: 'flex', gap: '10px', marginBottom: result ? '24px' : 0 }}>
+              <div style={{ display: 'flex', gap: '10px', marginBottom: result ? '24px' : 0, flexWrap: 'wrap' }}>
                 <input
                   type="text"
                   value={kodeInput}
                   onChange={e => setKodeInput(e.target.value.toUpperCase())}
                   onKeyDown={e => e.key === 'Enter' && handleCek()}
                   placeholder="Contoh: KUNKER-20260808-84A12"
-                  style={{ flex: 1, padding: '11px 14px', minHeight: '44px', border: '1px solid #D9DEE5', borderRadius: '8px', fontSize: '13.5px', fontFamily: 'inherit', textTransform: 'uppercase', letterSpacing: '1px', color: '#0F172A' }}
+                  style={{ flex: '1 1 200px', minWidth: 0, padding: '11px 14px', minHeight: '44px', border: '1px solid #D9DEE5', borderRadius: '8px', fontSize: '13.5px', fontFamily: 'inherit', textTransform: 'uppercase', letterSpacing: '1px', color: '#0F172A', boxSizing: 'border-box' }}
                 />
                 <button
                   onClick={() => handleCek()}
                   className="btn btn-primary"
-                  style={{ padding: '11px 24px', minHeight: '44px', border: 'none', borderRadius: '8px', fontSize: '13.5px', fontWeight: '700', cursor: 'pointer', background: '#0028B3', color: 'white', fontFamily: 'inherit', width: 'auto' }}
+                  style={{ padding: '11px 24px', minHeight: '44px', border: 'none', borderRadius: '8px', fontSize: '13.5px', fontWeight: '700', cursor: 'pointer', background: '#0028B3', color: 'white', fontFamily: 'inherit', flex: '0 0 auto' }}
                 >
                   {loading ? '...' : 'Cek'}
                 </button>
@@ -866,124 +866,126 @@ export default function Status() {
 
                   {/* Stepper (Alur 6 Langkah Dinamis) */}
                   <p style={{ fontSize: '15px', fontWeight: '700', color: '#111827', marginBottom: '18px' }}>Progres Permohonan</p>
-                  <div className="stepper">
-                    {/* Step 1: Diajukan */}
-                    <div className="stepper-item">
-                      <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: '#0028B3', color: 'white' }}>
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 5 5L19 7" /></svg>
+                  <div className="stepper-wrap">
+                    <div className="stepper">
+                      {/* Step 1: Diajukan */}
+                      <div className="stepper-item">
+                        <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: '#0028B3', color: 'white' }}>
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 5 5L19 7" /></svg>
+                        </div>
+                        <div className="stepper-title">Diajukan</div>
+                        <div className="stepper-date">{result.tglPengajuanAwal ? formatDateTime(result.tglPengajuanAwal) : '-'}</div>
                       </div>
-                      <div className="stepper-title">Diajukan</div>
-                      <div className="stepper-date">{result.tglPengajuanAwal ? formatDateTime(result.tglPengajuanAwal) : '-'}</div>
+                      <div className={`stepper-line${result.status !== 'Pending' ? ' done' : ''}`} />
+
+                      {/* Step 2: Diproses / Review */}
+                      {(() => {
+                        const isPending = result.status === 'Pending';
+                        const isRevisi = result.status === 'Revisi';
+                        const bg = isPending ? '#B45309' : isRevisi ? '#6D28D9' : '#0028B3';
+                        const title = isPending ? 'Menunggu Review' : isRevisi ? 'Revisi Dikirim' : 'Diproses';
+                        const date = result.tglDiproses ? formatDateTime(result.tglDiproses) : result.tglRevisi ? formatDateTime(result.tglRevisi) : 'Dalam antrian review';
+                        return (
+                          <div className="stepper-item">
+                            <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: bg, color: '#fff' }}>
+                              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 6v6l4 2" /></svg>
+                            </div>
+                            <div className="stepper-title">{title}</div>
+                            <div className="stepper-date">{date}</div>
+                          </div>
+                        );
+                      })()}
+                      <div className={`stepper-line${['Disetujui', 'Ditolak', 'Selesai', 'Ringkasan_Terkirim'].includes(result.status) ? ' done' : ''}`} />
+
+                      {/* Step 3: Keputusan (Disetujui / Ditolak) */}
+                      {(() => {
+                        const isApproved = ['Disetujui', 'Selesai', 'Ringkasan_Terkirim'].includes(result.status);
+                        const isRejected = result.status === 'Ditolak';
+                        const bg = isApproved ? '#0028B3' : isRejected ? '#B91C1C' : '#E4E7ED';
+                        const title = isApproved ? 'Disetujui' : isRejected ? 'Ditolak' : 'Keputusan Final';
+                        const date = result.tglDisetujui ? formatDateTime(result.tglDisetujui) : result.tglDiproses ? formatDateTime(result.tglDiproses) : 'Belum diproses';
+                        return (
+                          <div className="stepper-item">
+                            <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: bg, color: '#fff' }}>
+                              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                {isApproved ? <path d="m5 12 5 5L19 7" /> : isRejected ? <><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6M9 9l6 6" /></> : <path d="M5 12h14" />}
+                              </svg>
+                            </div>
+                            <div className="stepper-title">{title}</div>
+                            <div className="stepper-date">{date}</div>
+                          </div>
+                        );
+                      })()}
+                      <div className={`stepper-line${['Selesai', 'Ringkasan_Terkirim'].includes(result.status) ? ' done' : ''}`} />
+
+                      {/* Step 4: Selesai Kunjungan */}
+                      {(() => {
+                        const isFinished = ['Selesai', 'Ringkasan_Terkirim'].includes(result.status);
+                        const isWaitingVisit = result.status === 'Disetujui';
+                        const bg = isFinished ? '#0028B3' : isWaitingVisit ? '#B45309' : '#E4E7ED';
+                        const title = isFinished ? 'Selesai' : isWaitingVisit ? 'Menunggu Kunjungan' : 'Pelaksanaan';
+                        const date = result.tglSelesai ? formatDateTime(result.tglSelesai) : isWaitingVisit ? 'Sesuai jadwal' : 'Belum dilaksanakan';
+                        return (
+                          <div className="stepper-item">
+                            <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: bg, color: '#fff' }}>
+                              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                {isFinished ? <path d="m5 12 5 5L19 7" /> : <path d="M5 12h14" />}
+                              </svg>
+                            </div>
+                            <div className="stepper-title">{title}</div>
+                            <div className="stepper-date">{date}</div>
+                          </div>
+                        );
+                      })()}
+                      <div className={`stepper-line${(['Selesai', 'Ringkasan_Terkirim'].includes(result.status) && result.hasReview) ? ' done' : ''}`} />
+
+                      {/* Step 5: Rating & Review */}
+                      {(() => {
+                        const hasReview = result.hasReview;
+                        const isSelesaiStage = ['Selesai', 'Ringkasan_Terkirim'].includes(result.status);
+                        const bg = hasReview ? '#0028B3' : isSelesaiStage ? '#B45309' : '#E4E7ED';
+                        const title = hasReview ? 'Rating & Review' : isSelesaiStage ? 'Menunggu Review' : 'Rating & Review';
+                        const date = result.tglReview ? formatDateTime(result.tglReview) : hasReview ? 'Selesai' : isSelesaiStage ? 'Belum diisi' : 'Belum tersedia';
+                        return (
+                          <div className="stepper-item">
+                            <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: bg, color: '#fff' }}>
+                              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                {hasReview ? <path d="m5 12 5 5L19 7" /> : <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />}
+                              </svg>
+                            </div>
+                            <div className="stepper-title">{title}</div>
+                            <div className="stepper-date">{date}</div>
+                          </div>
+                        );
+                      })()}
+                      <div className={`stepper-line${result.pdf_ready ? ' done' : ''}`} />
+
+                      {/* Step 6: Ringkasan Hasil Kunjungan */}
+                      {(() => {
+                        // pdf_ready adalah satu-satunya gate — true hanya jika PDF sudah diupload
+                        const isReady = !!(result.pdf_ready);
+                        const isWaitingSummary = result.hasReview && ['Selesai', 'Ringkasan_Terkirim'].includes(result.status) && !isReady;
+                        const bg = isReady ? '#0028B3' : isWaitingSummary ? '#B45309' : '#E4E7ED';
+                        const title = isReady ? 'Ringkasan Tersedia' : isWaitingSummary ? 'Menunggu Ringkasan' : 'Ringkasan PDF';
+                        const date = result.ringkasanSentAt ? formatDateTime(result.ringkasanSentAt) : isReady ? 'Dokumen tersedia' : isWaitingSummary ? 'Dalam proses admin' : 'Belum tersedia';
+                        return (
+                          <div className="stepper-item">
+                            <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: bg, color: '#fff' }}>
+                              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                {isReady ? <path d="m5 12 5 5L19 7" /> : <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />}
+                              </svg>
+                            </div>
+                            <div className="stepper-title">{title}</div>
+                            <div className="stepper-date">{date}</div>
+                          </div>
+                        );
+                      })()}
                     </div>
-                    <div className={`stepper-line${result.status !== 'Pending' ? ' done' : ''}`} />
-
-                    {/* Step 2: Diproses / Review */}
-                    {(() => {
-                      const isPending = result.status === 'Pending';
-                      const isRevisi = result.status === 'Revisi';
-                      const bg = isPending ? '#B45309' : isRevisi ? '#6D28D9' : '#0028B3';
-                      const title = isPending ? 'Menunggu Review' : isRevisi ? 'Revisi Dikirim' : 'Diproses';
-                      const date = result.tglDiproses ? formatDateTime(result.tglDiproses) : result.tglRevisi ? formatDateTime(result.tglRevisi) : 'Dalam antrian review';
-                      return (
-                        <div className="stepper-item">
-                          <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: bg, color: '#fff' }}>
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 6v6l4 2" /></svg>
-                          </div>
-                          <div className="stepper-title">{title}</div>
-                          <div className="stepper-date">{date}</div>
-                        </div>
-                      );
-                    })()}
-                    <div className={`stepper-line${['Disetujui', 'Ditolak', 'Selesai', 'Ringkasan_Terkirim'].includes(result.status) ? ' done' : ''}`} />
-
-                    {/* Step 3: Keputusan (Disetujui / Ditolak) */}
-                    {(() => {
-                      const isApproved = ['Disetujui', 'Selesai', 'Ringkasan_Terkirim'].includes(result.status);
-                      const isRejected = result.status === 'Ditolak';
-                      const bg = isApproved ? '#0028B3' : isRejected ? '#B91C1C' : '#E4E7ED';
-                      const title = isApproved ? 'Disetujui' : isRejected ? 'Ditolak' : 'Keputusan Final';
-                      const date = result.tglDisetujui ? formatDateTime(result.tglDisetujui) : result.tglDiproses ? formatDateTime(result.tglDiproses) : 'Belum diproses';
-                      return (
-                        <div className="stepper-item">
-                          <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: bg, color: '#fff' }}>
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              {isApproved ? <path d="m5 12 5 5L19 7" /> : isRejected ? <><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6M9 9l6 6" /></> : <path d="M5 12h14" />}
-                            </svg>
-                          </div>
-                          <div className="stepper-title">{title}</div>
-                          <div className="stepper-date">{date}</div>
-                        </div>
-                      );
-                    })()}
-                    <div className={`stepper-line${['Selesai', 'Ringkasan_Terkirim'].includes(result.status) ? ' done' : ''}`} />
-
-                    {/* Step 4: Selesai Kunjungan */}
-                    {(() => {
-                      const isFinished = ['Selesai', 'Ringkasan_Terkirim'].includes(result.status);
-                      const isWaitingVisit = result.status === 'Disetujui';
-                      const bg = isFinished ? '#0028B3' : isWaitingVisit ? '#B45309' : '#E4E7ED';
-                      const title = isFinished ? 'Selesai' : isWaitingVisit ? 'Menunggu Kunjungan' : 'Pelaksanaan';
-                      const date = result.tglSelesai ? formatDateTime(result.tglSelesai) : isWaitingVisit ? 'Sesuai jadwal' : 'Belum dilaksanakan';
-                      return (
-                        <div className="stepper-item">
-                          <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: bg, color: '#fff' }}>
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              {isFinished ? <path d="m5 12 5 5L19 7" /> : <path d="M5 12h14" />}
-                            </svg>
-                          </div>
-                          <div className="stepper-title">{title}</div>
-                          <div className="stepper-date">{date}</div>
-                        </div>
-                      );
-                    })()}
-                    <div className={`stepper-line${(['Selesai', 'Ringkasan_Terkirim'].includes(result.status) && result.hasReview) ? ' done' : ''}`} />
-
-                    {/* Step 5: Rating & Review */}
-                    {(() => {
-                      const hasReview = result.hasReview;
-                      const isSelesaiStage = ['Selesai', 'Ringkasan_Terkirim'].includes(result.status);
-                      const bg = hasReview ? '#0028B3' : isSelesaiStage ? '#B45309' : '#E4E7ED';
-                      const title = hasReview ? 'Rating & Review' : isSelesaiStage ? 'Menunggu Review' : 'Rating & Review';
-                      const date = result.tglReview ? formatDateTime(result.tglReview) : hasReview ? 'Selesai' : isSelesaiStage ? 'Belum diisi' : 'Belum tersedia';
-                      return (
-                        <div className="stepper-item">
-                          <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: bg, color: '#fff' }}>
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              {hasReview ? <path d="m5 12 5 5L19 7" /> : <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />}
-                            </svg>
-                          </div>
-                          <div className="stepper-title">{title}</div>
-                          <div className="stepper-date">{date}</div>
-                        </div>
-                      );
-                    })()}
-                    <div className={`stepper-line${result.pdf_ready ? ' done' : ''}`} />
-
-                    {/* Step 6: Ringkasan Hasil Kunjungan */}
-                    {(() => {
-                      // pdf_ready adalah satu-satunya gate — true hanya jika PDF sudah diupload
-                      const isReady = !!(result.pdf_ready);
-                      const isWaitingSummary = result.hasReview && ['Selesai', 'Ringkasan_Terkirim'].includes(result.status) && !isReady;
-                      const bg = isReady ? '#0028B3' : isWaitingSummary ? '#B45309' : '#E4E7ED';
-                      const title = isReady ? 'Ringkasan Tersedia' : isWaitingSummary ? 'Menunggu Ringkasan' : 'Ringkasan PDF';
-                      const date = result.ringkasanSentAt ? formatDateTime(result.ringkasanSentAt) : isReady ? 'Dokumen tersedia' : isWaitingSummary ? 'Dalam proses admin' : 'Belum tersedia';
-                      return (
-                        <div className="stepper-item">
-                          <div style={{ width: '34px', height: '34px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: bg, color: '#fff' }}>
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              {isReady ? <path d="m5 12 5 5L19 7" /> : <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />}
-                            </svg>
-                          </div>
-                          <div className="stepper-title">{title}</div>
-                          <div className="stepper-date">{date}</div>
-                        </div>
-                      );
-                    })()}
                   </div>
 
                   {/* Detail Grid */}
                   <p style={{ fontSize: '15px', fontWeight: '700', color: '#222222', marginBottom: '18px' }}>Informasi Permohonan</p>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 16px', marginBottom: '24px' }}>
+                  <div className="status-detail-grid">
                     {[
                       ['NAMA PEMOHON/PIC (PENANGGUNG JAWAB)', result.namaPic || '-'],
                       ['JABATAN/POSISI PIC (PENANGGUNG JAWAB)', result.jabatanPic || '-'],

@@ -397,15 +397,15 @@ export default function RiwayatKunjungan() {
 
   return (
     <PublicLayout>
-      <div style={{ background: '#F6F7FA', minHeight: 'calc(100vh - 80px)', padding: '48px 20px 80px' }}>
+      <div style={{ background: '#F6F7FA', minHeight: 'calc(100vh - 80px)', padding: '32px 14px 64px' }}>
         <div style={{ maxWidth: '1140px', margin: '0 auto' }}>
 
           {/* Header Title */}
-          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <h1 style={{ fontSize: '28px', fontWeight: '800', color: '#001178', marginBottom: '10px', letterSpacing: '-0.4px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <h1 style={{ fontSize: '26px', fontWeight: '800', color: '#001178', marginBottom: '8px', letterSpacing: '-0.4px' }}>
               Riwayat Kunjungan Kerja
             </h1>
-            <p style={{ fontSize: '14.5px', color: '#64748B', maxWidth: '640px', margin: '0 auto', lineHeight: '1.7' }}>
+            <p style={{ fontSize: '13.5px', color: '#64748B', maxWidth: '640px', margin: '0 auto', lineHeight: '1.7' }}>
               Daftar seluruh kunjungan kerja yang telah selesai beserta ulasan &amp; tingkat kepuasan dari instansi pemohon.
             </p>
           </div>
@@ -414,9 +414,9 @@ export default function RiwayatKunjungan() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '20px',
-              marginBottom: '36px',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
+              gap: '16px',
+              marginBottom: '28px',
             }}
           >
             <StatCard
@@ -454,19 +454,19 @@ export default function RiwayatKunjungan() {
             style={{
               background: '#FFFFFF',
               borderRadius: '16px',
-              padding: '18px 24px',
+              padding: '16px 18px',
               boxShadow: 'var(--shadow-sm)',
               border: '1px solid rgba(228, 231, 237, 0.8)',
-              marginBottom: '32px',
+              marginBottom: '28px',
               display: 'flex',
               flexWrap: 'wrap',
-              gap: '16px',
+              gap: '14px',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
           >
             {/* Input Search */}
-            <div style={{ flex: '1 1 280px', position: 'relative' }}>
+            <div style={{ flex: '1 1 240px', minWidth: 0, position: 'relative' }}>
               <input
                 type="text"
                 value={search}
@@ -474,8 +474,8 @@ export default function RiwayatKunjungan() {
                 placeholder="Cari nama instansi..."
                 style={{
                   width: '100%',
-                  padding: '11px 14px 11px 40px',
-                  minHeight: '44px',
+                  padding: '10px 14px 10px 38px',
+                  minHeight: '42px',
                   borderRadius: '8px',
                   border: '1px solid #CBD5E1',
                   fontSize: '13.5px',
@@ -492,23 +492,24 @@ export default function RiwayatKunjungan() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }}
+                style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }}
               >
                 <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </div>
 
             {/* Dropdown Filters */}
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', flex: '1 1 auto' }}>
               {/* Filter Rating */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '12.5px', color: '#64748B', fontWeight: '600' }}>Rating:</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: '1 1 140px', minWidth: 0 }}>
+                <span style={{ fontSize: '12px', color: '#64748B', fontWeight: '600', whiteSpace: 'nowrap' }}>Rating:</span>
                 <select
                   value={rating}
                   onChange={handleRatingChange}
                   style={{
-                    padding: '10px 14px',
-                    minHeight: '44px',
+                    width: '100%',
+                    padding: '8px 12px',
+                    minHeight: '42px',
                     borderRadius: '8px',
                     border: '1px solid #CBD5E1',
                     fontSize: '13px',
@@ -528,14 +529,15 @@ export default function RiwayatKunjungan() {
               </div>
 
               {/* Sort Dropdown */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '12.5px', color: '#64748B', fontWeight: '600' }}>Urutkan:</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: '1 1 140px', minWidth: 0 }}>
+                <span style={{ fontSize: '12px', color: '#64748B', fontWeight: '600', whiteSpace: 'nowrap' }}>Urutkan:</span>
                 <select
                   value={sort}
                   onChange={handleSortChange}
                   style={{
-                    padding: '10px 14px',
-                    minHeight: '44px',
+                    width: '100%',
+                    padding: '8px 12px',
+                    minHeight: '42px',
                     borderRadius: '8px',
                     border: '1px solid #CBD5E1',
                     fontSize: '13px',
@@ -555,37 +557,37 @@ export default function RiwayatKunjungan() {
 
           {/* Grid Content */}
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '80px 0', color: '#64748B' }}>
-              <div className="spinner" style={{ margin: '0 auto 14px', width: '36px', height: '36px' }} />
-              <p style={{ fontSize: '14px' }}>Memuat riwayat kunjungan...</p>
+            <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748B' }}>
+              <div className="spinner" style={{ margin: '0 auto 12px', width: '32px', height: '32px' }} />
+              <p style={{ fontSize: '13.5px' }}>Memuat riwayat kunjungan...</p>
             </div>
           ) : items.length === 0 ? (
             <div
               style={{
                 background: '#FFFFFF',
                 borderRadius: '16px',
-                padding: '56px 24px',
+                padding: '48px 20px',
                 textAlign: 'center',
                 boxShadow: 'var(--shadow-sm)',
                 border: '1px solid #E2E8F0',
                 color: '#64748B',
               }}
             >
-              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 16px' }}>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 14px' }}>
                 <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
               </svg>
-              <h4 style={{ fontSize: '17px', color: '#0F172A', fontWeight: '700', marginBottom: '6px' }}>Belum Ada Data Riwayat Kunjungan</h4>
-              <p style={{ fontSize: '13.5px', margin: 0 }}>Tidak ada ulasan kunjungan yang sesuai dengan kriteria filter Anda.</p>
+              <h4 style={{ fontSize: '16px', color: '#0F172A', fontWeight: '700', marginBottom: '6px' }}>Belum Ada Data Riwayat Kunjungan</h4>
+              <p style={{ fontSize: '13px', margin: 0 }}>Tidak ada ulasan kunjungan yang sesuai dengan kriteria filter Anda.</p>
             </div>
           ) : (
             <>
-              {/* Responsive Grid: 3 col Desktop, 2 col Tablet, 1 col Mobile */}
+              {/* Responsive Grid */}
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                  gap: '24px',
-                  marginBottom: '40px',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 290px), 1fr))',
+                  gap: '20px',
+                  marginBottom: '36px',
                 }}
               >
                 {items.map((item) => (
@@ -595,7 +597,7 @@ export default function RiwayatKunjungan() {
 
               {/* Pagination */}
               {meta.last_page > 1 && (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                   <button
                     type="button"
                     className="btn-outline"

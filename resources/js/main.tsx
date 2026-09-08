@@ -24,6 +24,7 @@ import ReviewAdmin from './pages/admin/Review';
 import DinasAdmin from './pages/admin/Dinas';
 import ManajemenAdmin from './pages/admin/ManajemenAdmin';
 import Blacklist from './pages/admin/Blacklist';
+import Pengaturan from './pages/admin/Pengaturan';
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
@@ -81,6 +82,7 @@ const AppRoutes = () => {
         <Route path="/admin/dinas" element={<ProtectedRoute><DinasAdmin /></ProtectedRoute>} />
         <Route path="/admin/users" element={<ProtectedRoute><ManajemenAdmin /></ProtectedRoute>} />
         <Route path="/admin/blacklist" element={<ProtectedRoute><Blacklist /></ProtectedRoute>} />
+        <Route path="/admin/settings" element={<ProtectedRoute><Pengaturan /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

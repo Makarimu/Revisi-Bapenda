@@ -4,6 +4,7 @@ import PublicLayout from '../layouts/PublicLayout';
 import api from '../services/api';
 import { loadRecaptchaScript, resetRecaptchaPromise } from '../services/recaptcha';
 import { getRecaptchaSiteKey } from '../utils/url';
+import SearchableDinasSelect from '../components/SearchableDinasSelect';
 
 
 // ---- Static Constants (keluar dari komponen agar tidak dibuat ulang setiap render) ----
@@ -939,12 +940,11 @@ export default function Permohonan() {
                       <div className="form-grid full">
                         <div className="form-group" id="field-dinasId">
                           <label>Dinas/Instansi yang Dituju *</label>
-                          <select
-                            className={errors.dinasId ? 'error' : ''}
+                          <SearchableDinasSelect
+                            dinasList={dinasList}
                             value={form.dinasId}
-                            onChange={e => {
-                              const selectedId = e.target.value;
-                              const selectedDinas = dinasList.find(d => d.id.toString() === selectedId);
+                            error={!!errors.dinasId}
+                            onChange={(selectedId, selectedDinas) => {
                               setForm((f: any) => ({
                                 ...f,
                                 dinasId: selectedId,
@@ -952,15 +952,7 @@ export default function Permohonan() {
                               }));
                               if (selectedId) clearError('dinasId');
                             }}
-                            style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '13.5px', fontFamily: 'inherit', outline: 'none', background: 'white' }}
-                          >
-                            <option value="">-- Pilih Dinas Tujuan --</option>
-                            {dinasList.map((d: any) => (
-                              <option key={d.id} value={d.id}>
-                                {d.nama} ({d.singkatan})
-                              </option>
-                            ))}
-                          </select>
+                          />
                           {errors.dinasId && <p style={ERR_MSG_STYLE}>⚠ {errors.dinasId}</p>}
                           {form.dinasId && (
                             <div style={{ marginTop: '8px', fontSize: '12.5px', color: '#0028B3', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>

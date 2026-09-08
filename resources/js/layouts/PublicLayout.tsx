@@ -1,12 +1,32 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { assetUrl } from '../utils/url';
+import { getPublicSettings } from '../api/settings';
 
 export default function PublicLayout({ children }: { children?: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [settings, setSettings] = useState({
+    header_telepon: 'Telp: (021) 875-8605',
+    header_jam_layanan: 'Jam Layanan: Senin – Jumat (08.00 – 16.00 WIB)',
+    header_link_portal_bogor: 'https://bogorkab.go.id',
+    header_link_portal_ekabo: 'https://ekabo.bogorkab.go.id',
+  });
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getPublicSettings()
+      .then((res) => {
+        if (res?.data) {
+          setSettings((prev) => ({
+            ...prev,
+            ...res.data,
+          }));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setShowBackToTop(window.scrollY > 320);
@@ -61,7 +81,7 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
               </svg>
-              <span>Telp: (021) 875-8605</span>
+              <span>{settings.header_telepon || 'Telp: (021) 875-8605'}</span>
             </div>
             <div className="gov-topbar-divider" />
             <div className="gov-topbar-item">
@@ -69,11 +89,11 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
               </svg>
-              <span>Jam Layanan: Senin – Jumat (08.00 – 16.00 WIB)</span>
+              <span>{settings.header_jam_layanan || 'Jam Layanan: Senin – Jumat (08.00 – 16.00 WIB)'}</span>
             </div>
           </div>
           <div className="gov-topbar-right">
-            <a href="https://bogorkab.go.id" target="_blank" rel="noopener noreferrer" className="gov-topbar-link">
+            <a href={settings.header_link_portal_bogor || "https://bogorkab.go.id"} target="_blank" rel="noopener noreferrer" className="gov-topbar-link">
               <span>Portal Kab. Bogor</span>
               <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}>
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
@@ -82,7 +102,7 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
               </svg>
             </a>
             <div className="gov-topbar-divider" />
-            <a href="https://ekabo.bogorkab.go.id" target="_blank" rel="noopener noreferrer" className="gov-topbar-link">
+            <a href={settings.header_link_portal_ekabo || "https://ekabo.bogorkab.go.id"} target="_blank" rel="noopener noreferrer" className="gov-topbar-link">
               <span>Portal EKABO</span>
               <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}>
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
