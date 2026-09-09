@@ -1799,8 +1799,7 @@ body {
 .hero,
 .header,
 .layout-grid,
-.card,
-.modal {
+.card {
   max-width: 100%;
 }
 

@@ -6,7 +6,26 @@ import './index.css';
 // Context & Common Components
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ErrorBoundary from './components/common/ErrorBoundary';
-import { getBasePath } from './utils/url';
+import { getBasePath, assetUrl } from './utils/url';
+
+// Ensure browser tab favicon dynamically uses logoK.png in all environments
+try {
+  const iconUrl = assetUrl('/image/logoK.png');
+  const existingLinks = document.querySelectorAll("link[rel*='icon']");
+  if (existingLinks.length > 0) {
+    existingLinks.forEach((el) => {
+      (el as HTMLLinkElement).href = iconUrl;
+    });
+  } else {
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/png';
+    link.href = iconUrl;
+    document.head.appendChild(link);
+  }
+} catch (e) {
+  // Ignore
+}
 
 // Public Pages (Eager Loaded for instant public access)
 import Landing from './pages/Landing';

@@ -19,6 +19,9 @@ class RiwayatKunjunganResource extends JsonResource
         return [
             'id'                => $this->id,
             'instansi'          => $this->instansi,
+            'dinas_id'          => $this->dinas_id,
+            'dinas_tujuan'      => $this->dinas?->nama ?: ($this->dinas_tujuan ?: 'Badan Pengelolaan Pendapatan Daerah'),
+            'dinas_singkatan'   => $this->dinas?->singkatan ?? null,
             'tanggal_kunjungan' => $this->tanggal_kunjungan ? $this->tanggal_kunjungan->format('Y-m-d') : null,
             'tujuan'            => $this->tujuan,
             'jumlah_peserta'    => (int) $this->jumlah_peserta,

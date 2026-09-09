@@ -20,7 +20,7 @@ class KunjunganSelesaiMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Terima Kasih Atas Kunjungan Kerja',
+            subject: 'Terima Kasih Atas Kunjungan Kerja — ' . $this->permohonan->kode,
         );
     }
 

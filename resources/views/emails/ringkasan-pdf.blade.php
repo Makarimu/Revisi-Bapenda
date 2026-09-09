@@ -9,7 +9,7 @@
         <!-- Header -->
         <tr>
             <td style="background-color: #1883FF; padding: 30px; text-align: center;">
-                <img src="{{ $message->embed(public_path('image/icon.png')) }}" alt="Kabupaten Bogor" style="height: 54px; width: auto; max-width: 260px; margin-bottom: 12px; display: inline-block;">
+                <img src="{{ $emailLogoUrl ?? (str_starts_with(config('app.url'), 'https://') ? asset('image/icon.png') : 'https://raw.githubusercontent.com/Makarimu/Revisi-Bapenda/main/public/image/icon.png') }}" alt="Kabupaten Bogor" style="height: 54px; width: auto; max-width: 260px; margin-bottom: 14px; display: inline-block; border: 0; background: transparent;">
                 <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">Ringkasan Hasil Kunjungan Kerja</h1>
             </td>
         </tr>

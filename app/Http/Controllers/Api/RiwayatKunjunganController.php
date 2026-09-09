@@ -16,7 +16,7 @@ class RiwayatKunjunganController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $filters = $request->only(['search', 'rating', 'sort', 'per_page', 'page']);
+        $filters = $request->only(['search', 'rating', 'dinas_id', 'sort', 'per_page', 'page']);
 
         $paginator = $this->riwayatService->getRiwayatKunjungan($filters);
         $statistik = $this->riwayatService->getStatistik();

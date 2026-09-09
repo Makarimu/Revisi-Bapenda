@@ -29,8 +29,15 @@ class SettingController extends Controller
     /**
      * Get all admin settings
      */
-    public function getAdminSettings()
+    public function getAdminSettings(Request $request)
     {
+        if ($request->user() && $request->user()->dinas_id !== null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya Super Admin yang berhak mengakses pengaturan publik.',
+            ], 403);
+        }
+
         $settings = Setting::all()->pluck('value', 'key');
 
         return response()->json([
@@ -49,6 +56,13 @@ class SettingController extends Controller
      */
     public function updateSettings(Request $request)
     {
+        if ($request->user() && $request->user()->dinas_id !== null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya Super Admin yang berhak mengubah pengaturan publik.',
+            ], 403);
+        }
+
         $validated = $request->validate([
             'header_telepon' => 'nullable|string|max:255',
             'header_jam_layanan' => 'nullable|string|max:255',

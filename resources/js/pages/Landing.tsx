@@ -472,8 +472,16 @@ export default function Landing() {
                       </p>
                     </div>
                     <div style={{ borderTop: '1px solid var(--border)', paddingTop: '14px' }}>
-                      <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--blue-900)' }}>{rev.instansi || '-'}</div>
-                      <div style={{ fontSize: '12px', color: 'var(--text-sub)', marginTop: '3px' }}>PIC: {rev.nama_pic || '-'}</div>
+                      <div style={{ fontSize: '13.5px', fontWeight: '800', color: 'var(--blue-900)' }}>
+                        {rev.dinas_tujuan || 'Badan Pengelolaan Pendapatan Daerah'}
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#64748B', fontWeight: '600', marginBottom: '6px' }}>
+                        Pemerintah Kabupaten Bogor
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#475569', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ color: '#94A3B8', fontSize: '11px', fontWeight: '600' }}>Ulasan dari:</span>
+                        <span style={{ fontWeight: '600', color: '#1E293B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{rev.instansi || '-'}</span>
+                      </div>
                     </div>
                   </div>
                 ))}

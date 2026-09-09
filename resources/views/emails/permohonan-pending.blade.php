@@ -10,7 +10,7 @@
         <!-- Header -->
         <tr>
             <td style="background: linear-gradient(135deg, #0028B3 0%, #1883FF 100%); padding: 32px 30px; text-align: center;">
-                <img src="{{ $message->embed(public_path('image/icon.png')) }}" alt="Kabupaten Bogor" style="height: 52px; width: auto; max-width: 250px; margin-bottom: 12px; display: inline-block;">
+                <img src="{{ $emailLogoUrl ?? (str_starts_with(config('app.url'), 'https://') ? asset('image/icon.png') : 'https://raw.githubusercontent.com/Makarimu/Revisi-Bapenda/main/public/image/icon.png') }}" alt="Kabupaten Bogor" style="height: 52px; width: auto; max-width: 250px; margin-bottom: 14px; display: inline-block; border: 0; background: transparent;">
                 <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.3px;">Tanda Terima Pengajuan Kunjungan Kerja</h1>
                 <p style="color: #E0E7FF; margin: 6px 0 0 0; font-size: 13px;">Pemerintah Kabupaten Bogor</p>
             </td>

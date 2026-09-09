@@ -2,7 +2,9 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="{{ asset('image/logoK.png') }}?v=4" />
+    <link rel="shortcut icon" type="image/png" href="{{ asset('image/logoK.png') }}?v=4" />
+    <link rel="apple-touch-icon" href="{{ asset('image/logoK.png') }}?v=4" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sistem Kunjungan Kerja</title>
     <!-- Leaflet CSS -->

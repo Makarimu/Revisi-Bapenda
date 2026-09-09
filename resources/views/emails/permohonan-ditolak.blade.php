@@ -8,7 +8,7 @@
     <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
         <tr>
             <td style="background-color: #DC2626; padding: 30px; text-align: center;">
-                <img src="{{ $message->embed(public_path('image/icon.png')) }}" alt="Kabupaten Bogor" style="height: 54px; width: auto; max-width: 260px; margin-bottom: 12px; display: inline-block;">
+                <img src="{{ $emailLogoUrl ?? (str_starts_with(config('app.url'), 'https://') ? asset('image/icon.png') : 'https://raw.githubusercontent.com/Makarimu/Revisi-Bapenda/main/public/image/icon.png') }}" alt="Kabupaten Bogor" style="height: 54px; width: auto; max-width: 260px; margin-bottom: 14px; display: inline-block; border: 0; background: transparent;">
                 <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">Permohonan Kunjungan Kerja Ditolak</h1>
             </td>
         </tr>

@@ -309,7 +309,7 @@ const DisclaimerModal = memo(function DisclaimerModal({ open, onClose }: any) {
   const handleCheck = useCallback((e: any) => setChecked(e.target.checked), []);
   return (
     <div className={`modal-overlay${open ? ' active' : ''}`}>
-      <div className="modal">
+      <div className="modal" style={{ maxWidth: '540px' }}>
         <div className="modal-header">
           <h3>Ketentuan Kunjungan Kerja</h3>
         </div>
@@ -342,7 +342,7 @@ const InfoMenginapModal = memo(function InfoMenginapModal({ open, onClose }: any
   const handleCheck = useCallback((e: any) => setChecked(e.target.checked), []);
   return (
     <div className={`modal-overlay${open ? ' active' : ''}`}>
-      <div className="modal">
+      <div className="modal" style={{ maxWidth: '520px' }}>
         <div className="modal-header">
           <h3>Info Rencana Menginap</h3>
         </div>

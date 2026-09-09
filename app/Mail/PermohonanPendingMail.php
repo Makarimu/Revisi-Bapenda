@@ -19,7 +19,7 @@ class PermohonanPendingMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Permohonan Kunjungan Kerja Sedang Ditinjau — ' . $this->permohonan->kode,
+            subject: 'Kunjungan Kerja Sedang Ditinjau — ' . $this->permohonan->kode,
         );
     }
 

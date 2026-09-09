@@ -49,12 +49,16 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showLogoutModal, loggingOut]);
 
-  // Event listener agar halaman manapun bisa membuka modal Pengaturan Publik
+  // Event listener agar halaman manapun bisa membuka modal Pengaturan Publik (Hanya Super Admin)
   useEffect(() => {
-    const handleOpenModal = () => setShowPengaturanModal(true);
+    const handleOpenModal = () => {
+      if (user?.dinas_id === null) {
+        setShowPengaturanModal(true);
+      }
+    };
     window.addEventListener('open-pengaturan-modal', handleOpenModal);
     return () => window.removeEventListener('open-pengaturan-modal', handleOpenModal);
-  }, []);
+  }, [user]);
 
   const getPageTitle = () => {
     if (location.pathname.startsWith('/admin/permohonan')) return 'Kelola Permohonan';
@@ -98,24 +102,22 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
         .admin-sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 270px; max-width: 82vw; background: white; box-shadow: 4px 0 24px rgba(0,17,120,0.06); border-right: 1px solid var(--border); z-index: 601; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; }
         .admin-sidebar.active { transform: translateX(0); }
         
-        .admin-sidebar-header { display: flex; align-items: center; gap: 12px; padding: 20px; border-bottom: 1px solid var(--border); position: relative; }
-        .admin-sidebar-logo { height: 38px; width: auto; flex-shrink: 0; }
-        .admin-sidebar-title { font-size: 14px; font-weight: 700; color: #001178; line-height: 1.3; }
-        .admin-sidebar-sub { font-size: 11.5px; color: #64748B; margin-top: 2px; }
+        .admin-sidebar-header { display: flex; align-items: center; justify-content: center; padding: 20px 18px; min-height: 84px; border-bottom: 1px solid var(--border); position: relative; box-sizing: border-box; }
+        .admin-sidebar-logo { height: 48px; max-width: 215px; width: auto; object-fit: contain; flex-shrink: 0; transition: transform 0.2s ease; }
         
         .admin-sidebar-nav { padding: 16px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; }
-        .admin-nav-btn { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; border: none; background: transparent; color: #64748B; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: left; text-decoration: none; transition: all 0.2s cubic-bezier(0.4,0,0.2,1); }
+        .admin-nav-btn { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 10px; border: none; background: transparent; color: #64748B; font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: left; text-decoration: none; transition: all 0.2s cubic-bezier(0.4,0,0.2,1); }
         .admin-nav-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
         .admin-nav-btn:hover { background: #C5DBFF; color: #001178; }
         .admin-nav-btn.active { background: #C5DBFF; color: #001178; font-weight: 700; box-shadow: 0 2px 6px rgba(117,195,255,0.15); }
         
-        .admin-sidebar-footer { padding: 16px 18px 20px; border-top: 1px solid var(--border); }
+        .admin-sidebar-footer { padding: 16px 18px 20px; border-top: 1px solid var(--border); background: #FFFFFF; }
         .admin-side-info { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-        .admin-side-avatar { width: 36px; height: 36px; border-radius: 50%; background: #C5DBFF; color: #001178; font-size: 13.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(117,195,255,0.15); }
+        .admin-side-avatar { width: 38px; height: 38px; border-radius: 50%; background: #C5DBFF; color: #001178; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(117,195,255,0.15); }
         .admin-side-name { font-size: 13.5px; font-weight: 700; color: #0F172A; line-height: 1.3; }
         .admin-side-role { font-size: 11.5px; color: #64748B; margin-top: 1px; }
         
-        .admin-logout-btn { width: 100%; background: var(--gray-bg); color: #0F172A; border: 1px solid var(--border); border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; min-height: 42px; }
+        .admin-logout-btn { width: 100%; background: var(--gray-bg); color: #0F172A; border: 1px solid var(--border); border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; min-height: 42px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .admin-logout-btn:hover { background: #FEE2E2; color: #B91C1C; border-color: #FCA5A5; }
 
         .admin-topbar { background: #fff; color: var(--navy-dark-admin); box-shadow: 0 1px 4px rgba(0,17,120,0.06); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 200; }
@@ -159,24 +161,25 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
               </svg>
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <img src={LOGO_URL} alt="Bappenda" style={{ height: '32px', width: 'auto' }} referrerPolicy="no-referrer" />
+              <img src={LOGO_URL} alt="Kabupaten Bogor" style={{ height: '32px', width: 'auto' }} referrerPolicy="no-referrer" />
               <div>
                 <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-main)', lineHeight: '1.2' }}>{getPageTitle()}</div>
-                <div style={{ fontSize: '11px', color: 'var(--text-sub)' }}>Sistem Kunjungan Kerja</div>
               </div>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setShowPengaturanModal(true)}
-            title="Pengaturan Header Publik"
-            style={{ width: '36px', height: '36px', borderRadius: '8px', border: '1px solid var(--border)', background: showPengaturanModal ? '#C5DBFF' : 'var(--surface)', color: '#001178', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}
-          >
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="3" />
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-            </svg>
-          </button>
+          {user?.dinas_id === null && (
+            <button
+              type="button"
+              onClick={() => setShowPengaturanModal(true)}
+              title="Pengaturan Header Publik"
+              style={{ width: '36px', height: '36px', borderRadius: '8px', border: '1px solid var(--border)', background: showPengaturanModal ? '#C5DBFF' : 'var(--surface)', color: '#001178', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
@@ -187,10 +190,7 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
       {/* Sidebar */}
       <div className={`admin-sidebar ${sidebarOpen ? 'active' : ''}`}>
         <div className="admin-sidebar-header">
-          <img src={LOGO_URL} alt="Bappenda" className="admin-sidebar-logo" referrerPolicy="no-referrer" />
-          <div>
-            <div className="admin-sidebar-title">Sistem Kunjungan Kerja</div>
-          </div>
+          <img src={LOGO_URL} alt="Kabupaten Bogor" className="admin-sidebar-logo" referrerPolicy="no-referrer" />
         </div>
 
         <div className="admin-sidebar-nav">
@@ -259,10 +259,12 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
       </main>
 
       {/* Modal Popup Pengaturan Informasi Publik */}
-      <PengaturanModal
-        isOpen={showPengaturanModal}
-        onClose={() => setShowPengaturanModal(false)}
-      />
+      {user?.dinas_id === null && (
+        <PengaturanModal
+          isOpen={showPengaturanModal}
+          onClose={() => setShowPengaturanModal(false)}
+        />
+      )}
 
       {/* Modal Popup Konfirmasi Logout */}
       {showLogoutModal && (

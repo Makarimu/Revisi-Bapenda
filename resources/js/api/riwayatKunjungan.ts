@@ -3,7 +3,9 @@ import api from '../services/api';
 export interface RiwayatKunjunganItem {
   id: number;
   instansi: string;
+  dinas_id?: number | null;
   dinas_tujuan?: string | null;
+  dinas_singkatan?: string | null;
   tanggal_kunjungan: string;
   tujuan: string;
   jumlah_peserta: number;
@@ -21,6 +23,7 @@ export interface RiwayatKunjunganStatistik {
 export interface RiwayatKunjunganParams {
   search?: string;
   rating?: string | number;
+  dinas_id?: string | number;
   sort?: string;
   page?: number;
   per_page?: number;

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import PublicLayout from '../layouts/PublicLayout';
+import api from '../services/api';
 import {
   getRiwayatKunjungan,
   RiwayatKunjunganItem,
@@ -116,9 +117,29 @@ const ReviewDetailModal = memo(function ReviewDetailModal({
           </button>
         </div>
         <div className="modal-body" style={{ padding: '24px' }}>
-          <div style={{ marginBottom: '16px' }}>
-            <span style={{ fontSize: '12px', color: '#64748B', display: 'block', marginBottom: '3px', fontWeight: '600' }}>Instansi</span>
-            <strong style={{ fontSize: '16px', color: '#0F172A' }}>{item.instansi}</strong>
+          {/* Target Dinas Kabupaten Bogor */}
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)',
+              border: '1px solid #BFDBFE',
+              borderRadius: '12px',
+              padding: '14px 16px',
+              marginBottom: '16px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+              <span style={{ fontSize: '11px', fontWeight: '700', color: '#1D4ED8', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                Lokasi Kedinasan (Pemerintah Kabupaten Bogor)
+              </span>
+            </div>
+            <strong style={{ fontSize: '16px', color: '#1E3A8A', display: 'block' }}>
+              {item.dinas_tujuan || 'Badan Pengelolaan Pendapatan Daerah'}
+            </strong>
+          </div>
+
+          <div style={{ marginBottom: '14px' }}>
+            <span style={{ fontSize: '12px', color: '#64748B', display: 'block', marginBottom: '3px', fontWeight: '600' }}>Instansi Pengunjung (Pemberi Ulasan)</span>
+            <strong style={{ fontSize: '15.5px', color: '#0F172A' }}>{item.instansi}</strong>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '18px' }}>
@@ -202,11 +223,33 @@ const RiwayatCard = memo(function RiwayatCard({
       }}
     >
       <div>
-        {/* Header Card */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px', gap: '8px' }}>
-          <h4 style={{ margin: 0, fontSize: '15.5px', fontWeight: '700', color: '#0F172A', lineHeight: '1.4' }}>
-            {item.instansi}
-          </h4>
+        {/* Header Card: Kedinasan Kabupaten Bogor */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px', gap: '10px' }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '5px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '2px 8px',
+                  borderRadius: '6px',
+                  background: '#EFF6FF',
+                  color: '#1D4ED8',
+                  fontSize: '11px',
+                  fontWeight: '700',
+                  border: '1px solid #BFDBFE',
+                }}
+              >
+                <span>📍</span>
+                <span>{item.dinas_singkatan || 'Dinas'}</span>
+              </span>
+              <span style={{ fontSize: '11px', color: '#64748B', fontWeight: '600' }}>Kabupaten Bogor</span>
+            </div>
+            <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: '#0F172A', lineHeight: '1.35' }}>
+              {item.dinas_tujuan || 'Badan Pengelolaan Pendapatan Daerah'}
+            </h4>
+          </div>
           <span
             style={{
               padding: '3px 9px',
@@ -223,7 +266,34 @@ const RiwayatCard = memo(function RiwayatCard({
           </span>
         </div>
 
-        {/* Info Meta */}
+        {/* Instansi Tamu Pengunjung */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: '12px',
+            color: '#334155',
+            background: '#F8FAFC',
+            border: '1px solid #E2E8F0',
+            padding: '7px 10px',
+            borderRadius: '8px',
+            marginBottom: '12px',
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          <div style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span style={{ color: '#64748B', fontWeight: '600', marginRight: '4px' }}>Ulasan dari:</span>
+            <strong style={{ color: '#0F172A' }}>{item.instansi}</strong>
+          </div>
+        </div>
+
+        {/* Info Meta: Tanggal & Jumlah Peserta */}
         <div style={{ display: 'flex', gap: '16px', fontSize: '12.5px', color: '#64748B', marginBottom: '14px', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -239,19 +309,14 @@ const RiwayatCard = memo(function RiwayatCard({
           </div>
         </div>
 
-        {/* Tujuan */}
-        <div style={{ fontSize: '12.5px', color: '#64748B', marginBottom: '14px', lineHeight: '1.6' }}>
-          {item.dinas_tujuan && (
-            <div style={{ marginBottom: '4px' }}>
-              <strong style={{ color: '#475569' }}>Dinas Tujuan:</strong> {item.dinas_tujuan}
-            </div>
-          )}
-          {item.tujuan && (
+        {/* Maksud Kunjungan */}
+        {item.tujuan && (
+          <div style={{ fontSize: '12.5px', color: '#64748B', marginBottom: '14px', lineHeight: '1.6' }}>
             <div style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
               <strong style={{ color: '#475569' }}>Maksud:</strong> {item.tujuan}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Rating */}
         <div style={{ marginBottom: '14px' }}>
@@ -304,7 +369,7 @@ const RiwayatCard = memo(function RiwayatCard({
         )}
 
         {item.created_at_review && (
-          <div style={{ fontSize: '11px', color: '#94A3B8', borderTop: '1px border #F1F5F9', paddingTop: '8px', marginTop: '4px' }}>
+          <div style={{ fontSize: '11px', color: '#94A3B8', borderTop: '1px solid #F1F5F9', paddingTop: '8px', marginTop: '4px' }}>
             Ulasan diberikan pada {formatTanggalIndo(item.created_at_review)}
           </div>
         )}
@@ -325,9 +390,24 @@ export default function RiwayatKunjungan() {
   // Filters & State
   const [search, setSearch] = useState('');
   const [rating, setRating] = useState('');
+  const [dinasId, setDinasId] = useState('');
   const [sort, setSort] = useState('terbaru');
   const [page, setPage] = useState(1);
   const [meta, setMeta] = useState({ current_page: 1, last_page: 1, total: 0 });
+
+  // Master Data Dinas (Kabupaten Bogor)
+  const [dinasList, setDinasList] = useState<{ id: number; nama: string; singkatan: string }[]>([]);
+
+  // Fetch Master Data Dinas on mount
+  useEffect(() => {
+    api.get('/dinas').then((res) => {
+      if (res.data?.success && Array.isArray(res.data.data)) {
+        setDinasList(res.data.data);
+      }
+    }).catch((err) => {
+      console.error('Gagal memuat master data dinas:', err);
+    });
+  }, []);
 
   // Selected item untuk Modal
   const [selectedItem, setSelectedItem] = useState<RiwayatKunjunganItem | null>(null);
@@ -338,6 +418,7 @@ export default function RiwayatKunjungan() {
       const res = await getRiwayatKunjungan({
         search,
         rating,
+        dinas_id: dinasId,
         sort,
         page,
         per_page: 9,
@@ -353,7 +434,7 @@ export default function RiwayatKunjungan() {
     } finally {
       setLoading(false);
     }
-  }, [search, rating, sort, page]);
+  }, [search, rating, dinasId, sort, page]);
 
   useEffect(() => {
     fetchRiwayat();
@@ -361,6 +442,11 @@ export default function RiwayatKunjungan() {
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
+    setPage(1);
+  }, []);
+
+  const handleDinasChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setDinasId(e.target.value);
     setPage(1);
   }, []);
 
@@ -471,7 +557,7 @@ export default function RiwayatKunjungan() {
                 type="text"
                 value={search}
                 onChange={handleSearchChange}
-                placeholder="Cari nama instansi..."
+                placeholder="Cari dinas tujuan atau instansi pemohon..."
                 style={{
                   width: '100%',
                   padding: '10px 14px 10px 38px',
@@ -500,6 +586,33 @@ export default function RiwayatKunjungan() {
 
             {/* Dropdown Filters */}
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', flex: '1 1 auto' }}>
+              {/* Filter Dinas Tujuan (Kabupaten Bogor) */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: '1 1 220px', minWidth: 0 }}>
+                <span style={{ fontSize: '12px', color: '#64748B', fontWeight: '600', whiteSpace: 'nowrap' }}>Dinas:</span>
+                <select
+                  value={dinasId}
+                  onChange={handleDinasChange}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    minHeight: '42px',
+                    borderRadius: '8px',
+                    border: '1px solid #CBD5E1',
+                    fontSize: '13px',
+                    outline: 'none',
+                    background: '#FFFFFF',
+                    color: '#334155',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <option value="">Semua Dinas (Kab. Bogor)</option>
+                  {dinasList.map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.nama} {d.singkatan ? `(${d.singkatan})` : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
               {/* Filter Rating */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: '1 1 140px', minWidth: 0 }}>
                 <span style={{ fontSize: '12px', color: '#64748B', fontWeight: '600', whiteSpace: 'nowrap' }}>Rating:</span>

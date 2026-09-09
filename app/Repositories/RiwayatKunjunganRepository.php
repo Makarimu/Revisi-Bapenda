@@ -21,10 +21,23 @@ class RiwayatKunjunganRepository implements RiwayatKunjunganRepositoryInterface
             })
             ->with(['review', 'dinas']);
 
-        // Filter pencarian nama instansi
+        // Filter Dinas Tujuan (Kabupaten Bogor)
+        if (!empty($filters['dinas_id'])) {
+            $dinasId = (int) $filters['dinas_id'];
+            $query->where('dinas_id', $dinasId);
+        }
+
+        // Filter pencarian nama instansi pemohon atau dinas tujuan
         if (!empty($filters['search'])) {
             $search = trim($filters['search']);
-            $query->where('instansi', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->where('instansi', 'like', "%{$search}%")
+                  ->orWhere('dinas_tujuan', 'like', "%{$search}%")
+                  ->orWhereHas('dinas', function ($qd) use ($search) {
+                      $qd->where('nama', 'like', "%{$search}%")
+                         ->orWhere('singkatan', 'like', "%{$search}%");
+                  });
+            });
         }
 
         // Filter rating (1-5)

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -80,6 +81,11 @@ class Permohonan extends Model
     public function review(): HasOne
     {
         return $this->hasOne(Review::class, 'permohonan_id', 'id');
+    }
+
+    public function dinas(): BelongsTo
+    {
+        return $this->belongsTo(Dinas::class, 'dinas_id', 'id');
     }
 
     // ──────────────────────────────────────────────────
@@ -260,9 +266,5 @@ class Permohonan extends Model
             ->whereNotNull('ringkasan_pdf_path')
             ->whereDate('tanggal_selesai_kunjungan', now()->subDays(3)->toDateString());
     }
-
-    public function dinas()
-    {
-        return $this->belongsTo(Dinas::class, 'dinas_id');
-    }
 }
+

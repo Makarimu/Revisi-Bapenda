@@ -17,6 +17,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,6 +41,19 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
         }
+
+        View::composer('emails.*', function ($view) {
+            $customUrl = env('EMAIL_LOGO_URL');
+            if (!empty($customUrl)) {
+                $logoUrl = $customUrl;
+            } elseif (app()->environment('production') || (str_starts_with((string) config('app.url'), 'https://') && !str_contains((string) config('app.url'), 'localhost') && !str_contains((string) config('app.url'), '127.0.0.1'))) {
+                $logoUrl = asset('image/icon.png');
+            } else {
+                $logoUrl = 'https://raw.githubusercontent.com/Makarimu/Revisi-Bapenda/main/public/image/icon.png';
+            }
+
+            $view->with('emailLogoUrl', $logoUrl);
+        });
 
         RateLimiter::for('login', fn (Request $request) => Limit::perMinute(5)
             ->by(strtolower((string) $request->input('username')).'|'.$request->ip()));
