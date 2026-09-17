@@ -44,7 +44,7 @@ class PermohonanService
     public function submit(array $data): Permohonan
     {
         // Pra-validasi ringan (sebelum upload file)
-        if (!$this->kalenderService->isTanggalValid($data['tanggal_kunjungan'], $data['email'] ?? null)) {
+        if (!$this->kalenderService->isTanggalValid($data['tanggal_kunjungan'], $data['email'] ?? null, $data['dinas_id'] ?? null)) {
             throw new Exception("Tanggal tidak valid, sudah penuh, atau kurang dari H-7.");
         }
 
@@ -197,7 +197,7 @@ class PermohonanService
                 throw new Exception("Email Anda sudah memiliki pengajuan kunjungan pada tanggal tersebut.");
             }
 
-            if (!$this->kalenderService->isTanggalValid($data['tanggal_kunjungan'], $emailForCheck)) {
+            if (!$this->kalenderService->isTanggalValid($data['tanggal_kunjungan'], $emailForCheck, $data['dinas_id'] ?? $permohonan->dinas_id)) {
                 throw new Exception("Tanggal kunjungan yang baru tidak valid.");
             }
         }

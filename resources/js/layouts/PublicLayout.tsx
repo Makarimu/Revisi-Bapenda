@@ -61,6 +61,21 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
     }
   };
 
+  const handlePanduanClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (sidebarOpen) closeSidebar();
+
+    if (location.pathname === '/' || location.pathname === '') {
+      const el = document.getElementById('eksplorasi-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      navigate('/#eksplorasi-section', { replace: true });
+    } else {
+      navigate('/#eksplorasi-section');
+    }
+  };
+
   const handleBerandaClick = (e: React.MouseEvent) => {
     if (sidebarOpen) closeSidebar();
 
@@ -122,8 +137,9 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
           </Link>
 
           <nav className="header-nav">
-            <Link to="/" onClick={handleBerandaClick} className={location.pathname === '/' ? 'active' : ''}>Beranda</Link>
-            <Link to="/status" className={location.pathname.startsWith('/status') ? 'active' : ''}>Cek Status Permohonan</Link>
+            <Link to="/" onClick={handleBerandaClick} className={location.pathname === '/' && !location.hash.includes('eksplorasi') ? 'active' : ''}>Beranda</Link>
+            <a href="#eksplorasi-section" onClick={handlePanduanClick}>Panduan Layanan</a>
+            <Link to="/status" className={location.pathname.startsWith('/status') ? 'active' : ''}>Status Permohonan</Link>
             <Link to="/riwayat-kunjungan" className={location.pathname.startsWith('/riwayat-kunjungan') ? 'active' : ''}>Riwayat Kunjungan</Link>
           </nav>
 
@@ -134,7 +150,7 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
                 <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
                 <path d="M9 13h6M9 17h6" />
               </svg>
-              <span>Ajukan Permohonan Sekarang</span>
+              <span>Ajukan Permohonan</span>
             </Link>
 
             <button className="hamburger-btn" onClick={openSidebar} aria-label="Buka menu navigasi">
@@ -159,9 +175,10 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
         </div>
         <nav>
           <Link to="/" onClick={handleBerandaClick} className={location.pathname === '/' ? 'active' : ''}>Beranda</Link>
-          <Link to="/status" onClick={closeSidebar} className={location.pathname.startsWith('/status') ? 'active' : ''}>Cek Status Permohonan</Link>
+          <a href="#eksplorasi-section" onClick={handlePanduanClick}>Panduan Layanan</a>
+          <Link to="/status" onClick={closeSidebar} className={location.pathname.startsWith('/status') ? 'active' : ''}>Status Permohonan</Link>
           <Link to="/riwayat-kunjungan" onClick={closeSidebar} className={location.pathname.startsWith('/riwayat-kunjungan') ? 'active' : ''}>Riwayat Kunjungan</Link>
-          <Link to="/permohonan" onClick={closeSidebar} className={location.pathname.startsWith('/permohonan') ? 'active' : ''}>Ajukan Permohonan Sekarang</Link>
+          <Link to="/permohonan" onClick={closeSidebar} className={location.pathname.startsWith('/permohonan') ? 'active' : ''}>Ajukan Permohonan</Link>
         </nav>
       </div>
 
@@ -220,8 +237,8 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
               <div className="gov-footer-col">
                 <h5 className="gov-footer-title">Layanan Utama</h5>
                 <ul className="gov-footer-links">
-                  <li><Link to="/permohonan">Ajukan Permohonan Sekarang</Link></li>
-                  <li><Link to="/status">Cek Status Permohonan</Link></li>
+                  <li><Link to="/permohonan">Ajukan Permohonan</Link></li>
+                  <li><Link to="/status">Status Permohonan</Link></li>
                   <li><a href="#ketentuan-section" onClick={handleKetentuanClick}>Ketentuan Kunjungan</a></li>
                   <li><Link to="/riwayat-kunjungan">Riwayat Kunjungan</Link></li>
                   <li><Link to="/login">Login Admin</Link></li>
@@ -259,7 +276,7 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                     </svg>
-                    <span>bappenda@bogorkab.go.id</span>
+                    <span>diskominfo@bogorkab.go.id</span>
                   </li>
                 </ul>
               </div>
@@ -271,11 +288,11 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
         {/* Footer Bottom Bar */}
         <div className="gov-footer-bottom">
           <div className="gov-footer-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-            <div style={{ fontSize: '12.5px', color: '#94A3B8' }}>
-              &copy; 2026 Pemerintah Kabupaten Bogor. Seluruh hak cipta dilindungi undang-undang.
-            </div>
             <div style={{ fontSize: '12px', color: '#64748B' }}>
               Powered by <a href="https://diskominfo.bogorkab.go.id" target="_blank" rel="noopener noreferrer" style={{ color: '#75C3FF', textDecoration: 'none' }}>Diskominfo</a> &amp; <a href="https://bappenda.bogorkab.go.id" target="_blank" rel="noopener noreferrer" style={{ color: '#75C3FF', textDecoration: 'none' }}>Bappenda</a>
+            </div>
+            <div style={{ fontSize: '12.5px', color: '#94A3B8' }}>
+              &copy; 2026 Pemerintah Kabupaten Bogor. Seluruh hak cipta dilindungi undang-undang.
             </div>
           </div>
         </div>

@@ -50,7 +50,7 @@ class KalenderService
             ->toArray();
     }
 
-    public function isTanggalValid(string $tanggal, ?string $email = null): bool
+    public function isTanggalValid(string $tanggal, ?string $email = null, ?int $dinasId = null): bool
     {
         $date = Carbon::parse($tanggal)->startOfDay();
 
@@ -79,16 +79,29 @@ class KalenderService
         }
 
         // 3. Validasi Tanggal Diblokir Manual
-        $isBlocked = TanggalDiblokir::whereDate('tanggal', $date->toDateString())->exists();
+        $isBlockedQuery = TanggalDiblokir::whereDate('tanggal', $date->toDateString());
+        if ($dinasId) {
+            $isBlockedQuery->where(function($q) use ($dinasId) {
+                $q->whereNull('dinas_id')->orWhere('dinas_id', $dinasId);
+            });
+        } else {
+            $isBlockedQuery->whereNull('dinas_id');
+        }
+        $isBlocked = $isBlockedQuery->exists();
         if ($isBlocked) {
             return false;
         }
 
         // 4. Validasi Kapasitas Penuh (>= MAKS_PER_HARI)
         // Hanya menghitung permohonan yang aktif / tidak ditolak / tidak dibatalkan
-        $count = Permohonan::whereDate('tanggal_kunjungan', $date->toDateString())
-            ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
-            ->count();
+        $countQuery = Permohonan::whereDate('tanggal_kunjungan', $date->toDateString())
+            ->whereNotIn('status', ['Ditolak', 'Dibatalkan']);
+            
+        if ($dinasId) {
+            $countQuery->where('dinas_id', $dinasId);
+        }
+            
+        $count = $countQuery->count();
 
         if ($count >= config('visit.max_per_hari', 2)) {
             return false;
@@ -97,19 +110,42 @@ class KalenderService
         return true;
     }
 
-    public function getTanggalTerpakai(): array
+    public function getKalenderAvailability(?int $dinasId = null): array
     {
-        $diblokir = TanggalDiblokir::whereDate('tanggal', '>=', Carbon::today())
-            ->get()
-            ->map(fn($d) => $d->tanggal ? $d->tanggal->format('Y-m-d') : null)
-            ->filter()
-            ->values()
-            ->toArray();
+        if (!$dinasId) {
+            return [
+                'all_busy' => [],
+                'blocked' => [],
+                'blocked_details' => (object)[],
+                'full' => []
+            ];
+        }
+
+        $diblokirQuery = TanggalDiblokir::whereDate('tanggal', '>=', Carbon::today())
+            ->where(function($q) use ($dinasId) {
+                $q->whereNull('dinas_id')->orWhere('dinas_id', $dinasId);
+            });
         
-        $penuh = Permohonan::selectRaw('tanggal_kunjungan, count(*) as total')
+        $diblokirModels = $diblokirQuery->get();
+        $diblokir = [];
+        $blockedDetails = [];
+        foreach ($diblokirModels as $d) {
+            if ($d->tanggal) {
+                $tglStr = $d->tanggal->format('Y-m-d');
+                $diblokir[] = $tglStr;
+                $blockedDetails[$tglStr] = [
+                    'keterangan' => $d->keterangan ?: 'Agenda internal dinas',
+                    'diblokir_oleh' => $d->diblokir_oleh ?: 'Admin Dinas',
+                ];
+            }
+        }
+        
+        $penuhQuery = Permohonan::selectRaw('tanggal_kunjungan, count(*) as total')
             ->whereDate('tanggal_kunjungan', '>=', Carbon::today())
             ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
-            ->groupBy('tanggal_kunjungan')
+            ->where('dinas_id', $dinasId);
+            
+        $penuh = $penuhQuery->groupBy('tanggal_kunjungan')
             ->having('total', '>=', config('visit.max_per_hari', 2))
             ->get()
             ->map(fn($p) => $p->tanggal_kunjungan ? Carbon::parse($p->tanggal_kunjungan)->format('Y-m-d') : null)
@@ -117,6 +153,16 @@ class KalenderService
             ->values()
             ->toArray();
 
-        return array_values(array_unique(array_merge($diblokir, $penuh)));
+        return [
+            'all_busy' => array_values(array_unique(array_merge($diblokir, $penuh))),
+            'blocked' => array_values(array_unique($diblokir)),
+            'blocked_details' => $blockedDetails,
+            'full' => array_values(array_unique($penuh)),
+        ];
+    }
+
+    public function getTanggalTerpakai(?int $dinasId = null): array
+    {
+        return $this->getKalenderAvailability($dinasId)['all_busy'];
     }
 }

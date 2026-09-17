@@ -15,9 +15,10 @@ class TanggalDiblokirController extends Controller
         private TanggalDiblokirRepositoryInterface $tanggalDiblokirRepo
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->tanggalDiblokirRepo->getAllUpcoming();
+        $dinasId = $request->user()->dinas_id;
+        $data = $this->tanggalDiblokirRepo->getAllUpcoming($dinasId);
         return response()->json([
             'success' => true,
             'data' => TanggalDiblokirResource::collection($data)
@@ -29,6 +30,7 @@ class TanggalDiblokirController extends Controller
         $data = $request->validated();
         $data['diblokir_oleh'] = $request->user()->nama;
         $data['tgl_diblokir'] = Carbon::now();
+        $data['dinas_id'] = $request->user()->dinas_id;
 
         $tanggalDiblokir = $this->tanggalDiblokirRepo->create($data);
 
@@ -39,9 +41,10 @@ class TanggalDiblokirController extends Controller
         ], 201);
     }
 
-    public function destroy($tanggal)
+    public function destroy(Request $request, $tanggal)
     {
-        $success = $this->tanggalDiblokirRepo->deleteByTanggal($tanggal);
+        $dinasId = $request->user()->dinas_id;
+        $success = $this->tanggalDiblokirRepo->deleteByTanggal($tanggal, $dinasId);
 
         if (!$success) {
             return response()->json([

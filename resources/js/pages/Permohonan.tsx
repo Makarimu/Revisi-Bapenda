@@ -12,11 +12,12 @@ const MONTHS_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli
 const DAYS_ID = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 const STAR_NUMBERS = [1, 2, 3, 4, 5];
 const DROPDOWN_OPTIONS = [{ value: 'Ya', label: 'Ya' }, { value: 'Tidak', label: 'Tidak' }];
-const STEP_LABELS = ['Pilih Tanggal', 'Data Pemohon', 'Konfirmasi', 'Detail Kunjungan'];
+const STEP_LABELS = ['Pilih Dinas', 'Pilih Tanggal', 'Data Pemohon', 'Konfirmasi', 'Detail Kunjungan'];
 const LEGEND_DOT_STYLE_TERSEDIA = { background: '#C5DBFF', border: '1.5px solid #1883FF' };
 const LEGEND_DOT_STYLE_USER_BOOKED = { background: '#FEF3C7', border: '1.5px solid #F59E0B' };
-const LEGEND_DOT_STYLE_TERPAKAI = { background: '#FEE2E2', border: '1.5px solid #B91C1C' };
-const LEGEND_DOT_STYLE_TIDAK = { background: '#F1F3F6', border: '1.5px solid #9CA3AF' };
+const LEGEND_DOT_STYLE_BLOCKED = { background: 'repeating-linear-gradient(-45deg, #F1F5F9, #F1F5F9 2.5px, #CBD5E1 2.5px, #CBD5E1 5.5px)', border: '1.5px solid #64748B' };
+const LEGEND_DOT_STYLE_TERPAKAI = { background: '#FEE2E2', border: '1.5px solid #EF4444' };
+const LEGEND_DOT_STYLE_TIDAK = { background: '#F8FAFC', border: '1.5px solid #CBD5E1' };
 const INITIAL_FORM = {
   instansi: '', namaPic: '', jabatanPic: '',
   noTelp: '', email: '', tujuan: '', dinasId: '', dinasTujuan: '', namaKetuaRombongan: '',
@@ -41,7 +42,16 @@ function formatDisplayDate(s: any) {
 }
 
 // ---- Calendar Component — React.memo untuk isolasi dari re-render form ----
-const Calendar = memo(function Calendar({ busyDates, selectedDate, onSelect, minDateStr, userBookedDates = [] }: any) {
+const Calendar = memo(function Calendar({
+  busyDates = [],
+  blockedDates = [],
+  blockedDetails = {},
+  fullDates = [],
+  selectedDate,
+  onSelect,
+  minDateStr,
+  userBookedDates = []
+}: any) {
   const today = useMemo(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -65,7 +75,28 @@ const Calendar = memo(function Calendar({ busyDates, selectedDate, onSelect, min
     return d;
   });
 
+  const [pinnedDate, setPinnedDate] = useState<string | null>(null);
+  const [hoveredDate, setHoveredDate] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleDocClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.cal-day') && !target.closest('.cal-day-popup-anchor')) {
+        setPinnedDate(null);
+      }
+    };
+    document.addEventListener('mousedown', handleDocClick);
+    return () => document.removeEventListener('mousedown', handleDocClick);
+  }, []);
+
+  const handleClosePopup = useCallback(() => {
+    setPinnedDate(null);
+    setHoveredDate(null);
+  }, []);
+
   const prevMonth = useCallback(() => {
+    setPinnedDate(null);
+    setHoveredDate(null);
     setViewDate(d => {
       const next = new Date(d);
       next.setMonth(next.getMonth() - 1);
@@ -74,6 +105,8 @@ const Calendar = memo(function Calendar({ busyDates, selectedDate, onSelect, min
   }, []);
 
   const nextMonth = useCallback(() => {
+    setPinnedDate(null);
+    setHoveredDate(null);
     setViewDate(d => {
       const next = new Date(d);
       next.setMonth(next.getMonth() + 1);
@@ -101,19 +134,21 @@ const Calendar = memo(function Calendar({ busyDates, selectedDate, onSelect, min
     if (dayOfWeek === 0 || dayOfWeek === 6) return 'weekend';
     // Sudah diajukan oleh email yang sedang digunakan — PRIORITAS UTAMA sebelum busy/too-soon/available
     if (userBookedDates.includes(dateStr)) return 'user-booked';
-    // Slot penuh — tampilkan merah
-    if (busyDates.includes(dateStr)) return 'busy';
+    // Diblokir oleh Admin Dinas — warna ungu
+    if (blockedDates.includes(dateStr)) return 'blocked';
+    // Kuota penuh (>= 2 kunjungan) — warna merah
+    if (fullDates.includes(dateStr) || busyDates.includes(dateStr)) return 'busy';
     // Terlalu dekat (H+7 belum terpenuhi)
     if (date < minDate) return 'too-soon';
     return 'available';
-  }, [userBookedDates, busyDates, minDate, today]);
+  }, [userBookedDates, blockedDates, fullDates, busyDates, minDate, today]);
 
   return (
-    <div className="card">
+    <div className="card" style={{ overflow: 'visible' }}>
       <div className="card-header cal-card-header">
         <h3>Jadwal Ketersediaan</h3>
       </div>
-      <div className="card-body">
+      <div className="card-body" style={{ overflow: 'visible' }}>
         <div className="cal-nav">
           <button onClick={prevMonth}>&#8249;</button>
           <span className="cal-month">{MONTHS_ID[month]} {year}</span>
@@ -128,15 +163,23 @@ const Calendar = memo(function Calendar({ busyDates, selectedDate, onSelect, min
             const cls = getDayClass(dateStr, dow);
             const isSelected = selectedDate === dateStr;
             const isToday = dateStr === todayStr;
+            const detail = blockedDetails[dateStr];
+            const isPopupOpen = (pinnedDate === dateStr) || (!pinnedDate && hoveredDate === dateStr);
             return (
               <CalendarDay
                 key={dateStr}
                 dateStr={dateStr}
                 day={day}
+                dow={dow}
                 cls={cls}
+                detail={detail}
                 isSelected={isSelected}
                 isToday={isToday}
+                isPopupOpen={isPopupOpen}
                 onSelect={onSelect}
+                onHover={setHoveredDate}
+                onTogglePin={setPinnedDate}
+                onClosePopup={handleClosePopup}
               />
             );
           })}
@@ -149,6 +192,10 @@ const Calendar = memo(function Calendar({ busyDates, selectedDate, onSelect, min
           <div className="legend-item">
             <div className="legend-dot" style={LEGEND_DOT_STYLE_USER_BOOKED} />
             <span>Sudah diajukan oleh Anda</span>
+          </div>
+          <div className="legend-item">
+            <div className="legend-dot" style={LEGEND_DOT_STYLE_BLOCKED} />
+            <span>Diblokir oleh Dinas</span>
           </div>
           <div className="legend-item">
             <div className="legend-dot" style={LEGEND_DOT_STYLE_TERPAKAI} />
@@ -165,25 +212,279 @@ const Calendar = memo(function Calendar({ busyDates, selectedDate, onSelect, min
 });
 
 // CalendarDay diisolasi agar hanya hari yang berubah yang re-render
-const CalendarDay = memo(function CalendarDay({ dateStr, day, cls, isSelected, isToday, onSelect }: any) {
-  const isDisabled = cls !== 'available';
-  const handleClick = useCallback(() => {
-    if (cls === 'available') onSelect(dateStr);
-  }, [cls, dateStr, onSelect]);
+const CalendarDay = memo(function CalendarDay({
+  dateStr,
+  day,
+  dow,
+  cls,
+  detail,
+  isSelected,
+  isToday,
+  isPopupOpen,
+  onSelect,
+  onHover,
+  onTogglePin,
+  onClosePopup
+}: any) {
+  const isInteractive = cls === 'blocked' || cls === 'busy' || cls === 'user-booked';
 
-  const title = cls === 'busy'
-    ? 'Tanggal ini sudah penuh (maksimal 2 kunjungan kerja)'
-    : cls === 'user-booked'
-      ? 'Anda sudah memiliki pengajuan pada tanggal ini'
-      : undefined;
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (cls === 'available') {
+      onSelect(dateStr);
+    } else if (isInteractive) {
+      onTogglePin((prev: string | null) => (prev === dateStr ? null : dateStr));
+    }
+  }, [cls, dateStr, isInteractive, onSelect, onTogglePin]);
+
+  const handleMouseEnter = useCallback(() => {
+    if (isInteractive) {
+      onHover(dateStr);
+    }
+  }, [isInteractive, onHover, dateStr]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (isInteractive) {
+      onHover((prev: string | null) => (prev === dateStr ? null : prev));
+    }
+  }, [isInteractive, onHover, dateStr]);
 
   return (
     <div
       className={`cal-day ${cls}${isSelected && cls !== 'user-booked' ? ' selected' : ''}${isToday ? ' today' : ''}`}
       onClick={handleClick}
-      title={title}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{ position: 'relative' }}
     >
       {day}
+
+      {isPopupOpen && (
+        <div
+          className="cal-day-popup-anchor"
+          style={{
+            position: 'absolute',
+            bottom: 'calc(100% + 8px)',
+            zIndex: 150,
+            ...(dow <= 1 ? { left: '0' } : dow >= 5 ? { right: '0' } : { left: '50%', transform: 'translateX(-50%)' }),
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="cal-day-popup-card">
+            {cls === 'blocked' ? (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '22px',
+                      height: '22px',
+                      borderRadius: '7px',
+                      background: '#F1F5F9',
+                      color: '#475569',
+                      border: '1px solid #CBD5E1',
+                      flexShrink: 0
+                    }}>
+                      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                    </span>
+                    <span style={{ fontSize: '12px', fontWeight: '800', color: '#334155', letterSpacing: '-0.2px' }}>
+                      Tanggal Diblokir
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onClosePopup}
+                    style={{
+                      background: '#F1F5F9',
+                      border: 'none',
+                      color: '#64748B',
+                      cursor: 'pointer',
+                      padding: '3px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '5px',
+                      transition: 'background 0.15s ease'
+                    }}
+                    title="Tutup Popup"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div style={{ fontSize: '12px', fontWeight: '700', color: '#1E293B', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+                  </svg>
+                  <span>{formatDisplayDate(dateStr)}</span>
+                </div>
+
+                <div style={{
+                  background: '#F8FAFC',
+                  border: '1px solid #E2E8F0',
+                  borderLeft: '3.5px solid #64748B',
+                  borderRadius: '7px',
+                  padding: '8px 10px',
+                  marginBottom: '8px'
+                }}>
+                  <div style={{ fontSize: '10.5px', color: '#475569', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '3px' }}>
+                    Keterangan:
+                  </div>
+                  <div style={{ fontSize: '12.5px', color: '#1E293B', fontWeight: '600', wordBreak: 'break-word', lineHeight: '1.45' }}>
+                    "{detail?.keterangan || 'Agenda internal dinas'}"
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px', fontSize: '10.5px', color: '#64748B' }}>
+                  <span>Oleh: <strong style={{ color: '#475569' }}>{detail?.diblokir_oleh || 'Admin Dinas'}</strong></span>
+                  <span style={{ color: '#DC2626', fontWeight: '600' }}>Tidak Tersedia</span>
+                </div>
+              </>
+            ) : cls === 'busy' ? (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '22px',
+                      height: '22px',
+                      borderRadius: '7px',
+                      background: '#FEE2E2',
+                      color: '#B91C1C',
+                      flexShrink: 0
+                    }}>
+                      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" />
+                      </svg>
+                    </span>
+                    <span style={{ fontSize: '12px', fontWeight: '800', color: '#B91C1C', letterSpacing: '-0.2px' }}>
+                      Jadwal Penuh
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onClosePopup}
+                    style={{
+                      background: '#F1F5F9',
+                      border: 'none',
+                      color: '#64748B',
+                      cursor: 'pointer',
+                      padding: '3px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '5px'
+                    }}
+                    title="Tutup Popup"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div style={{ fontSize: '12px', fontWeight: '700', color: '#1E293B', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+                  </svg>
+                  <span>{formatDisplayDate(dateStr)}</span>
+                </div>
+
+                <div style={{
+                  background: '#FEF2F2',
+                  border: '1px solid #FECACA',
+                  borderLeft: '3.5px solid #EF4444',
+                  borderRadius: '7px',
+                  padding: '8px 10px',
+                  marginBottom: '8px'
+                }}>
+                  <div style={{ fontSize: '12px', color: '#991B1B', lineHeight: '1.45' }}>
+                    Kuota kunjungan kerja pada tanggal ini sudah penuh (maksimal 2 rombongan per hari). Silakan pilih tanggal lain.
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '22px',
+                      height: '22px',
+                      borderRadius: '7px',
+                      background: '#FEF3C7',
+                      color: '#B45309',
+                      flexShrink: 0
+                    }}>
+                      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" />
+                      </svg>
+                    </span>
+                    <span style={{ fontSize: '12px', fontWeight: '800', color: '#B45309', letterSpacing: '-0.2px' }}>
+                      Sudah Diajukan
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onClosePopup}
+                    style={{
+                      background: '#F1F5F9',
+                      border: 'none',
+                      color: '#64748B',
+                      cursor: 'pointer',
+                      padding: '3px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '5px'
+                    }}
+                    title="Tutup Popup"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div style={{ fontSize: '12px', fontWeight: '700', color: '#1E293B', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+                  </svg>
+                  <span>{formatDisplayDate(dateStr)}</span>
+                </div>
+
+                <div style={{
+                  background: '#FFFBEB',
+                  border: '1px solid #FDE68A',
+                  borderLeft: '3.5px solid #F59E0B',
+                  borderRadius: '7px',
+                  padding: '8px 10px',
+                  marginBottom: '8px'
+                }}>
+                  <div style={{ fontSize: '12px', color: '#92400E', lineHeight: '1.45' }}>
+                    Anda sudah memiliki pengajuan kunjungan kerja pada tanggal ini.
+                  </div>
+                </div>
+              </>
+            )}
+            <div className={`cal-popup-arrow arrow-${dow <= 1 ? 'left' : dow >= 5 ? 'right' : 'center'}`} />
+          </div>
+        </div>
+      )}
     </div>
   );
 });
@@ -546,10 +847,14 @@ export default function Permohonan() {
   const [file2, setFile2] = useState<File | null>(null);
   const [errors, setErrors] = useState<any>({});
   const [busyDates, setBusyDates] = useState<any[]>([]);
+  const [blockedDates, setBlockedDates] = useState<string[]>([]);
+  const [blockedDetails, setBlockedDetails] = useState<Record<string, any>>({});
+  const [fullDates, setFullDates] = useState<string[]>([]);
   const [minDateStr, setMinDateStr] = useState<string>('');
   const [userBookedDates, setUserBookedDates] = useState<string[]>([]);
   const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
   const [dinasList, setDinasList] = useState<any[]>([]);
+  const [isDinasOpen, setIsDinasOpen] = useState(false);
 
   useEffect(() => {
     api.get('/dinas')
@@ -567,10 +872,22 @@ export default function Permohonan() {
   }, []);
 
   useEffect(() => {
+    // Jika belum memilih dinas tujuan, kalender bersih (semua tanggal valid tampil biru/tersedia)
+    if (!form.dinasId) {
+      setBusyDates([]);
+      setBlockedDates([]);
+      setBlockedDetails({});
+      setFullDates([]);
+      return;
+    }
+
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
-    const params: any = {};
+    const params: any = {
+      dinas_id: form.dinasId
+    };
+
     // Tangkap emailParam di closure — digunakan untuk memutuskan apakah perlu update userBookedDates
     const emailParam = (form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
       ? form.email.trim()
@@ -585,17 +902,26 @@ export default function Permohonan() {
 
     api.get('/permohonan/tanggal-terpakai', { params, signal: controller.signal })
       .then(res => {
-        setBusyDates(res.data.data || []);
+        const busy = res.data.data || [];
+        const blocked = res.data.blocked_dates || [];
+        const details = res.data.blocked_details || {};
+        const full = res.data.full_dates || [];
+
+        setBusyDates(busy);
+        setBlockedDates(blocked);
+        setBlockedDetails(details);
+        setFullDates(full);
+
+        // Jika tanggal yang sempat dipilih ternyata masuk tanggal terpakai/diblokir pada dinas baru, batalkan pilihan
+        setSelectedDate(prev => (prev && busy.includes(prev) ? '' : prev));
+
         if (res.data.min_date) {
           setMinDateStr(res.data.min_date);
         }
         // Hanya update userBookedDates jika request dikirim dengan email valid.
-        // Jika request dikirim tanpa email (saat mengetik sebagian email), abaikan user_booked_dates
-        // dari response ini agar tidak menimpa data yang sudah benar.
         if (emailParam) {
           const booked: string[] = res.data.user_booked_dates || [];
           setUserBookedDates(booked);
-          // Batalkan pilihan tanggal jika ternyata sudah pernah diajukan oleh email ini
           setSelectedDate(prev => (prev && booked.includes(prev) ? '' : prev));
         }
       })
@@ -608,12 +934,20 @@ export default function Permohonan() {
     return () => {
       controller.abort();
     };
-  }, [form.email]);
+  }, [form.email, form.dinasId]);
 
   const handleDateSelect = useCallback((dateStr: any) => {
+    if (!form.dinasId) {
+      setErrors((prev: any) => ({ ...prev, dinasId: 'Silakan pilih dinas tujuan terlebih dahulu.' }));
+      setStep(1);
+      return;
+    }
+    if (blockedDates.includes(dateStr) || fullDates.includes(dateStr) || busyDates.includes(dateStr)) {
+      return;
+    }
     setSelectedDate(dateStr);
-    setStep(2);
-  }, []);
+    setStep(3);
+  }, [form.dinasId, blockedDates, fullDates, busyDates]);
 
   const handleRencanaMenginap = useCallback((val: any) => {
     setForm((f: any) => ({ ...f, rencanaMenginap: val }));
@@ -693,7 +1027,7 @@ export default function Permohonan() {
 
   const goToKonfirmasi = useCallback(() => {
     if (validate()) {
-      setStep(3);
+      setStep(4);
     } else {
       // Scroll ke field pertama yang error
       setTimeout(() => {
@@ -712,6 +1046,7 @@ export default function Permohonan() {
 
   const handleGoToStep1 = useCallback(() => setStep(1), []);
   const handleGoToStep2 = useCallback(() => setStep(2), []);
+  const handleGoToStep3 = useCallback(() => setStep(3), []);
   const handleOpenSubmitConfirm = useCallback(() => setShowSubmitConfirm(true), []);
 
   const copyKode = useCallback(() => {
@@ -747,7 +1082,7 @@ export default function Permohonan() {
       setShowSubmitConfirm(false);
       setShowRecaptcha(false);
       setSubmittedKode(res.data.data.kode);
-      setStep(4);
+      setStep(5);
     } catch (err: any) {
       if (err.response?.status === 422) {
         const errData = err.response.data.errors || {};
@@ -777,7 +1112,7 @@ export default function Permohonan() {
         setShowSubmitConfirm(false);
         setShowRecaptcha(false);
         alert('Mohon periksa kembali form anda. ' + err.response.data.message);
-        setStep(2);
+        setStep(3);
       } else {
         const errorMsg = err.response?.data?.message || err.message || 'Terjadi kesalahan sistem. Silakan coba lagi nanti.';
         setShowRecaptcha(false);
@@ -814,22 +1149,22 @@ export default function Permohonan() {
       <RecaptchaModal open={showRecaptcha} onVerified={submitPermohonan} onClose={handleCloseRecaptcha} loading={submitting} />
 
       <div style={{ background: 'var(--gray-bg)', minHeight: 'calc(100vh - 80px)' }}>
-        {/* Step 4: Sukses */}
-        {step === 4 ? (
-          <div style={{ maxWidth: '580px', margin: '0 auto', padding: '48px 20px 64px' }}>
+        {/* Step 5: Sukses (Detail Kunjungan) */}
+        {step === 5 ? (
+          <div style={{ maxWidth: '640px', margin: '0 auto', padding: '40px 20px 64px' }}>
             <div className="card">
-              <div className="card-body" style={{ padding: '36px 32px' }}>
-                <div style={{ textAlign: 'center', padding: '16px 0 20px' }}>
-                  <div style={{ marginBottom: '18px', display: 'flex', justifyContent: 'center' }}>
-                    <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: '#C5DBFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(0,40,179,0.15)' }}>
-                      <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <div className="card-body" style={{ padding: '40px 32px' }}>
+                <div style={{ textAlign: 'center', padding: '8px 0 20px' }}>
+                  <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ width: '76px', height: '76px', borderRadius: '50%', background: '#C5DBFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(0,40,179,0.15)' }}>
+                      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#0028B3" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                         <path d="M22 4 12 14.01l-3-3" />
                       </svg>
                     </div>
                   </div>
-                  <h3 style={{ color: '#001178', marginBottom: '10px', fontSize: '20px', fontWeight: '800', letterSpacing: '-0.3px' }}>Permohonan Berhasil Diajukan!</h3>
-                  <p style={{ fontSize: '13.5px', color: 'var(--text-sub)', lineHeight: '1.7', marginBottom: '24px' }}>
+                  <h3 style={{ color: '#001178', marginBottom: '10px', fontSize: '22px', fontWeight: '800', letterSpacing: '-0.3px' }}>Permohonan Berhasil Diajukan!</h3>
+                  <p style={{ fontSize: '14px', color: 'var(--text-sub)', lineHeight: '1.7', marginBottom: '24px' }}>
                     Simpan kode permohonan Anda untuk memantau status. Konfirmasi telah dikirim ke email Anda.
                   </p>
                   <div className="kode-wrapper">
@@ -859,8 +1194,11 @@ export default function Permohonan() {
             {/* key berubah saat userBookedDates berubah isinya → memaksa remount Calendar */}
             <div id="calendarColumn">
               <Calendar
-                key={userBookedDates.join(',')}
+                key={userBookedDates.join(',') + '_' + blockedDates.join(',') + '_' + fullDates.join(',')}
                 busyDates={busyDates}
+                blockedDates={blockedDates}
+                blockedDetails={blockedDetails}
+                fullDates={fullDates}
                 selectedDate={selectedDate}
                 onSelect={handleDateSelect}
                 minDateStr={minDateStr}
@@ -870,36 +1208,205 @@ export default function Permohonan() {
 
             {/* Form */}
             <div>
-              <div className="card">
-                <div className="card-header form-card-header" id="formCardHeader">
-                  <h3>Form Pengajuan Kunjungan Kerja</h3>
+              <div className="card" style={{ overflow: 'visible' }}>
+                <div className="card-header form-card-header" id="formCardHeader" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  {step > 2 && (
+                    <button
+                      type="button"
+                      onClick={step === 4 ? handleGoToStep3 : handleGoToStep2}
+                      title={step === 4 ? 'Kembali ke Data Pemohon' : 'Kembali ke Pilih Dinas & Tanggal'}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '8px',
+                        background: '#EFF6FF',
+                        border: '1px solid #BFDBFE',
+                        color: '#0028B3',
+                        cursor: 'pointer',
+                        transition: 'all 0.18s ease',
+                        flexShrink: 0,
+                        padding: 0,
+                      }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.background = '#0028B3';
+                        e.currentTarget.style.color = '#FFFFFF';
+                        e.currentTarget.style.borderColor = '#0028B3';
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.background = '#EFF6FF';
+                        e.currentTarget.style.color = '#0028B3';
+                        e.currentTarget.style.borderColor = '#BFDBFE';
+                      }}
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12" />
+                        <polyline points="12 19 5 12 12 5" />
+                      </svg>
+                    </button>
+                  )}
+                  <h3 style={{ margin: 0 }}>Form Pengajuan Kunjungan Kerja</h3>
                 </div>
-                <div className="card-body">
+                <div className="card-body" style={{ overflow: 'visible' }}>
                   <StepIndicator step={step} />
 
-                  {/* Step 1 */}
-                  {step === 1 && (
-                    <div style={{ textAlign: 'center', padding: '48px 20px', color: 'var(--text-sub)' }}>
-                      <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
-                        <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: '#C5DBFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(0,40,179,0.1)' }}>
-                          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#0028B3" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
-                          </svg>
+                  {/* Step 1 & 2: Pilih Dinas & Pilih Tanggal */}
+                  {(step === 1 || step === 2) && (
+                    <div
+                      style={{
+                        padding: '36px 24px',
+                        paddingBottom: isDinasOpen ? '270px' : '56px',
+                        color: 'var(--text-sub)',
+                        minHeight: '460px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        transition: 'padding-bottom 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                      }}
+                    >
+                      <div style={{ marginBottom: '24px', textAlign: 'center' }}>
+                        <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
+                          <div
+                            style={{
+                              width: '68px',
+                              height: '68px',
+                              borderRadius: '20px',
+                              background: 'linear-gradient(135deg, #DBEAFE 0%, #EFF6FF 100%)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              boxShadow: '0 6px 20px rgba(0, 40, 179, 0.12)',
+                              border: '1px solid rgba(0, 40, 179, 0.08)',
+                            }}
+                          >
+                            <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#0028B3" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21V10.85M19 21V10.85M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4" />
+                            </svg>
+                          </div>
                         </div>
+                        <h3 style={{ color: '#001178', marginBottom: '8px', fontSize: '18px', fontWeight: '800', letterSpacing: '-0.3px' }}>
+                          Pilih Dinas Tujuan
+                        </h3>
+                        <p style={{ fontSize: '13.5px', lineHeight: '1.65', maxWidth: '460px', margin: '0 auto' }}>
+                          Silakan pilih dinas/instansi pemerintah yang ingin Anda kunjungi. Jadwal ketersediaan tanggal akan otomatis disesuaikan dengan dinas pilihan Anda.
+                        </p>
                       </div>
-                      <h3 style={{ color: '#001178', marginBottom: '8px', fontSize: '17px', fontWeight: '700' }}>Pilih Tanggal Kunjungan</h3>
-                      <p style={{ fontSize: '13.5px', lineHeight: '1.7' }}>Klik tanggal yang <strong style={{ color: '#0028B3' }}>tersedia</strong> pada kalender di sebelah untuk memulai pengajuan.</p>
+
+                      <div className="form-group" style={{ textAlign: 'left', maxWidth: '460px', width: '100%', margin: '0 auto' }}>
+                        <label style={{ fontWeight: '700', color: '#001178', marginBottom: '8px', display: 'block', fontSize: '13.5px' }}>
+                          Dinas/Instansi yang Dituju <span style={{ color: '#EF4444' }}>*</span>
+                        </label>
+                        <SearchableDinasSelect
+                          dinasList={dinasList}
+                          value={form.dinasId}
+                          error={!!errors.dinasId}
+                          onOpenChange={setIsDinasOpen}
+                          onChange={(selectedId, selectedDinas) => {
+                            setForm((f: any) => ({
+                              ...f,
+                              dinasId: selectedId,
+                              dinasTujuan: selectedDinas ? selectedDinas.nama : ''
+                            }));
+                            if (selectedId) {
+                              clearError('dinasId');
+                              setStep(2);
+                            } else {
+                              setStep(1);
+                            }
+                          }}
+                        />
+                        {errors.dinasId && <p style={ERR_MSG_STYLE}>⚠ {errors.dinasId}</p>}
+
+                        {/* Status guidance card */}
+                        {form.dinasId ? (
+                          <div
+                            style={{
+                              marginTop: '16px',
+                              padding: '16px 18px',
+                              borderRadius: '12px',
+                              background: '#EFF6FF',
+                              border: '1px solid #BFDBFE',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '10px',
+                              boxShadow: '0 2px 8px rgba(0, 40, 179, 0.06)',
+                              animation: 'fadeIn 0.2s ease',
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#0028B3', fontWeight: '700', fontSize: '13.5px' }}>
+                              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                                <path d="M20 6 9 17l-5-5" />
+                              </svg>
+                              <span>Dinas Terpilih: {dinasList.find(d => d.id.toString() === form.dinasId)?.nama || form.dinasTujuan}</span>
+                            </div>
+                            <div style={{ fontSize: '12px', color: '#1E40AF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                              <span>No. Telp: <strong>{dinasList.find(d => d.id.toString() === form.dinasId)?.nomor_telepon || '-'}</strong></span>
+                            </div>
+                            <div
+                              style={{
+                                marginTop: '4px',
+                                padding: '12px 14px',
+                                borderRadius: '10px',
+                                background: '#DBEAFE',
+                                border: '1px solid #93C5FD',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                color: '#1E3A8A',
+                                fontSize: '12.5px',
+                                fontWeight: '600',
+                                lineHeight: '1.45',
+                              }}
+                            >
+                              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                                <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+                              </svg>
+                              <span>Silakan langsung pilih tanggal kunjungan yang <strong style={{ color: '#0028B3' }}>tersedia (warna biru)</strong> pada kalender di sebelah kiri.</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            style={{
+                              marginTop: '14px',
+                              padding: '11px 14px',
+                              borderRadius: '10px',
+                              background: '#F8FAFC',
+                              border: '1px dashed #CBD5E1',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '10px',
+                              color: '#64748B',
+                              fontSize: '12px',
+                              lineHeight: '1.5',
+                            }}
+                          >
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                              <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            <span>Pilih salah satu instansi dinas di atas untuk melihat jadwal kalender di sebelah kiri.</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
 
-                  {/* Step 2 */}
-                  {step === 2 && (
+                  {/* Step 3 */}
+                  {step === 3 && (
                     <div>
-                      <div className="selected-date-display">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
-                        </svg>
-                        <span>Tanggal terpilih: <strong>{formatDisplayDate(selectedDate)}</strong></span>
+                      <div className="selected-date-display" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0028B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+                          </svg>
+                          <span>Tanggal terpilih: <strong>{formatDisplayDate(selectedDate)}</strong></span>
+                        </div>
+                        {form.dinasTujuan && (
+                          <div style={{ fontSize: '12.5px', color: '#0028B3', fontWeight: '600' }}>
+                            Tujuan: <strong>{form.dinasTujuan}</strong>
+                          </div>
+                        )}
                       </div>
 
                       <div className="form-title">Data Pemohon</div>
@@ -938,31 +1445,6 @@ export default function Permohonan() {
 
                       <div className="form-title">Detail Kunjungan</div>
                       <div className="form-grid full">
-                        <div className="form-group" id="field-dinasId">
-                          <label>Dinas/Instansi yang Dituju *</label>
-                          <SearchableDinasSelect
-                            dinasList={dinasList}
-                            value={form.dinasId}
-                            error={!!errors.dinasId}
-                            onChange={(selectedId, selectedDinas) => {
-                              setForm((f: any) => ({
-                                ...f,
-                                dinasId: selectedId,
-                                dinasTujuan: selectedDinas ? selectedDinas.nama : ''
-                              }));
-                              if (selectedId) clearError('dinasId');
-                            }}
-                          />
-                          {errors.dinasId && <p style={ERR_MSG_STYLE}>⚠ {errors.dinasId}</p>}
-                          {form.dinasId && (
-                            <div style={{ marginTop: '8px', fontSize: '12.5px', color: '#0028B3', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                              </svg>
-                              <span>No. Telp Dinas: {dinasList.find(d => d.id.toString() === form.dinasId)?.nomor_telepon || '-'}</span>
-                            </div>
-                          )}
-                        </div>
                         <div className="form-group" id="field-tujuan">
                           <label>Deskripsi Tujuan/Maksud Kunjungan *</label>
                           <textarea className={errors.tujuan ? 'error' : ''} value={form.tujuan} onChange={e => { setForm((f: any) => ({ ...f, input: e.target.value, tujuan: e.target.value })); if (e.target.value) clearError('tujuan'); }} placeholder="Jelaskan tujuan kunjungan secara singkat dan jelas" />
@@ -1022,7 +1504,7 @@ export default function Permohonan() {
                       </div>
 
                       <div style={{ marginTop: '28px', display: 'flex', gap: '12px' }}>
-                        <button className="btn-outline" onClick={handleGoToStep1} style={{ width: 'auto', paddingLeft: '22px', paddingRight: '22px' }}>
+                        <button className="btn-outline" onClick={handleGoToStep2} style={{ width: 'auto', paddingLeft: '22px', paddingRight: '22px' }}>
                           Kembali
                         </button>
                         <button className="btn-primary" onClick={goToKonfirmasi} style={{ flex: 1 }}>
@@ -1032,8 +1514,8 @@ export default function Permohonan() {
                     </div>
                   )}
 
-                  {/* Step 3: Konfirmasi */}
-                  {step === 3 && (
+                  {/* Step 4: Konfirmasi */}
+                  {step === 4 && (
                     <div>
                       <div className="confirm-block">
                         <div className="confirm-block-title">Tanggal &amp; Identitas</div>
@@ -1073,7 +1555,7 @@ export default function Permohonan() {
                       </div>
 
                       <div style={{ marginTop: '28px', display: 'flex', gap: '12px' }}>
-                        <button className="btn-outline" onClick={handleGoToStep2} style={{ width: 'auto', paddingLeft: '22px', paddingRight: '22px' }}>
+                        <button className="btn-outline" onClick={handleGoToStep3} style={{ width: 'auto', paddingLeft: '22px', paddingRight: '22px' }}>
                           Kembali
                         </button>
                         <button

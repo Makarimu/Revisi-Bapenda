@@ -89,7 +89,7 @@ class SubmitPermohonanRequest extends FormRequest
                 }
             }
 
-            if ($tanggal && !$this->container->make(\App\Services\KalenderService::class)->isTanggalValid($tanggal, $email)) {
+            if ($tanggal && !$this->container->make(\App\Services\KalenderService::class)->isTanggalValid($tanggal, $email, $this->input('dinas_id'))) {
                 $validator->errors()->add('tanggal_kunjungan', 'Tanggal kunjungan tidak valid, slot penuh, atau belum memenuhi aturan minimal H+7.');
             }
         });

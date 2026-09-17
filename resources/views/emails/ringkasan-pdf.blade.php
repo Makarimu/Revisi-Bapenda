@@ -19,7 +19,7 @@
             <td style="padding: 40px 30px;">
                 <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.7; color: #4b5563;">
                     Yth. <strong>{{ $permohonan->nama_pic }}</strong>,<br><br>
-                    Terima kasih telah melakukan kunjungan kerja ke <strong>Badan Pengelolaan Pendapatan Daerah Kabupaten Bogor</strong>.
+                    Terima kasih telah melakukan kunjungan kerja ke <strong>Pemerintah Kabupaten Bogor</strong>.
                 </p>
 
                 <!-- Kode Permohonan -->

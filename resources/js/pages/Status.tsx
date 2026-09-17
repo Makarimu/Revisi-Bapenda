@@ -35,7 +35,7 @@ function statusLabel(s: any) {
   return s;
 }
 
-const RatingReviewCard = memo(function RatingReviewCard({ kode, reviewData, onSubmitted, showToast }: any) {
+const RatingReviewCard = memo(function RatingReviewCard({ kode, reviewData, onSubmitted, showToast, dinasTujuan }: any) {
   const [rating, setRating] = useState<number>(reviewData?.rating || 0);
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [reviewText, setReviewText] = useState<string>(reviewData?.review || '');
@@ -84,6 +84,12 @@ const RatingReviewCard = memo(function RatingReviewCard({ kode, reviewData, onSu
       <h4 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <span style={{ color: '#F59E0B', fontSize: '18px' }}>★</span> Rating &amp; Review
       </h4>
+      {dinasTujuan && (
+        <div style={{ marginBottom: '16px', padding: '12px', background: '#F8FAFC', borderRadius: '8px', border: '1px solid #E2E8F0', fontSize: '13.5px' }}>
+          <span style={{ color: '#64748B', display: 'block', marginBottom: '4px' }}>Penilaian untuk Kunjungan ke:</span>
+          <strong style={{ color: '#001178' }}>{dinasTujuan}</strong>
+        </div>
+      )}
 
       {isSubmitted ? (
         <div style={{ background: '#C5DBFF', border: '1px solid rgba(117, 195, 255, 0.6)', borderRadius: '12px', padding: '20px', textAlign: 'center' }}>
@@ -861,6 +867,7 @@ export default function Status() {
                       reviewData={result.review}
                       onSubmitted={handleReviewSubmitted}
                       showToast={showToast}
+                      dinasTujuan={result.dinas_tujuan}
                     />
                   )}
 

@@ -26,9 +26,15 @@ class PermohonanController extends Controller
     public function getTanggalTerpakai(Request $request)
     {
         $email = $request->query('email');
+        $dinasId = $request->query('dinas_id');
+        $availability = $this->kalenderService->getKalenderAvailability($dinasId);
+
         return response()->json([
             'success' => true,
-            'data' => $this->kalenderService->getTanggalTerpakai(),
+            'data' => $availability['all_busy'],
+            'blocked_dates' => $availability['blocked'],
+            'blocked_details' => $availability['blocked_details'],
+            'full_dates' => $availability['full'],
             'user_booked_dates' => $this->kalenderService->getUserBookedDates($email),
             'min_date' => $this->kalenderService->getMinimumVisitDate($email)->toDateString()
         ]);
@@ -87,7 +93,10 @@ class PermohonanController extends Controller
 
     private function verifyRecaptcha(string $token, ?string $ip): void
     {
-        $secretKey = config('services.recaptcha.secret_key');
+        $secretKey = config('services.recaptcha.secret_key') 
+            ?: env('RECAPTCHA_SECRET_KEY') 
+            ?: env('VITE_RECAPTCHA_SECRET_KEY') 
+            ?: '6LcxbZktAAAAAOXzpENxut9RXX8boVWE6luiPcn6';
 
         if (!$secretKey) {
             Log::error('reCAPTCHA secret key is not configured.');
