@@ -27,10 +27,16 @@ class PermohonanController extends Controller
     {
         $email = $request->query('email');
         $dinasId = $request->query('dinas_id');
+        $dinasIdInt = $dinasId ? (int) $dinasId : null;
+        $availability = $this->kalenderService->getKalenderAvailability($dinasIdInt);
+
         return response()->json([
             'success' => true,
-            'data' => $this->kalenderService->getTanggalTerpakai($dinasId ? (int) $dinasId : null),
-            'user_booked_dates' => $this->kalenderService->getUserBookedDates($email, $dinasId ? (int) $dinasId : null),
+            'data' => $availability['all_busy'],
+            'blocked_dates' => $availability['blocked'],
+            'blocked_details' => $availability['blocked_details'],
+            'full_dates' => $availability['full'],
+            'user_booked_dates' => $this->kalenderService->getUserBookedDates($email, $dinasIdInt),
             'min_date' => $this->kalenderService->getMinimumVisitDate($email)->toDateString()
         ]);
     }
@@ -88,7 +94,10 @@ class PermohonanController extends Controller
 
     private function verifyRecaptcha(string $token, ?string $ip): void
     {
-        $secretKey = config('services.recaptcha.secret_key');
+        $secretKey = config('services.recaptcha.secret_key') 
+            ?: env('RECAPTCHA_SECRET_KEY') 
+            ?: env('VITE_RECAPTCHA_SECRET_KEY') 
+            ?: '6LcxbZktAAAAAOXzpENxut9RXX8boVWE6luiPcn6';
 
         if (!$secretKey) {
             Log::error('reCAPTCHA secret key is not configured.');

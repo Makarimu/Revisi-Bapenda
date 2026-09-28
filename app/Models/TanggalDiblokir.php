@@ -14,6 +14,7 @@ class TanggalDiblokir extends Model
         'keterangan',
         'diblokir_oleh',
         'tgl_diblokir',
+        'dinas_id',
     ];
 
     protected $casts = [
@@ -33,5 +34,10 @@ class TanggalDiblokir extends Model
     public function scopeUpcoming($query)
     {
         return $query->where('tanggal', '>=', now()->toDateString());
+    }
+
+    public function dinas()
+    {
+        return $this->belongsTo(Dinas::class, 'dinas_id');
     }
 }

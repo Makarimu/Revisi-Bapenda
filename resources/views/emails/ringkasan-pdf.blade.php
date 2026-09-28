@@ -19,7 +19,7 @@
             <td style="padding: 40px 30px;">
                 <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.7; color: #4b5563;">
                     Yth. <strong>{{ $permohonan->nama_pic }}</strong>,<br><br>
-                    Terima kasih telah melakukan kunjungan kerja ke <strong>Badan Pengelolaan Pendapatan Daerah Kabupaten Bogor</strong>.
+                    Terima kasih telah melakukan kunjungan kerja ke <strong>Pemerintah Kabupaten Bogor</strong>.
                 </p>
 
                 <!-- Kode Permohonan -->
@@ -52,7 +52,7 @@
 
                 <!-- Tombol CTA -->
                 <div style="text-align: center; margin-bottom: 10px;">
-                    <a href="{{ rtrim(env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}"
+                    <a href="{{ rtrim(config('app.frontend_url') ?: config('app.url') ?: env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}"
                        style="display: inline-block; background-color: #1883FF; color: #ffffff; text-decoration: none; padding: 13px 32px; border-radius: 8px; font-weight: 700; font-size: 13.5px; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(24,131,255,0.25);">
                         Lihat Status &amp; Detail Permohonan
                     </a>

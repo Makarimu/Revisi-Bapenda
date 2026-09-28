@@ -13,14 +13,26 @@ class TanggalDiblokirRepository implements TanggalDiblokirRepositoryInterface
         return TanggalDiblokir::orderBy('tanggal', 'desc')->get();
     }
     
-    public function getAllUpcoming(): Collection
+    public function getAllUpcoming(?int $dinasId = null): Collection
     {
-        return TanggalDiblokir::upcoming()->orderBy('tanggal', 'asc')->get();
+        $query = TanggalDiblokir::upcoming()->orderBy('tanggal', 'asc');
+        if ($dinasId) {
+            $query->where(function($q) use ($dinasId) {
+                $q->whereNull('dinas_id')->orWhere('dinas_id', $dinasId);
+            });
+        }
+        return $query->get();
     }
     
-    public function findByTanggal(string $tanggal): ?TanggalDiblokir
+    public function findByTanggal(string $tanggal, ?int $dinasId = null): ?TanggalDiblokir
     {
-        return TanggalDiblokir::whereDate('tanggal', $tanggal)->first();
+        $query = TanggalDiblokir::whereDate('tanggal', $tanggal);
+        if ($dinasId) {
+            $query->where('dinas_id', $dinasId);
+        } else {
+            $query->whereNull('dinas_id');
+        }
+        return $query->first();
     }
     
     public function create(array $data): TanggalDiblokir
@@ -33,9 +45,9 @@ class TanggalDiblokirRepository implements TanggalDiblokirRepositoryInterface
         return $tanggalDiblokir->delete();
     }
     
-    public function deleteByTanggal(string $tanggal): bool
+    public function deleteByTanggal(string $tanggal, ?int $dinasId = null): bool
     {
-        $record = $this->findByTanggal($tanggal);
+        $record = $this->findByTanggal($tanggal, $dinasId);
         if ($record) {
             return $this->delete($record);
         }

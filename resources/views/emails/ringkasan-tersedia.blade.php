@@ -24,7 +24,7 @@
                 <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 24px; text-align: center;">
                     <p style="margin: 0 0 4px 0; font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase;">KODE PERMOHONAN</p>
                     <p style="margin: 0 0 16px 0; font-size: 20px; font-weight: 800; color: #1883FF; letter-spacing: 1px;">{{ $permohonan->kode }}</p>
-                    <a href="{{ rtrim(env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}"
+                    <a href="{{ rtrim(config('app.frontend_url') ?: config('app.url') ?: env('FRONTEND_URL', env('APP_URL', 'http://localhost:5173')), '/') . '/status?kode=' . $permohonan->kode }}"
                        style="display: inline-block; background-color: #1883FF; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 6px; font-weight: 700; font-size: 13.5px; box-shadow: 0 4px 12px rgba(24,131,255,0.25);">
                         Unduh PDF Ringkasan
                     </a>

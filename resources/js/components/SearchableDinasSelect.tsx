@@ -11,6 +11,7 @@ interface SearchableDinasSelectProps {
   dinasList: DinasItem[];
   value: string;
   onChange: (dinasId: string, selectedDinas?: DinasItem) => void;
+  onOpenChange?: (isOpen: boolean) => void;
   placeholder?: string;
   error?: boolean;
 }
@@ -19,13 +20,22 @@ export default function SearchableDinasSelect({
   dinasList,
   value,
   onChange,
+  onOpenChange,
   placeholder = '-- Pilih Dinas Tujuan --',
   error = false,
 }: SearchableDinasSelectProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpenState] = useState(false);
   const [search, setSearch] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const setIsOpen = (val: boolean | ((prev: boolean) => boolean)) => {
+    setIsOpenState(prev => {
+      const next = typeof val === 'function' ? val(prev) : val;
+      if (onOpenChange) onOpenChange(next);
+      return next;
+    });
+  };
 
   // Focus search input when dropdown opens
   useEffect(() => {
@@ -127,14 +137,14 @@ export default function SearchableDinasSelect({
         <div
           style={{
             position: 'absolute',
-            top: 'calc(100% + 4px)',
+            top: 'calc(100% + 6px)',
             left: 0,
             right: 0,
-            zIndex: 999,
+            zIndex: 1050,
             background: '#FFFFFF',
             borderRadius: '12px',
-            border: '1px solid #E2E8F0',
-            boxShadow: '0 10px 25px -5px rgba(0, 17, 120, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
+            border: '1px solid #CBD5E1',
+            boxShadow: '0 14px 34px -4px rgba(0, 40, 179, 0.2), 0 6px 16px -2px rgba(0, 0, 0, 0.08)',
             overflow: 'hidden',
             animation: 'fadeIn 0.15s ease-out',
           }}
@@ -188,7 +198,7 @@ export default function SearchableDinasSelect({
           </div>
 
           {/* Options List */}
-          <div style={{ maxHeight: '220px', overflowY: 'auto', padding: '4px 0' }}>
+          <div style={{ maxHeight: '220px', overflowY: 'auto', padding: '4px 0', WebkitOverflowScrolling: 'touch' }}>
             {/* Default empty option */}
             <div
               onClick={() => handleSelect('', undefined)}

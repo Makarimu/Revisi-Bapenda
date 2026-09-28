@@ -435,16 +435,25 @@ body {
 
 /* ===== CONTAINER ===== */
 .container {
-  max-width: 1080px;
+  max-width: 1140px;
   margin: 0 auto;
-  padding: 64px 20px 80px;
+  padding: 0 20px 80px;
+}
+
+/* ===== LANDING SECTIONS SPACING ===== */
+.gov-landing-section {
+  margin-top: 80px;
+}
+
+.gov-landing-section:first-child {
+  margin-top: 48px;
 }
 
 /* ===== SECTION TITLE ===== */
 .section-head {
   text-align: center;
-  max-width: 640px;
-  margin: 0 auto 44px;
+  max-width: 680px;
+  margin: 0 auto 36px;
 }
 
 .section-tag {
@@ -629,18 +638,18 @@ body {
 /* ===== KETENTUAN CARD ===== */
 .ketentuan-card {
   background: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: 32px 30px;
-  border: 1px solid rgba(197, 219, 255, 0.4);
+  border-radius: var(--radius-xl);
+  padding: 34px 32px;
+  border: 1px solid rgba(197, 219, 255, 0.5);
   box-shadow: var(--shadow-md);
-  margin-top: 20px;
+  margin-top: 0;
 }
 
 .ketentuan-dasar {
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--text-sub);
   line-height: 1.75;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .ketentuan-dasar strong {
@@ -648,10 +657,12 @@ body {
 }
 
 .ketentuan-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
   font-size: 13.5px;
   color: var(--text-main);
   line-height: 1.85;
-  padding-left: 20px;
 }
 
 .ketentuan-list li {
@@ -869,9 +880,9 @@ body {
   grid-template-columns: 380px 1fr;
   gap: 32px;
   align-items: start;
-  max-width: 1120px;
+  max-width: 1140px;
   margin: 0 auto;
-  padding: 48px 20px 64px;
+  padding: 40px 20px 100px;
 }
 
 .layout-grid>div {
@@ -899,8 +910,9 @@ body {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   border: 1px solid rgba(228, 231, 237, 0.7);
-  overflow: hidden;
+  overflow: visible;
   min-width: 0;
+  position: relative;
 }
 
 .card-body {
@@ -923,6 +935,8 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
 }
 
 .cal-card-header h3,
@@ -1048,8 +1062,126 @@ body {
 .cal-day.busy {
   background: #FEE2E2;
   color: #B91C1C;
+  border: 1px solid rgba(239, 68, 68, 0.35);
   font-weight: 600;
-  cursor: not-allowed;
+  cursor: pointer;
+  position: relative;
+}
+
+.cal-day.busy:hover {
+  background: #FECACA;
+  border-color: #EF4444;
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.2);
+  transform: translateY(-1px);
+}
+
+.cal-day.blocked {
+  background: repeating-linear-gradient(
+    -45deg,
+    #F1F5F9,
+    #F1F5F9 5px,
+    #E2E8F0 5px,
+    #E2E8F0 10px
+  );
+  color: #334155;
+  border: 1.5px solid #94A3B8;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+}
+
+.cal-day.blocked:hover {
+  background: repeating-linear-gradient(
+    -45deg,
+    #E2E8F0,
+    #E2E8F0 5px,
+    #CBD5E1 5px,
+    #CBD5E1 10px
+  );
+  border-color: #64748B;
+  box-shadow: 0 3px 10px rgba(100, 116, 139, 0.25);
+  transform: translateY(-1px);
+}
+
+.cal-day.user-booked {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1.5px solid #F59E0B;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+}
+
+.cal-day.user-booked:hover {
+  background: #FDE68A;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Calendar Day Floating Popover */
+.cal-day-popup-anchor {
+  pointer-events: auto;
+}
+
+.cal-day-popup-card {
+  position: relative;
+  width: 235px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1.5px solid #CBD5E1;
+  text-align: left;
+  cursor: default;
+  animation: calPopupCardIn 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: inherit;
+}
+
+@keyframes calPopupCardIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.cal-popup-arrow {
+  position: absolute;
+  top: 100%;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid #FFFFFF;
+}
+
+.cal-popup-arrow::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #DDD6FE;
+  z-index: -1;
+}
+
+.cal-popup-arrow.arrow-left {
+  left: 16px;
+}
+
+.cal-popup-arrow.arrow-right {
+  right: 16px;
+}
+
+.cal-popup-arrow.arrow-center {
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .cal-day.weekend {
@@ -1441,13 +1573,13 @@ body {
 .step {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
 }
 
 .step-num {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--border);
   color: var(--text-sub);
@@ -1490,10 +1622,10 @@ body {
 }
 
 .step-line {
-  flex: 0 0 32px;
+  flex: 0 0 18px;
   height: 2px;
   background: var(--border);
-  margin: 0 8px;
+  margin: 0 5px;
   border-radius: 2px;
 }
 
@@ -2021,7 +2153,7 @@ svg {
 
 /* ===== GRAND HERO ===== */
 .gov-grand-hero {
-  padding: 64px 24px 108px !important;
+  padding: 64px 24px 116px !important;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -2088,7 +2220,8 @@ svg {
   background: var(--white);
   color: var(--blue-800);
   min-height: 50px;
-  padding: 12px 28px;
+  min-width: 235px;
+  padding: 12px 24px;
   border-radius: 12px;
   font-weight: 700;
   font-size: 14.5px;
@@ -2114,10 +2247,11 @@ svg {
   background: rgba(255, 255, 255, 0.14);
   color: var(--white);
   min-height: 50px;
+  min-width: 235px;
   border: 1.5px solid rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 12px 28px;
+  padding: 12px 24px;
   border-radius: 12px;
   font-weight: 700;
   font-size: 14.5px;
@@ -2334,50 +2468,183 @@ svg {
   }
 }
 
-/* ===== EKABO BANNER CARD ===== */
-.gov-ekabo-card {
-  background-size: cover;
-  background-position: center;
-  border-radius: var(--radius-xl);
-  padding: 48px 36px;
-  color: var(--white);
-  margin-top: 64px;
-  box-shadow: var(--shadow-lg);
-  position: relative;
-  overflow: hidden;
+/* ===== EKSPLORASI & PESONA SECTION ===== */
+.gov-explore-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: stretch;
 }
 
-.gov-ekabo-inner {
-  max-width: 600px;
-}
-
-.gov-ekabo-tag {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--white);
+.gov-ekabo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.5px;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+  color: #B45309;
+  margin-bottom: 6px;
 }
 
-.gov-ekabo-card h3 {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--white);
-  margin-bottom: 12px;
-  letter-spacing: -0.3px;
-  line-height: 1.3;
+.gov-ekabo-badge svg {
+  color: #F59E0B;
 }
 
-.gov-ekabo-card p {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.92);
-  line-height: 1.7;
-  margin-bottom: 24px;
+.gov-ekabo-media-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 17, 120, 0.12);
+  background: #0F172A;
+  margin-top: auto;
+}
+
+.gov-ekabo-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gov-ekabo-media-box:hover .gov-ekabo-media-img {
+  transform: scale(1.04);
+}
+
+.gov-ekabo-media-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.22) 0%, transparent 42%, rgba(0, 17, 120, 0.58) 100%);
+}
+
+.gov-ekabo-media-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.gov-ekabo-media-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--blue-900);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2px 6px rgba(0, 17, 120, 0.08);
+  letter-spacing: 0.2px;
+}
+
+.btn-ekabo-visit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #001178 0%, #0028B3 55%, #1883FF 100%);
+  color: #FFFFFF;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(0, 17, 120, 0.4);
+  width: fit-content;
+}
+
+.btn-ekabo-visit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 40, 179, 0.5);
+  color: #FFFFFF;
+}
+
+.gov-video-card {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  border: 1px solid rgba(197, 219, 255, 0.6);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 380px;
+}
+
+.gov-video-card-header {
+  margin-bottom: 14px;
+}
+
+.gov-video-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--blue-800);
+  margin-bottom: 6px;
+}
+
+.gov-video-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #EF4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.gov-video-title {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--blue-900);
+  line-height: 1.35;
+  margin: 0;
+}
+
+.gov-video-embed {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 17, 120, 0.12);
+  background: #0F172A;
+  margin-top: auto;
+}
+
+.gov-video-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 960px) {
+  .gov-explore-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .gov-ekabo-card {
+    min-height: auto;
+  }
+  .gov-video-card {
+    min-height: auto;
+  }
 }
 
 /* ===== RICH GOVERNMENT FOOTER ===== */
