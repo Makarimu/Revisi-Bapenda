@@ -2468,12 +2468,8 @@ svg {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #B45309;
+  color: var(--blue-800);
   margin-bottom: 6px;
-}
-
-.gov-ekabo-badge svg {
-  color: #F59E0B;
 }
 
 .gov-ekabo-media-box {
