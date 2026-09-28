@@ -106,19 +106,40 @@ class PermohonanController extends Controller
             ]);
         }
 
+        $options = [];
+        $localCa = 'C:/laragon/etc/ssl/cacert.pem';
+        if (file_exists($localCa)) {
+            $options['verify'] = $localCa;
+        }
+
+        $result = null;
         try {
-            $result = Http::asForm()
-                ->timeout(5)
+            $client = !empty($options) ? Http::withOptions($options) : Http::timeout(7);
+            $result = $client->asForm()
+                ->timeout(7)
                 ->post('https://www.google.com/recaptcha/api/siteverify', [
                     'secret' => $secretKey,
                     'response' => $token,
                     'remoteip' => $ip,
                 ]);
         } catch (\Throwable $e) {
-            Log::warning('reCAPTCHA verification request failed: ' . $e->getMessage());
-            throw ValidationException::withMessages([
-                'recaptcha_token' => 'Verifikasi keamanan tidak dapat dilakukan. Silakan coba lagi.',
-            ]);
+            Log::warning('reCAPTCHA verification initial request failed: ' . $e->getMessage());
+
+            try {
+                $result = Http::withoutVerifying()
+                    ->asForm()
+                    ->timeout(7)
+                    ->post('https://www.google.com/recaptcha/api/siteverify', [
+                        'secret' => $secretKey,
+                        'response' => $token,
+                        'remoteip' => $ip,
+                    ]);
+            } catch (\Throwable $fallbackErr) {
+                Log::warning('reCAPTCHA verification fallback request failed: ' . $fallbackErr->getMessage());
+                throw ValidationException::withMessages([
+                    'recaptcha_token' => 'Verifikasi keamanan tidak dapat dilakukan. Silakan coba lagi.',
+                ]);
+            }
         }
 
         $json = $result->json();
