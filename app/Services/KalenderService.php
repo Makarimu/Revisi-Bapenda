@@ -32,37 +32,46 @@ class KalenderService
         return $minDate;
     }
 
-    public function getUserBookedDates(?string $email = null): array
+    public function getUserBookedDates(?string $email = null, ?int $dinasId = null): array
     {
         if (empty($email)) {
             return [];
         }
 
         $cleanEmail = strtolower(trim($email));
-        return Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
+        $query = Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
             ->whereDate('tanggal_kunjungan', '>=', Carbon::today())
-            ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
-            ->pluck('tanggal_kunjungan')
-            ->map(fn($d) => $d ? Carbon::parse($d)->format('Y-m-d') : null)
-            ->filter()
-            ->unique()
-            ->values()
-            ->toArray();
+            ->whereNotIn('status', ['Ditolak', 'Dibatalkan']);
+
+        if (!empty($dinasId)) {
+            // Batas per akun adalah maksimal 2 kali per kedinasan/kecamatan di hari tersebut
+            return $query->where('dinas_id', $dinasId)
+                ->groupBy('tanggal_kunjungan')
+                ->havingRaw('COUNT(*) >= 2')
+                ->pluck('tanggal_kunjungan')
+                ->map(fn($d) => $d ? Carbon::parse($d)->format('Y-m-d') : null)
+                ->filter()
+                ->values()
+                ->toArray();
+        }
+
+        return [];
     }
 
-    public function isTanggalValid(string $tanggal, ?string $email = null): bool
+    public function isTanggalValid(string $tanggal, ?string $email = null, ?int $dinasId = null): bool
     {
         $date = Carbon::parse($tanggal)->startOfDay();
 
-        // 0. Validasi Email yang sama tidak boleh booking 2x pada tanggal yang sama
-        if (!empty($email)) {
+        // 0. Validasi Email: Maksimal 2x per kedinasan/kecamatan pada tanggal yang sama
+        if (!empty($email) && !empty($dinasId)) {
             $cleanEmail = strtolower(trim($email));
-            $alreadyBooked = Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
+            $dinasCount = Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
+                ->where('dinas_id', $dinasId)
                 ->whereDate('tanggal_kunjungan', $date->toDateString())
                 ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
-                ->exists();
+                ->count();
 
-            if ($alreadyBooked) {
+            if ($dinasCount >= 2) {
                 return false;
             }
         }
@@ -84,20 +93,25 @@ class KalenderService
             return false;
         }
 
-        // 4. Validasi Kapasitas Penuh (>= MAKS_PER_HARI)
+        // 4. Validasi Kapasitas Penuh (>= MAKS_PER_HARI per dinas / global)
         // Hanya menghitung permohonan yang aktif / tidak ditolak / tidak dibatalkan
-        $count = Permohonan::whereDate('tanggal_kunjungan', $date->toDateString())
-            ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
-            ->count();
+        $countQuery = Permohonan::whereDate('tanggal_kunjungan', $date->toDateString())
+            ->whereNotIn('status', ['Ditolak', 'Dibatalkan']);
 
-        if ($count >= config('visit.max_per_hari', 2)) {
+        if (!empty($dinasId)) {
+            $countQuery->where('dinas_id', $dinasId);
+        }
+
+        $count = $countQuery->count();
+
+        if ($count >= config('visit.max_per_hari', 100)) {
             return false;
         }
 
         return true;
     }
 
-    public function getTanggalTerpakai(): array
+    public function getTanggalTerpakai(?int $dinasId = null): array
     {
         $diblokir = TanggalDiblokir::whereDate('tanggal', '>=', Carbon::today())
             ->get()
@@ -106,11 +120,16 @@ class KalenderService
             ->values()
             ->toArray();
         
-        $penuh = Permohonan::selectRaw('tanggal_kunjungan, count(*) as total')
+        $penuhQuery = Permohonan::selectRaw('tanggal_kunjungan, count(*) as total')
             ->whereDate('tanggal_kunjungan', '>=', Carbon::today())
-            ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
-            ->groupBy('tanggal_kunjungan')
-            ->having('total', '>=', config('visit.max_per_hari', 2))
+            ->whereNotIn('status', ['Ditolak', 'Dibatalkan']);
+
+        if (!empty($dinasId)) {
+            $penuhQuery->where('dinas_id', $dinasId);
+        }
+
+        $penuh = $penuhQuery->groupBy('tanggal_kunjungan')
+            ->having('total', '>=', config('visit.max_per_hari', 100))
             ->get()
             ->map(fn($p) => $p->tanggal_kunjungan ? Carbon::parse($p->tanggal_kunjungan)->format('Y-m-d') : null)
             ->filter()

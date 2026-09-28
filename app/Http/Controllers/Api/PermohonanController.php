@@ -26,10 +26,11 @@ class PermohonanController extends Controller
     public function getTanggalTerpakai(Request $request)
     {
         $email = $request->query('email');
+        $dinasId = $request->query('dinas_id');
         return response()->json([
             'success' => true,
-            'data' => $this->kalenderService->getTanggalTerpakai(),
-            'user_booked_dates' => $this->kalenderService->getUserBookedDates($email),
+            'data' => $this->kalenderService->getTanggalTerpakai($dinasId ? (int) $dinasId : null),
+            'user_booked_dates' => $this->kalenderService->getUserBookedDates($email, $dinasId ? (int) $dinasId : null),
             'min_date' => $this->kalenderService->getMinimumVisitDate($email)->toDateString()
         ]);
     }
@@ -132,12 +133,28 @@ class PermohonanController extends Controller
             ], 404);
         }
         
-        $kontakAktif = \App\Models\KontakTelepon::aktif()->first();
+        $dinas = $permohonan->dinas;
+        if (!$dinas && !empty($permohonan->dinas_tujuan)) {
+            $dinas = \App\Models\Dinas::where('nama', $permohonan->dinas_tujuan)
+                ->orWhere('singkatan', $permohonan->dinas_tujuan)
+                ->first();
+        }
+
+        $kontak = null;
+        if ($dinas && !empty($dinas->nomor_telepon)) {
+            $kontak = [
+                'nomor_telepon' => $dinas->nomor_telepon,
+                'nama_pic' => $dinas->singkatan ?: $dinas->nama,
+            ];
+        } else {
+            $kontakAktif = \App\Models\KontakTelepon::aktif()->first();
+            $kontak = $kontakAktif ? new \App\Http\Resources\KontakTeleponResource($kontakAktif) : null;
+        }
 
         return response()->json([
             'success' => true,
             'data' => new PermohonanResource($permohonan),
-            'kontak' => $kontakAktif ? new \App\Http\Resources\KontakTeleponResource($kontakAktif) : null
+            'kontak' => $kontak
         ]);
     }
 

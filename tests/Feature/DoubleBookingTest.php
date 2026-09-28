@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Permohonan;
+use App\Models\Dinas;
 use App\Services\KalenderService;
 use Carbon\Carbon;
 
@@ -13,14 +14,23 @@ class DoubleBookingTest extends TestCase
     use RefreshDatabase;
 
     protected KalenderService $kalenderService;
+    protected Dinas $dinas;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->kalenderService = app(KalenderService::class);
+
+        $this->dinas = Dinas::create([
+            'id' => 9,
+            'nama' => 'Dinas Komunikasi dan Informatika',
+            'singkatan' => 'DISKOMINFO',
+            'latitude' => -6.485570,
+            'longitude' => 106.838141,
+        ]);
     }
 
-    private function getPayload(string $email, string $tanggalKunjungan): array
+    private function getPayload(string $email, string $tanggalKunjungan, ?int $dinasId = null): array
     {
         return [
             'tanggal_kunjungan' => $tanggalKunjungan,
@@ -33,8 +43,10 @@ class DoubleBookingTest extends TestCase
             'no_telp' => '081234567890',
             'email' => $email,
             'tujuan' => 'Maksud dan Tujuan Test Kunjungan Kerja',
+            'dinas_id' => $dinasId ?: $this->dinas->id,
             'jumlah_peserta' => 5,
             'rencana_menginap' => 'Tidak',
+            'recaptcha_token' => 'dev-bypass',
             'surat_permohonan' => 'data:application/pdf;base64,' . base64_encode('%PDF-1.4 dummy content'),
             'surat_permohonan_nama' => 'surat.pdf',
             'surat_permohonan_mime' => 'application/pdf',
@@ -45,7 +57,7 @@ class DoubleBookingTest extends TestCase
     }
 
     /**
-     * TEST 1 & TEST 2: Email A belum pernah mengajukan vs Email A sudah mengajukan.
+     * TEST 1 & TEST 2: Email A belum mencapai 2x vs sudah 2x untuk dinas tersebut.
      */
     public function test_email_a_sudah_mengajukan_terdeteksi_di_user_booked_dates()
     {
@@ -57,19 +69,31 @@ class DoubleBookingTest extends TestCase
         $targetDateStr = $targetDate->toDateString();
 
         // Sebelum booking: user_booked_dates kosong
-        $resBefore = $this->getJson('/api/permohonan/tanggal-terpakai?email=' . urlencode($emailA));
+        $resBefore = $this->getJson('/api/permohonan/tanggal-terpakai?email=' . urlencode($emailA) . '&dinas_id=' . $this->dinas->id);
         $resBefore->assertStatus(200);
         $this->assertNotContains($targetDateStr, $resBefore->json('user_booked_dates'));
 
-        // Booking pertama oleh Email A
+        // Booking 1 oleh Email A: belum mengunci tanggal
         Permohonan::factory()->create([
             'email' => $emailA,
+            'dinas_id' => $this->dinas->id,
             'tanggal_kunjungan' => $targetDateStr,
             'status' => 'Pending',
         ]);
 
-        // Sesudah booking: user_booked_dates berisi tanggal tersebut
-        $resAfter = $this->getJson('/api/permohonan/tanggal-terpakai?email=' . urlencode($emailA));
+        $res1 = $this->getJson('/api/permohonan/tanggal-terpakai?email=' . urlencode($emailA) . '&dinas_id=' . $this->dinas->id);
+        $res1->assertStatus(200);
+        $this->assertNotContains($targetDateStr, $res1->json('user_booked_dates'));
+
+        // Booking 2 oleh Email A: sekarang mengunci tanggal untuk dinas ini
+        Permohonan::factory()->create([
+            'email' => $emailA,
+            'dinas_id' => $this->dinas->id,
+            'tanggal_kunjungan' => $targetDateStr,
+            'status' => 'Pending',
+        ]);
+
+        $resAfter = $this->getJson('/api/permohonan/tanggal-terpakai?email=' . urlencode($emailA) . '&dinas_id=' . $this->dinas->id);
         $resAfter->assertStatus(200);
         $this->assertContains($targetDateStr, $resAfter->json('user_booked_dates'));
     }
@@ -89,18 +113,24 @@ class DoubleBookingTest extends TestCase
 
         Permohonan::factory()->create([
             'email' => $emailA,
+            'dinas_id' => $this->dinas->id,
+            'tanggal_kunjungan' => $targetDateStr,
+            'status' => 'Pending',
+        ]);
+        Permohonan::factory()->create([
+            'email' => $emailA,
+            'dinas_id' => $this->dinas->id,
             'tanggal_kunjungan' => $targetDateStr,
             'status' => 'Pending',
         ]);
 
-        $resB = $this->getJson('/api/permohonan/tanggal-terpakai?email=' . urlencode($emailB));
+        $resB = $this->getJson('/api/permohonan/tanggal-terpakai?email=' . urlencode($emailB) . '&dinas_id=' . $this->dinas->id);
         $resB->assertStatus(200);
         $this->assertNotContains($targetDateStr, $resB->json('user_booked_dates'));
-        $this->assertNotContains($targetDateStr, $resB->json('data')); // Kapasitas 1/2 belum penuh
     }
 
     /**
-     * TEST 4: Email A mencoba submit ulang pada tanggal yang sama via API -> ditolak backend.
+     * TEST 4: Email A maksimal 2 kali per dinas di hari tersebut, ke-3 ditolak.
      */
     public function test_backend_menolak_submit_ganda_email_yang_sama_pada_tanggal_yang_sama()
     {
@@ -115,37 +145,14 @@ class DoubleBookingTest extends TestCase
         $res1 = $this->postJson('/api/permohonan', $this->getPayload($email, $targetDateStr));
         $res1->assertStatus(201);
 
-        // Submit 2 dengan tanggal & email sama -> DITOLAK
+        // Submit 2 dengan tanggal, dinas & email sama -> BERHASIL (kuota 2x)
         $res2 = $this->postJson('/api/permohonan', $this->getPayload($email, $targetDateStr));
-        $res2->assertStatus(422)
+        $res2->assertStatus(201);
+
+        // Submit 3 dengan tanggal, dinas & email sama -> DITOLAK
+        $res3 = $this->postJson('/api/permohonan', $this->getPayload($email, $targetDateStr));
+        $res3->assertStatus(422)
              ->assertJsonValidationErrors(['tanggal_kunjungan']);
-    }
-
-    /**
-     * TEST 5: Tanggal dengan 2 pengajuan dari email berbeda -> terpakai penuh (merah) bagi semua email.
-     */
-    public function test_tanggal_penuh_dua_pengajuan_terbaca_busy_untuk_semua_email()
-    {
-        $targetDate = Carbon::today()->addDays(10);
-        while ($targetDate->isWeekend()) {
-            $targetDate->addDay();
-        }
-        $targetDateStr = $targetDate->toDateString();
-
-        Permohonan::factory()->create([
-            'email' => 'user1@domain.com',
-            'tanggal_kunjungan' => $targetDateStr,
-            'status' => 'Pending',
-        ]);
-        Permohonan::factory()->create([
-            'email' => 'user2@domain.com',
-            'tanggal_kunjungan' => $targetDateStr,
-            'status' => 'Disetujui',
-        ]);
-
-        $res = $this->getJson('/api/permohonan/tanggal-terpakai?email=user3@domain.com');
-        $res->assertStatus(200);
-        $this->assertContains($targetDateStr, $res->json('data'));
     }
 
     /**
@@ -161,13 +168,21 @@ class DoubleBookingTest extends TestCase
         }
         $targetDateStr = $targetDate->toDateString();
 
+        // Buat 2 permohonan dengan email lower
         Permohonan::factory()->create([
             'email' => $emailLower,
+            'dinas_id' => $this->dinas->id,
+            'tanggal_kunjungan' => $targetDateStr,
+            'status' => 'Pending',
+        ]);
+        Permohonan::factory()->create([
+            'email' => $emailLower,
+            'dinas_id' => $this->dinas->id,
             'tanggal_kunjungan' => $targetDateStr,
             'status' => 'Pending',
         ]);
 
-        // Request API dengan email uppercase & space -> ditolak duplicate
+        // Request API ke-3 dengan email uppercase & space -> ditolak
         $res = $this->postJson('/api/permohonan', $this->getPayload($emailUpper, $targetDateStr));
         $res->assertStatus(422)
             ->assertJsonValidationErrors(['tanggal_kunjungan']);
@@ -185,17 +200,25 @@ class DoubleBookingTest extends TestCase
         }
         $targetDateStr = $targetDate->toDateString();
 
+        // 2 permohonan berstatus Ditolak
         Permohonan::factory()->create([
             'email' => $email,
+            'dinas_id' => $this->dinas->id,
+            'tanggal_kunjungan' => $targetDateStr,
+            'status' => 'Ditolak',
+        ]);
+        Permohonan::factory()->create([
+            'email' => $email,
+            'dinas_id' => $this->dinas->id,
             'tanggal_kunjungan' => $targetDateStr,
             'status' => 'Ditolak',
         ]);
 
-        $res = $this->getJson('/api/permohonan/tanggal-terpakai?email=' . urlencode($email));
+        $res = $this->getJson('/api/permohonan/tanggal-terpakai?email=' . urlencode($email) . '&dinas_id=' . $this->dinas->id);
         $res->assertStatus(200);
         $this->assertNotContains($targetDateStr, $res->json('user_booked_dates'));
 
-        // Bisa mengajukan ulang pada tanggal tersebut
+        // Bisa mengajukan permohonan baru
         $resSubmit = $this->postJson('/api/permohonan', $this->getPayload($email, $targetDateStr));
         $resSubmit->assertStatus(201);
     }

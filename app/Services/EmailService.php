@@ -71,7 +71,24 @@ class EmailService
             if ($status === 'Pending') {
                 $mailable = new PermohonanPendingMail($permohonan);
             } elseif ($status === 'Disetujui') {
-                $kontakAktif = KontakTelepon::aktif()->get();
+                $permohonan->loadMissing('dinas');
+                $dinas = $permohonan->dinas;
+                if (!$dinas && !empty($permohonan->dinas_tujuan)) {
+                    $dinas = \App\Models\Dinas::where('nama', $permohonan->dinas_tujuan)
+                        ->orWhere('singkatan', $permohonan->dinas_tujuan)
+                        ->first();
+                }
+
+                if ($dinas && !empty($dinas->nomor_telepon)) {
+                    $kontakAktif = collect([
+                        (object) [
+                            'nomor_telepon' => $dinas->nomor_telepon,
+                            'nama_pic' => $dinas->singkatan ?: $dinas->nama,
+                        ]
+                    ]);
+                } else {
+                    $kontakAktif = KontakTelepon::aktif()->get();
+                }
                 $mailable = new PermohonanDisetujuiMail($permohonan, $kontakAktif);
             } elseif ($status === 'Ditolak') {
                 // Pembeda antara Ditolak Murni vs Ditolak dengan Revisi

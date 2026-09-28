@@ -148,7 +148,7 @@ const Calendar = memo(function Calendar({ busyDates, selectedDate, onSelect, min
           </div>
           <div className="legend-item">
             <div className="legend-dot" style={LEGEND_DOT_STYLE_USER_BOOKED} />
-            <span>Sudah diajukan oleh Anda</span>
+            <span>Maksimal 2x Kunjungan Dinas</span>
           </div>
           <div className="legend-item">
             <div className="legend-dot" style={LEGEND_DOT_STYLE_TERPAKAI} />
@@ -174,7 +174,7 @@ const CalendarDay = memo(function CalendarDay({ dateStr, day, cls, isSelected, i
   const title = cls === 'busy'
     ? 'Tanggal ini sudah penuh (maksimal 2 kunjungan kerja)'
     : cls === 'user-booked'
-      ? 'Anda sudah memiliki pengajuan pada tanggal ini'
+      ? 'Email Anda sudah mencapai batas maksimal 2 pengajuan untuk dinas ini pada tanggal tersebut'
       : undefined;
 
   return (
@@ -583,6 +583,10 @@ export default function Permohonan() {
       setUserBookedDates([]);
     }
 
+    if (form.dinasId) {
+      params.dinas_id = form.dinasId;
+    }
+
     api.get('/permohonan/tanggal-terpakai', { params, signal: controller.signal })
       .then(res => {
         setBusyDates(res.data.data || []);
@@ -590,12 +594,10 @@ export default function Permohonan() {
           setMinDateStr(res.data.min_date);
         }
         // Hanya update userBookedDates jika request dikirim dengan email valid.
-        // Jika request dikirim tanpa email (saat mengetik sebagian email), abaikan user_booked_dates
-        // dari response ini agar tidak menimpa data yang sudah benar.
         if (emailParam) {
           const booked: string[] = res.data.user_booked_dates || [];
           setUserBookedDates(booked);
-          // Batalkan pilihan tanggal jika ternyata sudah pernah diajukan oleh email ini
+          // Batalkan pilihan tanggal jika ternyata sudah pernah mencapai 2x untuk dinas ini
           setSelectedDate(prev => (prev && booked.includes(prev) ? '' : prev));
         }
       })
@@ -608,7 +610,7 @@ export default function Permohonan() {
     return () => {
       controller.abort();
     };
-  }, [form.email]);
+  }, [form.email, form.dinasId]);
 
   const handleDateSelect = useCallback((dateStr: any) => {
     setSelectedDate(dateStr);

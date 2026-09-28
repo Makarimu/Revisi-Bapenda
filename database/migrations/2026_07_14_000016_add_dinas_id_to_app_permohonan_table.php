@@ -12,10 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('app_permohonan', function (Blueprint $table) {
-            $table->unsignedBigInteger('dinas_id')->nullable()->after('dinas_tujuan');
-            $table->foreign('dinas_id')->references('id')->on('app_md_dinas')->nullOnDelete();
-        });
+        if (Schema::hasTable('app_permohonan') && !Schema::hasColumn('app_permohonan', 'dinas_id')) {
+            Schema::table('app_permohonan', function (Blueprint $table) {
+                $table->unsignedBigInteger('dinas_id')->nullable()->after('dinas_tujuan');
+                $table->foreign('dinas_id')->references('id')->on('app_md_dinas')->nullOnDelete();
+            });
+        }
 
         // Map existing permohonan dinas_tujuan text to app_md_dinas id
         $permohonans = DB::table('app_permohonan')->get();

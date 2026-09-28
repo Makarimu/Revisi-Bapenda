@@ -8,9 +8,33 @@ use App\Models\Dinas;
 
 class DinasController extends Controller
 {
+    private function ensureDinasReady(): void
+    {
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasTable('app_md_dinas')) {
+                \Illuminate\Support\Facades\Schema::create('app_md_dinas', function ($table) {
+                    $table->id();
+                    $table->string('nama', 200);
+                    $table->string('singkatan', 50);
+                    $table->string('nomor_telepon', 50)->nullable();
+                    $table->double('latitude')->nullable();
+                    $table->double('longitude')->nullable();
+                    $table->timestamps();
+                });
+            }
+
+            if (\Illuminate\Support\Facades\Schema::hasTable('app_md_dinas') && Dinas::count() === 0) {
+                (new \Database\Seeders\DinasSeeder())->run();
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Auto-provisioning app_md_dinas: ' . $e->getMessage());
+        }
+    }
+
     // Public endpoint for visitor form dropdown
     public function listPublic()
     {
+        $this->ensureDinasReady();
         $dinas = Dinas::orderBy('nama', 'asc')->get(['id', 'nama', 'singkatan', 'nomor_telepon', 'latitude', 'longitude']);
         return response()->json([
             'success' => true,
@@ -21,6 +45,7 @@ class DinasController extends Controller
     // Admin listing (all attributes)
     public function index()
     {
+        $this->ensureDinasReady();
         $dinas = Dinas::orderBy('nama', 'asc')->get();
         return response()->json([
             'success' => true,

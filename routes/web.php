@@ -3,4 +3,5 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SpaController;
 
-Route::get('/{any}', SpaController::class)->where('any', '.*');
+Route::get('/', SpaController::class);
+Route::get('/{any}', SpaController::class)->where('any', '^(?!api/).*');

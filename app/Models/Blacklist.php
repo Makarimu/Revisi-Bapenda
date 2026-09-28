@@ -54,11 +54,15 @@ class Blacklist extends Model
         // 2. Cek Instansi
         if (!empty($instansi)) {
             $cleanInstansi = strtolower(trim($instansi));
+            $concatSql = \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite'
+                ? '"%" || LOWER(TRIM(nilai)) || "%"'
+                : 'CONCAT("%", LOWER(TRIM(nilai)), "%")';
+
             $foundInstansi = self::aktif()
                 ->where('tipe', 'instansi')
-                ->where(function ($q) use ($cleanInstansi) {
+                ->where(function ($q) use ($cleanInstansi, $concatSql) {
                     $q->whereRaw('LOWER(TRIM(nilai)) = ?', [$cleanInstansi])
-                      ->orWhereRaw('? LIKE CONCAT("%", LOWER(TRIM(nilai)), "%")', [$cleanInstansi]);
+                      ->orWhereRaw("? LIKE {$concatSql}", [$cleanInstansi]);
                 })
                 ->first();
 

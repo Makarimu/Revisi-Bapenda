@@ -20,7 +20,7 @@ class PermohonanRepository implements PermohonanRepositoryInterface
 
     public function findByKode(string $kode): ?Permohonan
     {
-        $query = Permohonan::where('kode', $kode)->with('review');
+        $query = Permohonan::where('kode', $kode)->with(['review', 'dinas']);
         $this->applyDinasFilter($query);
         return $query->first();
     }

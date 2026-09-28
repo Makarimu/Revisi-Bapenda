@@ -78,19 +78,36 @@ class SubmitPermohonanRequest extends FormRequest
 
             if ($tanggal && $email) {
                 $cleanEmail = strtolower(trim($email));
-                $alreadyBooked = \App\Models\Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
-                    ->whereDate('tanggal_kunjungan', \Carbon\Carbon::parse($tanggal)->toDateString())
-                    ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
-                    ->exists();
+                $dinasId = $this->input('dinas_id');
+                $dinasTujuan = $this->input('dinas_tujuan');
 
-                if ($alreadyBooked) {
-                    $validator->errors()->add('tanggal_kunjungan', 'Email Anda sudah memiliki pengajuan kunjungan pada tanggal tersebut.');
+                $query = \App\Models\Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
+                    ->whereDate('tanggal_kunjungan', \Carbon\Carbon::parse($tanggal)->toDateString())
+                    ->whereNotIn('status', ['Ditolak', 'Dibatalkan']);
+
+                if ($dinasId) {
+                    $query->where('dinas_id', $dinasId);
+                } elseif ($dinasTujuan) {
+                    $query->where('dinas_tujuan', $dinasTujuan);
+                }
+
+                $dinasCount = $query->count();
+
+                if ($dinasCount >= 2) {
+                    $dinasName = 'kedinasan/kecamatan ini';
+                    if ($dinasId) {
+                        $d = \App\Models\Dinas::find($dinasId);
+                        if ($d) $dinasName = $d->singkatan ?: $d->nama;
+                    } elseif ($dinasTujuan) {
+                        $dinasName = $dinasTujuan;
+                    }
+                    $validator->errors()->add('tanggal_kunjungan', "Email Anda sudah mencapai batas maksimal 2 pengajuan kunjungan untuk {$dinasName} pada tanggal tersebut.");
                     return;
                 }
             }
 
-            if ($tanggal && !$this->container->make(\App\Services\KalenderService::class)->isTanggalValid($tanggal, $email)) {
-                $validator->errors()->add('tanggal_kunjungan', 'Tanggal kunjungan tidak valid, slot penuh, atau belum memenuhi aturan minimal H+7.');
+            if ($tanggal && !$this->container->make(\App\Services\KalenderService::class)->isTanggalValid($tanggal, $email, $this->input('dinas_id'))) {
+                $validator->errors()->add('tanggal_kunjungan', 'Tanggal kunjungan tidak valid, batas maksimal 2 pengajuan telah tercapai, slot penuh, atau belum memenuhi aturan minimal H+7.');
             }
         });
     }

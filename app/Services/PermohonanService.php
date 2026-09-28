@@ -44,8 +44,9 @@ class PermohonanService
     public function submit(array $data): Permohonan
     {
         // Pra-validasi ringan (sebelum upload file)
-        if (!$this->kalenderService->isTanggalValid($data['tanggal_kunjungan'], $data['email'] ?? null)) {
-            throw new Exception("Tanggal tidak valid, sudah penuh, atau kurang dari H-7.");
+        $dinasId = $data['dinas_id'] ?? null;
+        if (!$this->kalenderService->isTanggalValid($data['tanggal_kunjungan'], $data['email'] ?? null, $dinasId)) {
+            throw new Exception("Tanggal kunjungan tidak valid, batas maksimal 2 pengajuan per dinas telah tercapai, slot penuh, atau kurang dari H-7.");
         }
 
         if (isset($data['dinas_id'])) {
@@ -91,17 +92,32 @@ class PermohonanService
         for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
             try {
                 $permohonan = DB::transaction(function () use ($data) {
-                    // Race-condition safe: cek duplikat DI DALAM transaction dengan pessimistic lock
+                    // Race-condition safe: cek kuota per dinas DI DALAM transaction dengan pessimistic lock
                     if (isset($data['email']) && isset($data['tanggal_kunjungan'])) {
                         $cleanEmail = strtolower(trim($data['email']));
-                        $alreadyBooked = Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
-                            ->whereDate('tanggal_kunjungan', $data['tanggal_kunjungan'])
-                            ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
-                            ->lockForUpdate()
-                            ->exists();
+                        $dinasId = $data['dinas_id'] ?? null;
 
-                        if ($alreadyBooked) {
-                            throw new Exception("Email Anda sudah memiliki pengajuan kunjungan pada tanggal tersebut.");
+                        $query = Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
+                            ->whereDate('tanggal_kunjungan', $data['tanggal_kunjungan'])
+                            ->whereNotIn('status', ['Ditolak', 'Dibatalkan']);
+
+                        if ($dinasId) {
+                            $query->where('dinas_id', $dinasId);
+                        } elseif (!empty($data['dinas_tujuan'])) {
+                            $query->where('dinas_tujuan', $data['dinas_tujuan']);
+                        }
+
+                        $dinasBookedCount = $query->lockForUpdate()->count();
+
+                        if ($dinasBookedCount >= 2) {
+                            $dinasName = 'kedinasan ini';
+                            if ($dinasId) {
+                                $d = \App\Models\Dinas::find($dinasId);
+                                if ($d) $dinasName = $d->singkatan ?: $d->nama;
+                            } elseif (!empty($data['dinas_tujuan'])) {
+                                $dinasName = $data['dinas_tujuan'];
+                            }
+                            throw new Exception("Email Anda sudah mencapai batas maksimal 2 pengajuan kunjungan untuk {$dinasName} pada tanggal tersebut.");
                         }
                     }
 
@@ -182,23 +198,26 @@ class PermohonanService
             throw new Exception("Permohonan ini tidak dapat direvisi.");
         }
 
-        // Cek tanggal jika berubah
-        if ($data['tanggal_kunjungan'] !== $permohonan->tanggal_kunjungan->toDateString()) {
-            // Cek duplikat: email sama + tanggal baru sudah ada booking aktif lain
+        // Cek tanggal jika berubah atau dinas berubah
+        $dinasForCheck = $data['dinas_id'] ?? $permohonan->dinas_id;
+        $tglBaru = $data['tanggal_kunjungan'];
+        $tglLama = $permohonan->tanggal_kunjungan ? $permohonan->tanggal_kunjungan->toDateString() : null;
+        if ($tglBaru !== $tglLama || $dinasForCheck != $permohonan->dinas_id) {
             $emailForCheck = $data['email'] ?? $permohonan->email;
             $cleanEmail = strtolower(trim($emailForCheck));
-            $duplicateExists = Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
-                ->whereDate('tanggal_kunjungan', $data['tanggal_kunjungan'])
+            $dinasCount = Permohonan::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])
+                ->where('dinas_id', $dinasForCheck)
+                ->whereDate('tanggal_kunjungan', $tglBaru)
                 ->whereNotIn('status', ['Ditolak', 'Dibatalkan'])
                 ->where('id', '!=', $permohonan->id)
-                ->exists();
+                ->count();
 
-            if ($duplicateExists) {
-                throw new Exception("Email Anda sudah memiliki pengajuan kunjungan pada tanggal tersebut.");
+            if ($dinasCount >= 2) {
+                throw new Exception("Email Anda sudah mencapai batas maksimal 2 pengajuan kunjungan untuk dinas ini pada tanggal tersebut.");
             }
 
-            if (!$this->kalenderService->isTanggalValid($data['tanggal_kunjungan'], $emailForCheck)) {
-                throw new Exception("Tanggal kunjungan yang baru tidak valid.");
+            if (!$this->kalenderService->isTanggalValid($tglBaru, $emailForCheck, $dinasForCheck)) {
+                throw new Exception("Tanggal kunjungan yang baru tidak valid atau kuota telah tercapai.");
             }
         }
 

@@ -241,14 +241,9 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
             type="button"
             className="admin-logout-btn"
             onClick={() => setShowLogoutModal(true)}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-            Keluar Sesi
+            Keluar
           </button>
         </div>
       </div>
@@ -333,29 +328,6 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
               </svg>
             </button>
 
-            {/* Icon Warning/Logout */}
-            <div
-              style={{
-                width: '60px',
-                height: '60px',
-                borderRadius: '50%',
-                background: '#FEE2E2',
-                border: '1.5px solid #FECACA',
-                color: '#DC2626',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 18px',
-                boxShadow: '0 4px 12px rgba(220, 38, 38, 0.12)',
-              }}
-            >
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" y1="12" x2="9" y2="12" />
-              </svg>
-            </div>
-
             {/* Judul & Keterangan */}
             <h3
               id="modal-logout-title"
@@ -367,7 +339,7 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
                 letterSpacing: '-0.3px',
               }}
             >
-              Apakah kamu ingin logout?
+              Apakah kamu ingin keluar?
             </h3>
             <p
               style={{
@@ -492,7 +464,7 @@ export default function AdminLayout({ children }: { children?: React.ReactNode }
                     Keluar...
                   </>
                 ) : (
-                  'Ya, Logout'
+                  'Ya, Keluar'
                 )}
               </button>
             </div>

@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('app_md_dinas', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama', 200);
-            $table->string('singkatan', 50);
-            $table->string('nomor_telepon', 50)->nullable();
-            $table->double('latitude')->nullable();
-            $table->double('longitude')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('app_md_dinas')) {
+            Schema::create('app_md_dinas', function (Blueprint $table) {
+                $table->id();
+                $table->string('nama', 200);
+                $table->string('singkatan', 50);
+                $table->string('nomor_telepon', 50)->nullable();
+                $table->double('latitude')->nullable();
+                $table->double('longitude')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
