@@ -61,8 +61,9 @@ export default function KelolaKalender() {
       showToast('Tanggal berhasil diblokir!');
       setShowForm(false); setFormDate(''); setFormKet(''); setSelectedDate('');
       fetchData();
-    } catch {
-      showToast('Gagal memblokir tanggal', 'error');
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.response?.data?.errors?.tanggal?.[0] || 'Gagal memblokir tanggal';
+      showToast(msg, 'error');
     } finally { setSubmitting(false); }
   };
 
@@ -72,8 +73,9 @@ export default function KelolaKalender() {
       await bukaBlokirTanggal(tgl);
       showToast('Blokir tanggal berhasil dibuka!');
       fetchData();
-    } catch {
-      showToast('Gagal membuka blokir', 'error');
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || 'Gagal membuka blokir';
+      showToast(msg, 'error');
     }
   };
 
