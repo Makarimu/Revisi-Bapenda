@@ -132,7 +132,6 @@ export default function Landing() {
       >
         <div className="hero-inner gov-hero-inner">
           <div className="gov-hero-badge">
-            <span className="gov-badge-dot" />
             <span>PORTAL RESMI PELAYANAN KUNJUNGAN KERJA KABUPATEN BOGOR</span>
           </div>
 
