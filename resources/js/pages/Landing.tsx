@@ -513,7 +513,6 @@ export default function Landing() {
             <div className="gov-video-card">
               <div className="gov-video-card-header">
                 <div className="gov-video-badge">
-                  <span className="gov-video-dot" />
                   <span>Video Panduan Pengguna</span>
                 </div>
                 <h4 className="gov-video-title">Tutorial Pengajuan Permohonan Kunjungan Kerja</h4>
@@ -535,9 +534,6 @@ export default function Landing() {
             <div className="gov-video-card">
               <div className="gov-video-card-header">
                 <div className="gov-ekabo-badge">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                  </svg>
                   <span>Portal Wisata Resmi</span>
                 </div>
                 <h4 className="gov-video-title">Jelajahi Wisata &amp; Akomodasi Resmi</h4>
