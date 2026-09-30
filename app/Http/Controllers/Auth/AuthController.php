@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use App\Models\Admin;
 use App\Http\Resources\AdminResource;
 
@@ -17,7 +18,17 @@ class AuthController extends Controller
             'password' => 'required|string|max:255',
         ]);
 
-        $admin = Admin::where('username', $request->username)->first();
+        $usernameInput = trim($request->username);
+        $cleanSlug = Str::slug($usernameInput, '_');
+
+        $admin = Admin::where('username', $usernameInput)
+            ->orWhereRaw('LOWER(username) = ?', [strtolower($usernameInput)])
+            ->orWhere('username', 'admin_' . $cleanSlug)
+            ->orWhereHas('dinas', function ($q) use ($usernameInput) {
+                $q->whereRaw('LOWER(singkatan) = ?', [strtolower($usernameInput)])
+                  ->orWhereRaw('LOWER(nama) = ?', [strtolower($usernameInput)]);
+            })
+            ->first();
 
         if (!$admin || !Hash::check($request->password, $admin->password)) {
             return response()->json([
@@ -26,13 +37,9 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // Keep one active session per admin to reduce exposure from leaked tokens.
-        $admin->tokens()->delete();
-        $token = $admin->createToken(
-            'admin-token',
-            ['*'],
-            now()->addMinutes((int) config('sanctum.expiration'))
-        )->plainTextToken;
+        // Izinkan multi-login (tidak menghapus token lama agar akun tidak auto logout di device lain)
+        // Token diterbitkan tanpa batas waktu kedaluwarsa (unlimited session)
+        $token = $admin->createToken('admin-token')->plainTextToken;
 
         return response()->json([
             'success' => true,

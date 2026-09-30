@@ -157,9 +157,9 @@ function ModalTolak({ data, onClose, onSuccess }) {
                 <input
                   type="radio"
                   name="bisaRevisi"
-                  value="Ya"
-                  checked={bisaRevisi === 'Ya'}
-                  onChange={() => setBisaRevisi('Ya')}
+                  value={v}
+                  checked={bisaRevisi === v}
+                  onChange={() => setBisaRevisi(v)}
                   style={{ width: '16px', height: '16px', accentColor: '#0028B3' }} />
                 {v === 'Ya' ? 'Ya, Boleh Revisi' : 'Tidak (Tolak Permanen)'}
               </label>
