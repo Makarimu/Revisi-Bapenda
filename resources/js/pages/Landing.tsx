@@ -222,7 +222,7 @@ export default function Landing() {
             </svg>
           </div>
           <div className="gov-ribbon-text">
-            <strong>Pemberitahuan Wajib:</strong> Sesuai Surat Edaran Bupati Bogor No. 727 Tahun 2025, kunjungan kerja lebih dari 1 (satu) hari <strong>dihimbau untuk menginap</strong><br />di hotel/penginapan wilayah Kabupaten Bogor.
+            <strong>Pemberitahuan Wajib:</strong> Sesuai Surat Edaran Bupati Bogor No. 727 Tahun 2025, kunjungan kerja lebih dari 1 (satu) hari <strong>diwajibkan untuk menginap</strong><br />di hotel/penginapan wilayah Kabupaten Bogor.
           </div>
           <button className="gov-ribbon-btn" onClick={() => scrollToSection(ketentuanRef)}>
             Pelajari Ketentuan &rarr;
@@ -374,12 +374,23 @@ export default function Landing() {
               <li>2. Menyampaikan surat permohonan kunjungan kerja paling lambat 7 (tujuh) hari sebelum kegiatan dilaksanakan.</li>
               <li>
                 3. Kegiatan kunjungan kerja yang dilaksanakan lebih dari 1 (satu) hari di wilayah Kabupaten Bogor{' '}
-                <strong>DIHIMBAU UNTUK MENGINAP</strong> di hotel/penginapan yang berada di wilayah Kabupaten Bogor dan melampirkan bukti pemesanan akomodasi atau dokumen sejenis lainnya.
+                <strong>DIWAJIBKAN UNTUK MENGINAP</strong> di hotel/penginapan yang berada di wilayah Kabupaten Bogor dan melampirkan bukti pemesanan akomodasi atau dokumen sejenis lainnya.
               </li>
               <li>
                 4. Dalam hal tamu tidak melaksanakan ketentuan maka Bupati/Kepala Perangkat Daerah terkait tidak dapat menerima kegiatan kunjungan kerja dan/atau kegiatan sejenis lainnya.
               </li>
             </ol>
+            <div className="ketentuan-action">
+              <a
+                href="/dokumen/surat-edaran-727.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-unduh-se"
+                title="Buka Dokumen Surat Edaran Bupati Bogor Nomor: 727 Tahun 2025"
+              >
+                Lihat Surat Edaran Bupati Bogor Nomor: 727 Tahun 2025
+              </a>
+            </div>
           </div>
 
           {/* ===== INFO CARDS (DOKUMEN & PERSYARATAN) ===== */}

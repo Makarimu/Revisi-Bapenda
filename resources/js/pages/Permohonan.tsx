@@ -621,9 +621,29 @@ const DisclaimerModal = memo(function DisclaimerModal({ open, onClose }: any) {
           <ol className="disclaimer-list">
             <li>Kunjungan kerja dilaksanakan pada hari Senin s.d. Jum'at.</li>
             <li>Surat permohonan disampaikan paling lambat 7 hari sebelum kegiatan.</li>
-            <li>Kunjungan lebih dari 1 hari <strong>DIHIMBAU MENGINAP di hotel wilayah Kabupaten Bogor.</strong></li>
+            <li>Kunjungan lebih dari 1 hari <strong>DIWAJIBKAN MENGINAP di hotel wilayah Kabupaten Bogor.</strong></li>
             <li>Pelanggaran ketentuan mengakibatkan permohonan tidak dapat diterima.</li>
           </ol>
+          <div style={{ margin: '14px 0', padding: '10px 14px', background: '#EEF2FF', borderRadius: '10px', border: '1px solid rgba(0, 40, 179, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '12px', color: 'var(--text-sub)', fontWeight: 500 }}>
+              Dokumen Dasar: <strong>SE Bupati Bogor No. 727 Th 2025</strong>
+            </span>
+            <a
+              href="/dokumen/surat-edaran-727.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                fontSize: '12px',
+                color: '#0028B3',
+                fontWeight: 600,
+                textDecoration: 'none'
+              }}
+            >
+              Lihat PDF Surat Edaran &rarr;
+            </a>
+          </div>
           <label className="disclaimer-check">
             <input type="checkbox" checked={checked} onChange={handleCheck} />
             <span>Saya telah membaca dan memahami ketentuan kunjungan kerja di atas.</span>
