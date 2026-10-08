@@ -1057,17 +1057,7 @@ export default function Status() {
                               }}
                               style={{ padding: '8px 14px', fontSize: '12px', fontWeight: '600', background: '#FFFFFF', color: '#166534', border: '1px solid #86EFAC', borderRadius: '6px', cursor: 'pointer', fontFamily: 'inherit' }}
                             >
-                              📋 Salin Kode
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setKodeInput(item.kode);
-                                handleCek(item.kode);
-                              }}
-                              style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '700', background: '#0028B3', color: '#FFFFFF', border: 'none', borderRadius: '6px', cursor: 'pointer', fontFamily: 'inherit' }}
-                            >
-                              Lihat Status ↓
+                              Salin Kode
                             </button>
                           </div>
                         </div>
