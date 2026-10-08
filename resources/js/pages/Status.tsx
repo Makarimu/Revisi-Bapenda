@@ -657,6 +657,26 @@ export default function Status() {
   const [showRevisi, setShowRevisi] = useState(false);
   const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
 
+  // Mode Pencarian: 'kode' (pakai kode unik) atau 'lacak' (via tanggal, email, dinas)
+  const [searchMode, setSearchMode] = useState<'kode' | 'lacak'>('kode');
+  const [searchTanggal, setSearchTanggal] = useState('');
+  const [searchEmail, setSearchEmail] = useState('');
+  const [searchDinasId, setSearchDinasId] = useState('');
+  const [lacakLoading, setLacakLoading] = useState(false);
+  const [lacakResults, setLacakResults] = useState<any[] | null>(null);
+  const [lacakError, setLacakError] = useState<string | null>(null);
+  const [dinasList, setDinasList] = useState<any[]>([]);
+
+  useEffect(() => {
+    api.get('/dinas')
+      .then(res => {
+        if (res.data?.success) {
+          setDinasList(res.data.data);
+        }
+      })
+      .catch(err => console.error('Gagal mengambil daftar dinas:', err));
+  }, []);
+
   const showToast = useCallback((msg: any, type = 'success') => {
     setToast({ show: true, msg, type });
     setTimeout(() => setToast(t => ({ ...t, show: false })), 3000);
@@ -679,6 +699,53 @@ export default function Status() {
       setLoading(false);
     }
   }, [kodeInput, showToast]);
+
+  const handleLacakKode = useCallback(async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!searchTanggal) {
+      showToast('Pilih tanggal kunjungan.', 'error');
+      return;
+    }
+    if (!searchEmail || !searchEmail.includes('@')) {
+      showToast('Masukkan alamat email yang valid.', 'error');
+      return;
+    }
+    if (!searchDinasId) {
+      showToast('Pilih instansi / dinas yang dituju.', 'error');
+      return;
+    }
+
+    setLacakLoading(true);
+    setLacakError(null);
+    setLacakResults(null);
+
+    try {
+      const res = await api.post('/permohonan/lacak-kode', {
+        tanggal_kunjungan: searchTanggal,
+        email: searchEmail,
+        dinas_id: searchDinasId,
+      });
+
+      const items = res.data?.data || [];
+      setLacakResults(items);
+
+      if (items.length === 1) {
+        showToast('Kode ditemukan! Memuat status...', 'success');
+        const foundKode = items[0].kode;
+        setKodeInput(foundKode);
+        handleCek(foundKode);
+      } else if (items.length > 1) {
+        showToast(`Ditemukan ${items.length} permohonan. Silakan pilih permohonan Anda.`, 'info');
+      }
+    } catch (err: any) {
+      const msg = err.response?.data?.message || 'Permohonan tidak ditemukan. Pastikan data sudah sesuai.';
+      setLacakError(msg);
+      setLacakResults([]);
+      showToast(msg, 'error');
+    } finally {
+      setLacakLoading(false);
+    }
+  }, [searchTanggal, searchEmail, searchDinasId, showToast, handleCek]);
 
   useEffect(() => {
     let isMounted = true;
@@ -809,25 +876,214 @@ export default function Status() {
               </svg>
               <h3>Cek Status Permohonan</h3>
             </div>
+            {/* Mode Switcher Tabs */}
+            <div style={{ display: 'flex', borderBottom: '1px solid #E2E8F0', background: '#F8FAFC' }}>
+              <button
+                type="button"
+                onClick={() => { setSearchMode('kode'); setLacakError(null); }}
+                style={{
+                  flex: '1',
+                  padding: '13px 16px',
+                  fontSize: '13.5px',
+                  fontWeight: searchMode === 'kode' ? '700' : '600',
+                  color: searchMode === 'kode' ? '#0028B3' : '#64748B',
+                  background: searchMode === 'kode' ? '#FFFFFF' : 'transparent',
+                  border: 'none',
+                  borderBottom: searchMode === 'kode' ? '2.5px solid #0028B3' : '2.5px solid transparent',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'all 0.2s',
+                  fontFamily: 'inherit'
+                }}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '16px', height: '16px' }}>
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <span>Cek dengan Kode Permohonan</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => { setSearchMode('lacak'); setResult(null); }}
+                style={{
+                  flex: '1',
+                  padding: '13px 16px',
+                  fontSize: '13.5px',
+                  fontWeight: searchMode === 'lacak' ? '700' : '600',
+                  color: searchMode === 'lacak' ? '#0028B3' : '#64748B',
+                  background: searchMode === 'lacak' ? '#FFFFFF' : 'transparent',
+                  border: 'none',
+                  borderBottom: searchMode === 'lacak' ? '2.5px solid #0028B3' : '2.5px solid transparent',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'all 0.2s',
+                  fontFamily: 'inherit'
+                }}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '16px', height: '16px' }}>
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+                <span>Cari Kode Saya</span>
+                
+              </button>
+            </div>
+
             <div className="card-body" style={{ padding: '24px' }}>
-              <p style={{ fontSize: '13.5px', color: '#64748B', marginBottom: '16px', lineHeight: '1.6' }}>Masukkan kode permohonan yang Anda terima melalui email.</p>
-              <div style={{ display: 'flex', gap: '10px', marginBottom: result ? '24px' : 0, flexWrap: 'wrap' }}>
-                <input
-                  type="text"
-                  value={kodeInput}
-                  onChange={e => setKodeInput(e.target.value.toUpperCase())}
-                  onKeyDown={e => e.key === 'Enter' && handleCek()}
-                  placeholder="Contoh: KUNKER-20260808-84A12"
-                  style={{ flex: '1 1 200px', minWidth: 0, padding: '11px 14px', minHeight: '44px', border: '1px solid #D9DEE5', borderRadius: '8px', fontSize: '13.5px', fontFamily: 'inherit', textTransform: 'uppercase', letterSpacing: '1px', color: '#0F172A', boxSizing: 'border-box' }}
-                />
-                <button
-                  onClick={() => handleCek()}
-                  className="btn btn-primary"
-                  style={{ padding: '11px 24px', minHeight: '44px', border: 'none', borderRadius: '8px', fontSize: '13.5px', fontWeight: '700', cursor: 'pointer', background: '#0028B3', color: 'white', fontFamily: 'inherit', flex: '0 0 auto' }}
-                >
-                  {loading ? '...' : 'Cek'}
-                </button>
-              </div>
+              {searchMode === 'kode' ? (
+                <>
+                  <p style={{ fontSize: '13.5px', color: '#64748B', marginBottom: '16px', lineHeight: '1.6' }}>
+                    Masukkan kode permohonan yang Anda terima melalui email atau saat pengajuan.
+                  </p>
+                  <div style={{ display: 'flex', gap: '10px', marginBottom: result ? '24px' : 0, flexWrap: 'wrap' }}>
+                    <input
+                      type="text"
+                      value={kodeInput}
+                      onChange={e => setKodeInput(e.target.value.toUpperCase())}
+                      onKeyDown={e => e.key === 'Enter' && handleCek()}
+                      placeholder="Contoh: KUNKER-20260808-84A12"
+                      style={{ flex: '1 1 200px', minWidth: 0, padding: '11px 14px', minHeight: '44px', border: '1px solid #D9DEE5', borderRadius: '8px', fontSize: '13.5px', fontFamily: 'inherit', textTransform: 'uppercase', letterSpacing: '1px', color: '#0F172A', boxSizing: 'border-box' }}
+                    />
+                    <button
+                      onClick={() => handleCek()}
+                      className="btn btn-primary"
+                      style={{ padding: '11px 24px', minHeight: '44px', border: 'none', borderRadius: '8px', fontSize: '13.5px', fontWeight: '700', cursor: 'pointer', background: '#0028B3', color: 'white', fontFamily: 'inherit', flex: '0 0 auto' }}
+                    >
+                      {loading ? '...' : 'Cek'}
+                    </button>
+                  </div>
+
+                  {/* Bantuan jika belum menerima email */}
+                  <div style={{ marginTop: '18px', padding: '12px 16px', background: '#F8FAFC', borderRadius: '8px', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p style={{ fontSize: '13.5px', color: '#64748B', marginBottom: '16px', lineHeight: '1.6' }}>
+                    Masukkan <strong>Tanggal Kunjungan</strong>, <strong>Email</strong>, dan <strong>Instansi yang Dituju</strong> saat Anda mendaftar untuk melacak kode unik permohonan.
+                  </p>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '14px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#1E293B', marginBottom: '6px' }}>
+                        Tanggal Kunjungan <span style={{ color: '#DC2626' }}>*</span>
+                      </label>
+                      <input
+                        type="date"
+                        value={searchTanggal}
+                        onChange={e => setSearchTanggal(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleLacakKode()}
+                        style={{ width: '100%', padding: '10px 12px', minHeight: '44px', border: '1px solid #D9DEE5', borderRadius: '8px', fontSize: '13.5px', fontFamily: 'inherit', color: '#0F172A', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#1E293B', marginBottom: '6px' }}>
+                        Email Pemohon <span style={{ color: '#DC2626' }}>*</span>
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="nama@email.com"
+                        value={searchEmail}
+                        onChange={e => setSearchEmail(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleLacakKode()}
+                        style={{ width: '100%', padding: '10px 12px', minHeight: '44px', border: '1px solid #D9DEE5', borderRadius: '8px', fontSize: '13.5px', fontFamily: 'inherit', color: '#0F172A', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div style={{ gridColumn: '1 / -1' }}>
+                      <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#1E293B', marginBottom: '6px' }}>
+                        Instansi / Dinas yang Dituju <span style={{ color: '#DC2626' }}>*</span>
+                      </label>
+                      <SearchableDinasSelect
+                        dinasList={dinasList}
+                        value={searchDinasId}
+                        onChange={(selectedId) => setSearchDinasId(selectedId)}
+                        placeholder="-- Pilih Instansi / Dinas yang Dituju --"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleLacakKode}
+                    disabled={lacakLoading}
+                    className="btn btn-primary"
+                    style={{ width: '100%', padding: '12px', minHeight: '44px', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '700', cursor: 'pointer', background: '#0028B3', color: 'white', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                  >
+                    {lacakLoading ? (
+                      <span>Mencari permohonan...</span>
+                    ) : (
+                      <>
+                        <span>Cari Kode Permohonan</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* Hasil Pencarian Lacak Kode */}
+                  {lacakResults && lacakResults.length > 0 && (
+                    <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <div style={{ fontSize: '13px', fontWeight: '700', color: '#166534', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: '16px', height: '16px', color: '#16A34A' }}>
+                          <path d="M20 6L9 17l-5-5" />
+                        </svg>
+                        Ditemukan {lacakResults.length} kode permohonan yang sesuai:
+                      </div>
+                      {lacakResults.map((item: any, idx: number) => (
+                        <div key={idx} style={{ padding: '16px', background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+                          <div>
+                            <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#166534', fontWeight: '700', letterSpacing: '0.5px' }}>
+                              Kode Permohonan
+                            </div>
+                            <div style={{ fontSize: '18px', fontWeight: '800', color: '#14532D', letterSpacing: '1px', marginTop: '2px' }}>
+                              {item.kode}
+                            </div>
+                            <div style={{ fontSize: '12.5px', color: '#334155', marginTop: '4px' }}>
+                              {item.instansi} • Tujuan: {item.dinas_tujuan || '-'} • Kunjungan: {formatTanggal(item.tanggal_kunjungan)}
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard?.writeText(item.kode);
+                                showToast('Kode berhasil disalin ke clipboard!', 'success');
+                              }}
+                              style={{ padding: '8px 14px', fontSize: '12px', fontWeight: '600', background: '#FFFFFF', color: '#166534', border: '1px solid #86EFAC', borderRadius: '6px', cursor: 'pointer', fontFamily: 'inherit' }}
+                            >
+                              📋 Salin Kode
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setKodeInput(item.kode);
+                                handleCek(item.kode);
+                              }}
+                              style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '700', background: '#0028B3', color: '#FFFFFF', border: 'none', borderRadius: '6px', cursor: 'pointer', fontFamily: 'inherit' }}
+                            >
+                              Lihat Status ↓
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Error Tidak Ditemukan */}
+                  {lacakError && (
+                    <div style={{ marginTop: '18px', padding: '14px 16px', background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '8px', color: '#991B1B', fontSize: '13px' }}>
+                      <div style={{ fontWeight: '700', marginBottom: '2px' }}>Permohonan Tidak Ditemukan</div>
+                      <div>{lacakError}</div>
+                    </div>
+                  )}
+                </>
+              )}
 
               {/* Result Area */}
               {result && !result.found && (

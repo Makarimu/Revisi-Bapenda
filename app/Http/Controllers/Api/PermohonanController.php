@@ -14,6 +14,8 @@ use App\Http\Resources\PermohonanResource;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Permohonan;
+use Carbon\Carbon;
 
 class PermohonanController extends Controller
 {
@@ -150,6 +152,71 @@ class PermohonanController extends Controller
                 'recaptcha_token' => 'Verifikasi reCAPTCHA tidak valid atau telah kedaluwarsa. Silakan ulangi.',
             ]);
         }
+    }
+
+    public function lacakKode(Request $request)
+    {
+        $request->validate([
+            'tanggal_kunjungan' => ['required', 'date'],
+            'email'             => ['required', 'string', 'email'],
+            'dinas_id'          => ['required'],
+        ], [
+            'tanggal_kunjungan.required' => 'Tanggal kunjungan wajib diisi.',
+            'tanggal_kunjungan.date'     => 'Format tanggal kunjungan tidak valid.',
+            'email.required'             => 'Email wajib diisi.',
+            'email.email'                => 'Format email tidak valid.',
+            'dinas_id.required'          => 'Instansi / dinas yang dituju wajib dipilih.',
+        ]);
+
+        $tanggal = Carbon::parse($request->input('tanggal_kunjungan'))->toDateString();
+        $email = trim(strtolower($request->input('email')));
+        $dinasId = $request->input('dinas_id');
+
+        $query = Permohonan::with('dinas')
+            ->whereRaw('LOWER(email) = ?', [$email])
+            ->whereDate('tanggal_kunjungan', $tanggal);
+
+        if (is_numeric($dinasId)) {
+            $query->where(function ($q) use ($dinasId) {
+                $q->where('dinas_id', (int) $dinasId)
+                  ->orWhereHas('dinas', function ($sub) use ($dinasId) {
+                      $sub->where('id', (int) $dinasId);
+                  });
+            });
+        } else {
+            $query->where(function ($q) use ($dinasId) {
+                $q->where('dinas_tujuan', 'like', "%{$dinasId}%")
+                  ->orWhereHas('dinas', function ($sub) use ($dinasId) {
+                      $sub->where('nama', 'like', "%{$dinasId}%")
+                          ->orWhere('singkatan', 'like', "%{$dinasId}%");
+                  });
+            });
+        }
+
+        $results = $query->latest('id')->get();
+
+        if ($results->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Permohonan tidak ditemukan. Pastikan tanggal kunjungan, email, dan instansi tujuan sesuai saat pengajuan.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Permohonan berhasil ditemukan.',
+            'data'    => $results->map(function ($item) {
+                return [
+                    'kode'              => $item->kode,
+                    'status'            => $item->status,
+                    'tanggal_kunjungan' => $item->tanggal_kunjungan ? $item->tanggal_kunjungan->format('Y-m-d') : null,
+                    'instansi'          => $item->instansi,
+                    'nama_pic'          => $item->nama_pic,
+                    'dinas_tujuan'      => $item->dinas ? ($item->dinas->singkatan ?: $item->dinas->nama) : $item->dinas_tujuan,
+                    'created_at'        => $item->created_at ? $item->created_at->format('Y-m-d H:i') : null,
+                ];
+            }),
+        ]);
     }
 
     public function status($kode)

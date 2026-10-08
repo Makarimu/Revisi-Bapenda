@@ -47,6 +47,7 @@ Route::middleware('throttle:public-api')->group(function () {
     // Permohonan Kunjungan Kerja
     Route::prefix('permohonan')->group(function () {
         Route::get('/tanggal-terpakai', [PermohonanController::class, 'getTanggalTerpakai']);
+        Route::post('/lacak-kode', [PermohonanController::class, 'lacakKode']);
         Route::post('/', [PermohonanController::class, 'submit']);
         Route::get('/{kode}', [PermohonanController::class, 'status']);
         Route::post('/{kode}/revisi', [PermohonanController::class, 'revisi']);
