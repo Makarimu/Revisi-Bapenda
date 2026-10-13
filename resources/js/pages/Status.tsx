@@ -903,7 +903,7 @@ export default function Status() {
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
-                <span>Cek dengan Kode Permohonan</span>
+                <span>Cek Status Permohonan</span>
               </button>
               <button
                 type="button"
@@ -930,7 +930,7 @@ export default function Status() {
                   <circle cx="11" cy="11" r="8" />
                   <path d="m21 21-4.3-4.3" />
                 </svg>
-                <span>Cari Kode Saya</span>
+                <span>Cari Kode Permohonan</span>
                 
               </button>
             </div>
