@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class KalenderService
 {
     const MAKS_PER_HARI = 2;
-    const MIN_HARI = 7;
+    const MIN_HARI = 1;
 
     public function getMinimumVisitDate(?string $email = null): Carbon
     {
@@ -76,7 +76,7 @@ class KalenderService
             }
         }
 
-        // 1. Validasi Minimal H+7 (berdasarkan tanggal pengajuan atau kunjungan terakhir email)
+        // 1. Validasi Minimal H+1 (berdasarkan tanggal pengajuan atau kunjungan terakhir email)
         $minDate = $this->getMinimumVisitDate($email);
         if ($date->lt($minDate)) {
             return false;

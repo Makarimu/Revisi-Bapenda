@@ -46,7 +46,7 @@ class PermohonanService
         // Pra-validasi ringan (sebelum upload file)
         $dinasId = $data['dinas_id'] ?? null;
         if (!$this->kalenderService->isTanggalValid($data['tanggal_kunjungan'], $data['email'] ?? null, $dinasId)) {
-            throw new Exception("Tanggal kunjungan tidak valid, batas maksimal 2 pengajuan per dinas telah tercapai, slot penuh, atau kurang dari H-7.");
+            throw new Exception("Tanggal kunjungan tidak valid, batas maksimal 2 pengajuan per dinas telah tercapai, slot penuh, atau kurang dari H+1.");
         }
 
         if (isset($data['dinas_id'])) {

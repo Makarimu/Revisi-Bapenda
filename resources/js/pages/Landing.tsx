@@ -168,7 +168,7 @@ export default function Landing() {
       <div className="gov-quick-wrapper">
         <div className="gov-quick-container">
           <div className="gov-quick-grid">
-            
+
             {/* Card 1: Peta Wilayah */}
             <div className="gov-quick-card" onClick={() => scrollToSection(petaRef)} role="button" tabIndex={0}>
               <div className="gov-quick-icon-box">
@@ -424,7 +424,7 @@ export default function Landing() {
                 <h3>Hal yang Perlu Diperhatikan</h3>
               </div>
               <ul>
-                <li>Pengajuan minimal 7 hari sebelum rencana tanggal kunjungan</li>
+                <li>Pengajuan minimal 1 hari sebelum rencana tanggal kunjungan</li>
                 <li>Proses review dan disposisi oleh admin memakan waktu 1–3 hari kerja</li>
                 <li>Simpan Kode Permohonan unik untuk memantau status secara berkala</li>
                 <li>Pemberitahuan status resmi dikirimkan secara otomatis via email</li>

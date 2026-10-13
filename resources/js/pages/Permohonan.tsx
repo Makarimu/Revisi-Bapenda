@@ -64,7 +64,7 @@ const Calendar = memo(function Calendar({
       return new Date(y, m - 1, d);
     }
     const d = new Date();
-    d.setDate(d.getDate() + 7);
+    d.setDate(d.getDate() + 1);
     d.setHours(0, 0, 0, 0);
     return d;
   }, [minDateStr]);
@@ -138,7 +138,7 @@ const Calendar = memo(function Calendar({
     if (blockedDates.includes(dateStr)) return 'blocked';
     // Kuota penuh (>= 2 kunjungan) — warna merah
     if (fullDates.includes(dateStr) || busyDates.includes(dateStr)) return 'busy';
-    // Terlalu dekat (H+7 belum terpenuhi)
+    // Terlalu dekat (H+1 belum terpenuhi)
     if (date < minDate) return 'too-soon';
     return 'available';
   }, [userBookedDates, blockedDates, fullDates, busyDates, minDate, today]);
@@ -620,7 +620,7 @@ const DisclaimerModal = memo(function DisclaimerModal({ open, onClose }: any) {
           </p>
           <ol className="disclaimer-list">
             <li>Kunjungan kerja dilaksanakan pada hari Senin s.d. Jum'at.</li>
-            <li>Surat permohonan disampaikan paling lambat 7 hari sebelum kegiatan.</li>
+            <li>Surat permohonan disampaikan paling lambat 1 hari sebelum kegiatan.</li>
             <li>Kunjungan lebih dari 1 hari <strong>DIWAJIBKAN MENGINAP di hotel wilayah Kabupaten Bogor.</strong></li>
             <li>Pelanggaran ketentuan mengakibatkan permohonan tidak dapat diterima.</li>
           </ol>

@@ -453,7 +453,7 @@ function LangkahCard({ data, onRevisi, onUploadBukti }: any) {
 function RevisiDialog({ open, data, onClose, onSubmit }: any) {
   const today = new Date();
   const minDate = new Date();
-  minDate.setDate(today.getDate() + 7);
+  minDate.setDate(today.getDate() + 1);
 
   const [form, setForm] = useState<any>({});
   const [selectedDate, setSelectedDate] = useState('');
